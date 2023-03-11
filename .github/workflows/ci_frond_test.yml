@@ -1,5 +1,4 @@
-
-name: [Front-end] Test application
+name: Front-end - Test application
 
 on:
   push:

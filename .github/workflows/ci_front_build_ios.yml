@@ -1,5 +1,4 @@
-
-name: [Front-end] Build iOS
+name: Front-end - Build iOS
 
 on:
   push:

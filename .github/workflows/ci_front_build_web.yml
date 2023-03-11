@@ -1,5 +1,4 @@
-
-name: [Front-end] Build Web
+name: Front-end - Build Web
 
 on:
   push:
