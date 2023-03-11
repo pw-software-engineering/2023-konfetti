@@ -35,12 +35,12 @@ jobs:
         uses: vimtor/action-zip@v1.1
         with:
           # Files or directories to zip
-          files: ./build/web
+          files: ./src/front/ticketer/build/web
           # Name of output zip file
-          dest: ./build/web.zip
+          dest: ./src/front/ticketer/build/web.zip
       - name: Save web build
         uses: actions/upload-artifact@v3
         with:
           name: release-web-build
           retention-days: 1
-          path: ./build/web.zip
+          path: ./src/front/ticketer/build/web.zip

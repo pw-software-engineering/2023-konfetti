@@ -37,4 +37,4 @@ jobs:
         with:
           name: release-ios-build
           retention-days: 1
-          path: ./build/ios/iphoneos/Runner.app
+          path: ./src/front/ticketer/build/ios/iphoneos/Runner.app
