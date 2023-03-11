@@ -1,0 +1,40 @@
+name: Front-end - Build iOS
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    types: [ "labeled" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
+    name: Build
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./src/front/ticketer
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.7'
+          channel: 'stable'
+          architecture: x64
+      - name: Check version of flutter
+        run: flutter --version
+      - name: Update dependencies
+        run: flutter pub get
+      - name: Test app
+        run: flutter test
+      - name: Build iOS app
+        run: flutter build ios --release --no-codesign
+      - name: Save iOS build
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-ios-build
+          retention-days: 1
+          path: ./src/front/ticketer/build/ios/iphoneos/Runner.app
