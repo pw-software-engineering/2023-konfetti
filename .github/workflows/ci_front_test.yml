@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Test
+    name: Test front-end
     runs-on: ubuntu-latest
     defaults:
       run:

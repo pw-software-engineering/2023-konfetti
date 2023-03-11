@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
-    name: Build
+    name: Build front-end iOS application
     runs-on: macos-latest
     defaults:
       run:
