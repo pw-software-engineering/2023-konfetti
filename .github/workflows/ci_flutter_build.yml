@@ -6,11 +6,13 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+    types: [ "labeled" ]
 
   workflow_dispatch:
 
 jobs:
   build:
+    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     defaults:
       run:
@@ -26,23 +28,17 @@ jobs:
           flutter-version: '3.7.7'
           channel: 'stable'
           architecture: x64
-      - run: |
-          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
-        shell: bash
       - name: Check version of flutter
         run: flutter --version
       - name: Update dependencies
         run: flutter pub get
-      # We do not have any tests yet so we leave out this step
-      # - name: Test app
-      #   run: flutter test
+      - name: Test app
+        run: flutter test
       - name: Build Android app
         run: |
           flutter build apk
           flutter build appbundle
       - name: Build iOS app
-        run: lutter build ios --release --no-codesign
+        run: flutter build ios --release --no-codesign
       - name: Build web app
         run: flutter build web
