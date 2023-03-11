@@ -36,4 +36,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release-ios-build
-          path: build/ios/iphoneos/Runner.app
+          retention-days: 1
+          path: ./build/ios/iphoneos/Runner.app

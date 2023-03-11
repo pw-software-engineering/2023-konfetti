@@ -31,8 +31,16 @@ jobs:
         run: flutter test
       - name: Build web app
         run: flutter build web
+      - name: Zip builded files
+        uses: vimtor/action-zip@v1.1
+        with:
+          # Files or directories to zip
+          files: ./build/web
+          # Name of output zip file
+          dest: ./build/web.zip
       - name: Save web build
         uses: actions/upload-artifact@v3
         with:
           name: release-web-build
-          path: ./build/web
+          retention-days: 1
+          path: ./build/web.zip
