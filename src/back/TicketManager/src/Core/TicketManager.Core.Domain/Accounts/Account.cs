@@ -1,6 +1,8 @@
+using TicketManager.Core.Domain.Common;
+
 namespace TicketManager.Core.Domain.Accounts;
 
-public class Account
+public class Account : IIdentifiable<Guid>
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; }
