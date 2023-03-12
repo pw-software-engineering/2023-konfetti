@@ -13,9 +13,9 @@ public class User : IIdentifiable<Guid>, IAccount
     
     private User() {}
     
-    public User(Guid id, string email, string firstName, string lastName, DateOnly birthDate)
+    public User(string email, string firstName, string lastName, DateOnly birthDate)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         Email = email;
         FirstName = firstName;
         LastName = lastName;
