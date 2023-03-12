@@ -1,4 +1,9 @@
+using System.Text.Json.Serialization;
+using FastEndpoints;
+using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
+using Namotion.Reflection;
+using NSwag;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
@@ -19,9 +24,15 @@ public class Program
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
         
+        builder.Services.AddFastEndpoints();
+        
+        builder.Services.AddSwaggerDoc();
+        
         var app = builder.Build();
 
-        app.MapGet("/", () => "Hello World!");
+        app.UseAuthorization();
+        app.UseFastEndpoints();
+        app.UseSwaggerGen();
 
         app.Run();
     }
