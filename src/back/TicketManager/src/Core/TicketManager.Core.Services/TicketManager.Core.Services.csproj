@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TicketManager.Core.Contracts\TicketManager.Core.Contracts.csproj" />
+      <ProjectReference Include="..\TicketManager.Core.Domain\TicketManager.Core.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
