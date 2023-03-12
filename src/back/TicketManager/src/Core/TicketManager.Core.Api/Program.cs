@@ -1,9 +1,6 @@
-using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
-using Namotion.Reflection;
-using NSwag;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
