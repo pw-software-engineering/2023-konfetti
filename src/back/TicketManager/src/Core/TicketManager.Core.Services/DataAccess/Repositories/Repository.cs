@@ -16,35 +16,46 @@ public class Repository<TEntity, TId>
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        dbContext.Set<TEntity>().Add(entity);
+        Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
     
     public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        dbContext.Set<TEntity>().Update(entity);
+        Update(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
     
     public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        dbContext.Set<TEntity>().Remove(entity);
+        Delete(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
     
     public void Add(TEntity entity)
     {
+        UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Add(entity);
     }
     
     public void Update(TEntity entity)
     {
+        UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Update(entity);
     }
     
     public void Delete(TEntity entity)
     {
+        UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Remove(entity);
+    }
+
+    private void UpdateOptimisticConcurrencyIfNecessary(TEntity entity)
+    {
+        if (entity is IOptimisticConcurrent oc)
+        {
+            oc.DateModified = DateTime.UtcNow;
+        }
     }
 
     public async Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken)

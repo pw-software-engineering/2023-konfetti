@@ -3,13 +3,15 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Users;
 
-public class User : IIdentifiable<Guid>, IAccount
+public class User : IIdentifiable<Guid>, IAccount, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;
     public string FirstName { get; private init; } = null!;
     public string LastName { get; private init; } = null!;
     public DateOnly BirthDate { get; private init; }
+
+    DateTime IOptimisticConcurrent.DateModified { get; set; }
     
     private User() {}
     
