@@ -31,6 +31,21 @@ public class Repository<TEntity, TId>
         dbContext.Set<TEntity>().Remove(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+    
+    public void Add(TEntity entity)
+    {
+        dbContext.Set<TEntity>().Add(entity);
+    }
+    
+    public void Update(TEntity entity)
+    {
+        dbContext.Set<TEntity>().Update(entity);
+    }
+    
+    public void Delete(TEntity entity)
+    {
+        dbContext.Set<TEntity>().Remove(entity);
+    }
 
     public async Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken)
     {
