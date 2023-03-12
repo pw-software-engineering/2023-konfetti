@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.DataAccess.Repositories;
 
 namespace TicketManager.Core.Api;
 
@@ -12,6 +15,9 @@ public class Program
         builder.Services.AddDbContext<CoreDbContext>(
             opts => opts.UseInMemoryDatabase("Database")
         );
+
+        builder.Services.AddScoped<Repository<User, Guid>>();
+        builder.Services.AddScoped<Repository<Account, Guid>>();
         
         var app = builder.Build();
 
