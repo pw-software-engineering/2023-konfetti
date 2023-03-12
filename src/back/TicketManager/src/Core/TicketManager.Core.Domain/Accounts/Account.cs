@@ -5,8 +5,8 @@ namespace TicketManager.Core.Domain.Accounts;
 public class Account : IIdentifiable<Guid>
 {
     public Guid Id { get; private init; }
-    public string Email { get; private init; }
-    public string PasswordHash { get; private set; }
+    public string Email { get; private init; } = null!;
+    public string PasswordHash { get; private set; } = null!;
     
     private Account() {}
     
