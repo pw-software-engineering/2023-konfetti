@@ -5,7 +5,7 @@ namespace TicketManager.Core.Services.DataAccess.Repositories;
 
 public class Repository<TEntity, TId>
     where TEntity : class, IIdentifiable<TId>
-    where TId : IEqualityComparer<TId>
+    where TId : IComparable<TId>
 {
     private readonly CoreDbContext dbContext;
 
