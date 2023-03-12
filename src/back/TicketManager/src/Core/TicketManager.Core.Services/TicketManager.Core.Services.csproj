@@ -11,4 +11,8 @@
       <ProjectReference Include="..\TicketManager.Core.Domain\TicketManager.Core.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints" Version="5.8.0" />
+    </ItemGroup>
+
 </Project>
