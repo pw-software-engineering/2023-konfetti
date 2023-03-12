@@ -11,6 +11,8 @@ public class User : IIdentifiable<Guid>, IAccount
     public string LastName { get; private init; }
     public DateOnly BirthDate { get; private init; }
     
+    private User() {}
+    
     public User(Guid id, string email, string firstName, string lastName, DateOnly birthDate)
     {
         Id = id;

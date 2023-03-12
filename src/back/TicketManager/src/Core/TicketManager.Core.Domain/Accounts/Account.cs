@@ -8,6 +8,8 @@ public class Account : IIdentifiable<Guid>
     public string Email { get; private init; }
     public string PasswordHash { get; private set; }
     
+    private Account() {}
+    
     public Account(Guid id, string email, string passwordHash)
     {
         Id = id;
