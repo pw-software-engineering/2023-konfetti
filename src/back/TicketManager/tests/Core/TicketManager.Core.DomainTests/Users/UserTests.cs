@@ -29,5 +29,14 @@ public class UserTests
             user.LastName.Should().Be(lastName);
             user.BirthDate.Should().Be(birthDate);
         }
+
+        [Fact]
+        public void WhenConstructorCalledTwice_ItShouldReturnTwoDifferentIds()
+        {
+            var user1 = new User("email", "name", "lastname", DateOnly.MaxValue);
+            var user2 = new User("email", "name", "lastname", DateOnly.MaxValue);
+
+            user1.Id.Should().NotBe(user2.Id);
+        }
     }
 }
