@@ -27,4 +27,4 @@ jobs:
     - name: Build
       run: dotnet build src/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj --no-restore
     - name: Test
-      run: dotnet test test/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build --verbosity normal
+      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build --verbosity normal
