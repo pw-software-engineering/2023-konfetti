@@ -6,6 +6,7 @@ using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.JsonConverters;
+using TicketManager.Core.Services.Services.PasswordManagers;
 
 namespace TicketManager.Core.Api;
 
@@ -20,6 +21,8 @@ public class Program
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .UseInMemoryDatabase("Database")
         );
+
+        builder.Services.AddSingleton<PasswordManager>();
 
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
