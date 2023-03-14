@@ -39,7 +39,7 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(e => e.Id);
             cfg.Property(e => e.Email).HasMaxLength(StringLengths.MediumString);
-            cfg.Property(e => e.PasswordHash).HasMaxLength(StringLengths.MediumString);
+            cfg.Property(e => e.PasswordHash).HasMaxLength(StringLengths.ShortString);
             
             cfg.IsOptimisticConcurrent();
         });
