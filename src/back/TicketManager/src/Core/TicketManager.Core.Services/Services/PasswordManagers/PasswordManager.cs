@@ -23,7 +23,7 @@ public class PasswordManager
         return Convert.ToBase64String(hashBytes);
     }
 
-    public bool DoesPasswordsMatch(string passwordHash, string password)
+    public bool DoPasswordsMatch(string passwordHash, string password)
     {
         var hashBytes = Convert.FromBase64String(passwordHash);
         
