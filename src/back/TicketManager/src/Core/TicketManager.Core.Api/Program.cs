@@ -15,7 +15,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddDbContext<CoreDbContext>(
-            opts => opts.UseInMemoryDatabase("Database")
+            opts => opts
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .UseInMemoryDatabase("Database")
         );
 
         builder.Services.AddScoped<Repository<User, Guid>>();
