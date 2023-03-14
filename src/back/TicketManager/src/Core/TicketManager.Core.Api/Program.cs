@@ -5,6 +5,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
+using TicketManager.Core.Services.JsonConverters;
 
 namespace TicketManager.Core.Api;
 
@@ -30,7 +31,10 @@ public class Program
         var app = builder.Build();
 
         app.UseAuthorization();
-        app.UseFastEndpoints();
+        app.UseFastEndpoints(c =>
+        {
+            c.Serializer.Options.Converters.Add(new DateOnlyConverter());
+        });
         app.UseSwaggerGen();
 
         app.Run();
