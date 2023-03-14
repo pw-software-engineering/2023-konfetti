@@ -23,4 +23,9 @@ public class User : IIdentifiable<Guid>, IAccount, IOptimisticConcurrent
         LastName = lastName;
         BirthDate = birthDate;
     }
+    
+    public Account GetAccount(string passwordHash)
+    {
+        return new Account(Id, Email, passwordHash);
+    }
 }
