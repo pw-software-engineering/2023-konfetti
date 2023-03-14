@@ -20,6 +20,19 @@ public class PasswordManagerTests
             var hash = passwordManager.GetHash(password);
 
             hash.Should().NotBe(password);
-        } 
+        }
+
+        [Theory]
+        [InlineData("password")]
+        [InlineData("password1")]
+        [InlineData("haslo")]
+        [InlineData("asdf qwer 123")]
+        public void WhenCalledTwice_ItShouldGenerateDifferentHashes(string password)
+        {
+            var hash1 = passwordManager.GetHash(password);
+            var hash2 = passwordManager.GetHash(password);
+
+            hash1.Should().NotBe(hash2);
+        }
     }
 }
