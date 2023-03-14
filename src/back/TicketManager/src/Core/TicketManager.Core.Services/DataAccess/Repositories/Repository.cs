@@ -32,19 +32,19 @@ public class Repository<TEntity, TId>
         await dbContext.SaveChangesAsync(cancellationToken);
     }
     
-    public void Add(TEntity entity)
+    public virtual void Add(TEntity entity)
     {
         UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Add(entity);
     }
     
-    public void Update(TEntity entity)
+    public virtual void Update(TEntity entity)
     {
         UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Update(entity);
     }
     
-    public void Delete(TEntity entity)
+    public virtual void Delete(TEntity entity)
     {
         UpdateOptimisticConcurrencyIfNecessary(entity);
         dbContext.Set<TEntity>().Remove(entity);
