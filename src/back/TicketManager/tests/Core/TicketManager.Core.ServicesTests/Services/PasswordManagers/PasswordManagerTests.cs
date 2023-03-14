@@ -35,4 +35,38 @@ public class PasswordManagerTests
             hash1.Should().NotBe(hash2);
         }
     }
+
+    public class DoPasswordsMatchTests
+    {
+        private readonly PasswordManager passwordManager = new();
+        
+        [Theory]
+        [InlineData("password")]
+        [InlineData("password1")]
+        [InlineData("haslo")]
+        [InlineData("asdf qwer 123")]
+        public void WhenCalledWithSamePassword_ItShouldReturnTrue(string password)
+        {
+            var hash = passwordManager.GetHash(password);
+
+            var result = passwordManager.DoPasswordsMatch(hash, password);
+
+            result.Should().BeTrue();
+        }
+        
+        [Theory]
+        [InlineData("password")]
+        [InlineData("password1")]
+        [InlineData("haslo")]
+        [InlineData("asdf qwer 123")]
+        public void WhenCalledWithDifferentPassword_ItShouldReturnFalse(string password)
+        {
+            var differentPassword = "different password";
+            var hash = passwordManager.GetHash(password);
+
+            var result = passwordManager.DoPasswordsMatch(hash, differentPassword);
+
+            result.Should().BeFalse();
+        }
+    }
 }
