@@ -39,4 +39,20 @@ public class UserTests
             user1.Id.Should().NotBe(user2.Id);
         }
     }
+
+    public class GetAccountTests
+    {
+        [Fact]
+        public void WhenPasswordHashIsProvided_ItShouldGenerateAccountWithTheSameData()
+        {
+            var user = new User("email", "firstname", "lastname", new DateOnly(2001, 4, 18));
+            var passwordHash = "passwordhash";
+
+            var account = user.GetAccount(passwordHash);
+
+            account.Id.Should().Be(user.Id);
+            account.Email.Should().Be(user.Email);
+            account.PasswordHash.Should().Be(passwordHash);
+        }
+    }
 }
