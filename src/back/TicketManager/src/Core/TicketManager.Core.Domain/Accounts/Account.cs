@@ -2,13 +2,13 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Accounts;
 
-public class Account : IIdentifiable<Guid>, IOptimisticConcurrent
+public class Account : IIdentifiable<Guid>
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;
     public string PasswordHash { get; private set; } = null!;
     
-    DateTime IOptimisticConcurrent.DateModified { get; set; }
+    // DateTime IOptimisticConcurrent.DateModified { get; set; }
     
     private Account() {}
     
