@@ -5,13 +5,13 @@ name: Back-end build and test
 
 on:
   push:
-    branches: [ "master"]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master", "dev" ]
 
 jobs:
   build:
-
+    name: Build and test backend
     runs-on: ubuntu-latest
     defaults:
       run:
