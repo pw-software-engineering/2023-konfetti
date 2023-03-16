@@ -59,6 +59,116 @@ public class RegisterUserValidatorTests
         result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsAlreadyTaken);
     }
     
+    [Fact]
+    public async Task WhenEmptyEmailIsProvided_ItShouldReturnFalseWithEmailIsEmptyErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Email = "";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsEmpty);
+    }
+    
+    [Fact]
+    public async Task WhenTooLongEmailIsProvided_ItShouldReturnFalseWithEmailIsTooLongErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Email = new string('a', StringLengths.MediumString + 1);
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsTooLong);
+    }
+    
+    [Fact]
+    public async Task WhenInvalidEmailIsProvided_ItShouldReturnFalseWithEmailIsInvalidErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Email = "invalid email";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsInvalid);
+    }
+    
+    [Fact]
+    public async Task WhenEmptyPasswordIsProvided_ItShouldReturnFalseWithPasswordIsEmptyErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Password = "";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsEmpty);
+    }
+    
+    [Fact]
+    public async Task WhenTooLongPasswordIsProvided_ItShouldReturnFalseWithPasswordIsTooLongErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Password = new string('a', StringLengths.ShortString + 1);
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsTooLong);
+    }
+    
+    [Fact(Skip = "Valid password is not specified yet")]
+    public async Task WhenInvalidPasswordIsProvided_ItShouldReturnFalseWithPasswordIsInvalidErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.Password = "";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsInvalid);
+    }
+    
+    [Fact]
+    public async Task WhenEmptyFirstNameIsProvided_ItShouldReturnFalseWithFirstNameIsEmptyErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.FirstName = "";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.FirstNameIsEmpty);
+    }
+    
+    [Fact]
+    public async Task WhenTooLongFirstNameIsProvided_ItShouldReturnFalseWithFirstNameIsTooLongErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.FirstName = new string('a', StringLengths.ShortString + 1);
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.FirstNameIsTooLong);
+    }
+    
+    [Fact]
+    public async Task WhenEmptyLastNameIsProvided_ItShouldReturnFalseWithLastNameIsEmptyErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.LastName = "";
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.LastNameIsEmpty);
+    }
+    
+    [Fact]
+    public async Task WhenTooLongLastNameIsProvided_ItShouldReturnFalseWithLastNameIsTooLongErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
+        validRequest.LastName = new string('a', StringLengths.ShortString + 1);
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.LastNameIsTooLong);
+    }
+    
     private static RegisterUserValidator GetValidator(List<Account> accounts)
     {
         var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
