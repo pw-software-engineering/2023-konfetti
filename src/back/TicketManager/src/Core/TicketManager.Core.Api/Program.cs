@@ -6,6 +6,7 @@ using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.JsonConverters;
+using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 
 namespace TicketManager.Core.Api;
@@ -23,7 +24,8 @@ public class Program
         );
 
         builder.Services.AddSingleton<PasswordManager>();
-
+        builder.Services.AddSingleton<MockableCoreDbResolver>();
+        
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
         
