@@ -4,7 +4,7 @@ using TicketManager.Core.Domain.Common;
 namespace TicketManager.Core.Services.DataAccess.Repositories;
 
 public class Repository<TEntity, TId>
-    where TEntity : class, IIdentifiable<TId>
+    where TEntity : class, IAggregateRoot<TId>
     where TId : IComparable<TId>
 {
     private readonly CoreDbContext dbContext;

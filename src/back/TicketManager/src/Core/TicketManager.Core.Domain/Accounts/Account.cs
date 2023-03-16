@@ -2,7 +2,7 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Accounts;
 
-public class Account : IIdentifiable<Guid>
+public class Account : IAggregateRoot<Guid>
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;

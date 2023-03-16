@@ -1,6 +1,6 @@
 namespace TicketManager.Core.Domain.Common;
 
-public interface IIdentifiable<TId>
+public interface IAggregateRoot<TId>
 {
     public TId Id { get; }
 }
