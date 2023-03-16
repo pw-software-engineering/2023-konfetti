@@ -32,14 +32,8 @@ public class RegisterUserValidatorTests
     [Fact]
     public async Task WhenValidRequestIsProvided_ItShouldReturnTrue()
     {
-        var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
-        var scopeFactoryMock = new Mock<IServiceScopeFactory>();
-        var dbResolverMock = new Mock<MockableCoreDbResolver>();
-        dbContextMock.Setup(d => d.Accounts).ReturnsDbSet(new List<Account>());
-        dbResolverMock.Setup(r => r.Resolve(It.IsAny<IServiceScope>())).Returns(dbContextMock.Object);
+        var validator = GetValidator(new List<Account>());
 
-        var validator = new RegisterUserValidator(scopeFactoryMock.Object, dbResolverMock.Object);
-        
         var result = await validator.ValidateAsync(validRequest);
 
         result.IsValid.Should().BeTrue();
@@ -48,32 +42,32 @@ public class RegisterUserValidatorTests
     [Fact]
     public async Task WhenValidRequestIsProvidedAndEmailIsFree_ItShouldReturnTrue()
     {
-        var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
-        var scopeFactoryMock = new Mock<IServiceScopeFactory>();
-        var dbResolverMock = new Mock<MockableCoreDbResolver>();
-        dbContextMock.Setup(d => d.Accounts).ReturnsDbSet(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
-        dbResolverMock.Setup(r => r.Resolve(It.IsAny<IServiceScope>())).Returns(dbContextMock.Object);
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash") });
 
-        var validator = new RegisterUserValidator(scopeFactoryMock.Object, dbResolverMock.Object);
-        
         var result = await validator.ValidateAsync(validRequest);
 
         result.IsValid.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task WhenValidRequestIsProvidedAndEmailIsTaken_ItShouldReturnFalseWithEmailIsAlreadyTakenErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email@email.com", "passwordHash") });
+
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsAlreadyTaken);
+    }
+    
+    private static RegisterUserValidator GetValidator(List<Account> accounts)
     {
         var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
         var scopeFactoryMock = new Mock<IServiceScopeFactory>();
         var dbResolverMock = new Mock<MockableCoreDbResolver>();
-        dbContextMock.Setup(d => d.Accounts).ReturnsDbSet(new List<Account>() { new(Guid.NewGuid(), "email@email.com", "passwordHash") });
+        dbContextMock.Setup(d => d.Accounts).ReturnsDbSet(accounts);
         dbResolverMock.Setup(r => r.Resolve(It.IsAny<IServiceScope>())).Returns(dbContextMock.Object);
 
         var validator = new RegisterUserValidator(scopeFactoryMock.Object, dbResolverMock.Object);
-        
-        var result = await validator.ValidateAsync(validRequest);
-
-        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.EmailIsAlreadyTaken);
+        return validator;
     }
 }
