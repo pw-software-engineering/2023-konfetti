@@ -8,7 +8,9 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master", "dev" ]
-
+  
+  workflow_dispatch:
+  
 jobs:
   build:
     name: Build and test backend
