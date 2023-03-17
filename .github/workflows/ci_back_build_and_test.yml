@@ -1,0 +1,32 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Back-end build and test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master", "dev" ]
+  
+  workflow_dispatch:
+  
+jobs:
+  build:
+    name: Build and test backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/back/TicketManager
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore src/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj
+    - name: Build
+      run: dotnet build src/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj --no-restore
+    - name: Test
+      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build --verbosity normal
