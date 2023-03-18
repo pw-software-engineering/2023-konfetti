@@ -133,40 +133,47 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
   Widget _getRegisterContent() {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            "Join us as an organizer",
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueAccent),
-          ),
-          _companyNameEntryField(),
-          _companyCityEntryField(),
-          _companyZipCodeEntryField(),
-          _companyStreetEntryField(),
-          _companyDisplayNameEntryField(),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(
-                  child: TaxTypeDropdown(),
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 260,
-                  child: _companyTaxIdEntryField(),
-                ),
-              ]),
-          _companyPhoneEntryField(),
-          _submitButton(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              "Join us as an organizer",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueAccent),
+            ),
+            _companyNameEntryField(),
+            _companyCityEntryField(),
+            _companyZipCodeEntryField(),
+            _companyStreetEntryField(),
+            _companyDisplayNameEntryField(),
+            _taxTypeRow(),
+            _companyPhoneEntryField(),
+            _submitButton(),
+          ],
+        ),
       ),
     );
+  }
+
+  Row _taxTypeRow() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Flexible(
+            flex: 3,
+            child: TaxTypeDropdown(),
+          ),
+          const Spacer(),
+          Flexible(
+            flex: 7,
+            child: _companyTaxIdEntryField(),
+          ),
+        ]);
   }
 
   Future<void> submitOrganizerData() async {
@@ -177,7 +184,7 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           return AlertDialog(
             title: const Text("Thank you"),
             content: const Text(
-                "Administrators has received your form. We will try to verify your data as soon as possible."),
+                "Administrators have received your form. We will try to verify your data as soon as possible."),
             actions: [
               ElevatedButton(
                   onPressed: () => Navigator.pop(context),
@@ -229,11 +236,6 @@ class _TaxTypeDropdownState extends State<TaxTypeDropdown> {
       value: dropdownValue,
       icon: const Icon(Icons.expand_more),
       style: const TextStyle(fontSize: 14),
-      elevation: 16,
-      underline: Container(
-        color: const Color.fromARGB(255, 190, 190, 190),
-        height: 1,
-      ),
       onChanged: (String? value) {
         // This is called when the user selects an item.
         setState(() {
