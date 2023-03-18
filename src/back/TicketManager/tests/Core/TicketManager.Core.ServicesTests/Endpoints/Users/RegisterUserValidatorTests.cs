@@ -36,7 +36,7 @@ public class RegisterUserValidatorTests
 
         var result = await validator.ValidateAsync(validRequest);
 
-        result.IsValid.Should().BeTrue();
+        result.EnsureCorrectness();
     }
     
     [Fact]
@@ -46,7 +46,7 @@ public class RegisterUserValidatorTests
 
         var result = await validator.ValidateAsync(validRequest);
 
-        result.IsValid.Should().BeTrue();
+        result.EnsureCorrectness();
     }
 
     [Fact]
