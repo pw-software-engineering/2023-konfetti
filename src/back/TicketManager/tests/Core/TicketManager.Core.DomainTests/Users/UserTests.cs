@@ -1,4 +1,5 @@
 using FluentAssertions;
+using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Users;
 using Xunit;
 
@@ -53,6 +54,7 @@ public class UserTests
             account.Id.Should().Be(user.Id);
             account.Email.Should().Be(user.Email);
             account.PasswordHash.Should().Be(passwordHash);
+            account.Role.Should().Be(AccountRoles.User);
         }
     }
 }

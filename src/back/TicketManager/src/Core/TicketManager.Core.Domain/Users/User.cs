@@ -26,6 +26,6 @@ public class User : IAggregateRoot<Guid>, IAccount
     
     public Account GetAccount(string passwordHash)
     {
-        return new Account(Id, Email, passwordHash);
+        return new Account(Id, Email, passwordHash, AccountRoles.User);
     }
 }
