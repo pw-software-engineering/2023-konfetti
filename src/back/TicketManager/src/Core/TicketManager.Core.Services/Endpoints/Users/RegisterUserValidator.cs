@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Users;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.Endpoints.Accounts;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.ValidationExtensions;
 
@@ -31,13 +32,11 @@ public class RegisterUserValidator : Validator<RegisterUserRequest>
             .WithCode(RegisterUserRequest.ErrorCodes.EmailIsInvalid);
 
         RuleFor(req => req.Password)
-            .NotEmpty()
-            .WithCode(RegisterUserRequest.ErrorCodes.PasswordIsEmpty)
-            .MaximumLength(StringLengths.ShortString)
-            .WithCode(RegisterUserRequest.ErrorCodes.PasswordIsTooLong)
-            .Must(IsPasswordValid)
-            .WithCode(RegisterUserRequest.ErrorCodes.PasswordIsInvalid)
-            .WithMessage("Password is invalid");
+            .NotNull()
+            .WithCode(RegisterUserRequest.ErrorCodes.PasswordIsNull)
+            .SetValidator(new PasswordValidator(RegisterUserRequest.ErrorCodes.PasswordIsTooShort,
+                RegisterUserRequest.ErrorCodes.PasswordIsTooLong,
+                RegisterUserRequest.ErrorCodes.PasswordIsInvalid));
 
         RuleFor(req => req.FirstName)
             .NotEmpty()
@@ -59,10 +58,5 @@ public class RegisterUserValidator : Validator<RegisterUserRequest>
         return dbResolver.Resolve(scope)
             .Accounts
             .AllAsync(a => a.Email != email, cancellationToken);
-    }
-
-    private bool IsPasswordValid(string password)
-    {
-        return true;
     }
 }

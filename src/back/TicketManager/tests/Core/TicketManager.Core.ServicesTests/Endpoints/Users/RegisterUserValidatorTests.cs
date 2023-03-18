@@ -25,7 +25,7 @@ public class RegisterUserValidatorTests
             LastName = "lastName",
             BirthDate = new DateOnly(2001, 01, 01),
             Email = "email@email.com",
-            Password = "password",
+            Password = "password1D",
         };
     }
     
@@ -93,14 +93,26 @@ public class RegisterUserValidatorTests
     }
     
     [Fact]
-    public async Task WhenEmptyPasswordIsProvided_ItShouldReturnFalseWithPasswordIsEmptyErrorCode()
+    public async Task WhenEmptyPasswordIsProvided_ItShouldReturnFalseWithPasswordIsTooShortErrorCode()
     {
         var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash", AccountRoles.User) });
         validRequest.Password = "";
         
         var result = await validator.ValidateAsync(validRequest);
 
-        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsEmpty);
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsTooShort);
+    }
+
+    [Fact] public async Task WhenNullPasswordIsProvided_ItShouldReturnFalseWithPasswordIsToShortErrorCode()
+    {
+        var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash", AccountRoles.User) });
+#pragma warning disable CS8625 // nullable
+        validRequest.Password = null;
+#pragma warning restore CS8625
+        
+        var result = await validator.ValidateAsync(validRequest);
+
+        result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsNull);
     }
     
     [Fact]
@@ -114,11 +126,11 @@ public class RegisterUserValidatorTests
         result.EnsureCorrectError(RegisterUserRequest.ErrorCodes.PasswordIsTooLong);
     }
     
-    [Fact(Skip = "Valid password is not specified yet")]
+    [Fact]
     public async Task WhenInvalidPasswordIsProvided_ItShouldReturnFalseWithPasswordIsInvalidErrorCode()
     {
         var validator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash", AccountRoles.User) });
-        validRequest.Password = "";
+        validRequest.Password = "invalid password";
         
         var result = await validator.ValidateAsync(validRequest);
 
