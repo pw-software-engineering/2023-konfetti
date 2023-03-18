@@ -4,8 +4,8 @@ namespace TicketManager.Core.Services.Services.PasswordManagers;
 
 public class PasswordManager
 {
-    private const int SaltLength = 16;
-    private const int HashLength = 20;
+    public const int SaltLength = 16;
+    public const int HashLength = 20;
     
     public string GetHash(string password)
     {
