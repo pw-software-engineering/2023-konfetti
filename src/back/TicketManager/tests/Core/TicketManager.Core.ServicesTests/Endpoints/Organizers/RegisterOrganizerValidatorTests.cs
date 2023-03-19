@@ -28,7 +28,7 @@ public class RegisterOrganizerValidatorTests
             TaxIdType = TaxIdEnum.Nip,
             DisplayName = "Super company",
             Email = "email@emai.com",
-            Password = "password",
+            Password = "Password1",
             PhoneNumber = "123-456-789"
         };
         singleEntryValidator = GetValidator(new List<Account>() { new(Guid.NewGuid(), "email2@email.com", "passwordHash", AccountRoles.Organizer) });
@@ -55,6 +55,7 @@ public class RegisterOrganizerValidatorTests
     [Fact]
     public async Task WhenValidRequestIsProvidedAndEmailIsTaken_ItShouldReturnFalseWithEmailIsAlreadyTakenErrorCode()
     {
+        validRequest.Email = "email2@email.com";
         var result = await singleEntryValidator.ValidateAsync(validRequest);
 
         result.EnsureCorrectError(RegisterOrganizerRequest.ErrorCodes.EmailIsAlreadyTaken);
