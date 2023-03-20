@@ -24,7 +24,7 @@ public class RegisterOrganizerValidator: Validator<RegisterOrganizerRequest>
             .WithCode(RegisterOrganizerRequest.ErrorCodes.EmailIsEmpty)
             .MaximumLength(StringLengths.MediumString)
             .WithCode(RegisterOrganizerRequest.ErrorCodes.EmailIsTooLong)
-            .MustAsync(IsEmailAvailable)
+            .MustAsync(IsEmailAvailableAsync)
             .WithCode(RegisterOrganizerRequest.ErrorCodes.EmailIsAlreadyTaken)
             .WithMessage("Email is already taken")
             .EmailAddress()
