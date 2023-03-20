@@ -69,7 +69,7 @@ public class RegisterOrganizerValidator: Validator<RegisterOrganizerRequest>
         
     }
     
-    private Task<bool> IsEmailAvailable(string email, CancellationToken cancellationToken)
+    private Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         
