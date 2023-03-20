@@ -1,4 +1,3 @@
-using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Common;
 
@@ -11,11 +10,11 @@ public class Organizer : IAggregateRoot<Guid>, IAccount
     public string CompanyName { get; private init; } = null!;
     public string Address { get; private init; } = null!;
     public string TaxId { get; private init; } = null!;
-    public TaxIdEnum TaxIdType { get; private init; }
+    public TaxIdType TaxIdType { get; private init; }
     public string DisplayName { get; private init; } = null!;
     public string PhoneNumber { get; private init; } = null!;
 
-    public Organizer(string email, string companyName, string address, string taxId, TaxIdEnum taxIdType,
+    public Organizer(string email, string companyName, string address, string taxId, TaxIdType taxIdType,
         string displayName, string phoneNumber)
     {
         Email = email;
@@ -33,4 +32,13 @@ public class Organizer : IAggregateRoot<Guid>, IAccount
     {
         return new Account(Id, Email, passwordHash, AccountRoles.Organizer);
     }
+}
+
+public enum TaxIdType
+{
+    Nip = 0,
+    Regon = 1,
+    Krs = 2,
+    Pesel = 3,
+    Vatin = 4
 }

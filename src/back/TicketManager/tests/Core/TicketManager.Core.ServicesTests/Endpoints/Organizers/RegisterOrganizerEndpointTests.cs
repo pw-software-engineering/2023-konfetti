@@ -33,7 +33,7 @@ public class RegisterOrganizerEndpointTests
             CompanyName = "company sp. z o. o.",
             Address = "ul. Koszykowa 75, 00-662 Warszawa, Poland",
             TaxId = "3423272256",
-            TaxIdType = TaxIdEnum.Nip,
+            TaxIdType = TaxIdTypeDto.Nip,
             DisplayName = "Super company",
             Email = "email@emai.com",
             Password = "password",

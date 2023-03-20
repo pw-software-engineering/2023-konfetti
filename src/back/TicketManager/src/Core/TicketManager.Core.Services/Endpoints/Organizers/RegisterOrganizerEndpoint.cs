@@ -31,7 +31,7 @@ public class RegisterOrganizerEndpoint: Endpoint<RegisterOrganizerRequest>
 
     public override async Task HandleAsync(RegisterOrganizerRequest req, CancellationToken ct)
     {
-        var user = new Organizer(req.Email, req.CompanyName, req.Address, req.TaxId, req.TaxIdType, req.DisplayName, req.PhoneNumber);
+        var user = new Organizer(req.Email, req.CompanyName, req.Address, req.TaxId, (TaxIdType)req.TaxIdType, req.DisplayName, req.PhoneNumber);
         var account = user.GetAccount(passwordManager.GetHash(req.Password));
 
         organizers.Add(user);

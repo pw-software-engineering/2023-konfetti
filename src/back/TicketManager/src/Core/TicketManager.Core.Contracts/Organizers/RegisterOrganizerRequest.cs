@@ -5,7 +5,7 @@ public class RegisterOrganizerRequest
     public string CompanyName { get; set; }
     public string Address { get; set; }
     public string TaxId { get; set; }
-    public TaxIdEnum TaxIdType { get; set; }
+    public TaxIdTypeDto TaxIdType { get; set; }
     public string DisplayName { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
@@ -33,7 +33,7 @@ public class RegisterOrganizerRequest
     }
 }
 
-public enum TaxIdEnum
+public enum TaxIdTypeDto
 {
     Nip = 0,
     Regon = 1,
