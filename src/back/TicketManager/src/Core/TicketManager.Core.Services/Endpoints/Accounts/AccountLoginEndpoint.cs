@@ -5,20 +5,20 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Services.PasswordManagers;
+using TicketManager.Core.Services.Services.TokenManager;
 
 namespace TicketManager.Core.Services.Endpoints.Accounts;
 
 public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginResponse>
 {
-    private readonly Repository<Account, Guid> accounts;
     private readonly CoreDbContext coreDbContext;
     private readonly PasswordManager passwordManager;
-
-    public AccountLoginEndpoint(Repository<Account, Guid> accounts, CoreDbContext coreDbContext, PasswordManager passwordManager)
+    private readonly TokenCreator tokenCreator;
+    public AccountLoginEndpoint(CoreDbContext coreDbContext, PasswordManager passwordManager, TokenCreator tokenCreator)
     {
-        this.accounts = accounts;
         this.coreDbContext = coreDbContext;
         this.passwordManager = passwordManager;
+        this.tokenCreator = tokenCreator;
     }
 
     public override void Configure()
@@ -35,7 +35,12 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
             .FirstOrDefaultAsync(ct);
         if (account is not null && passwordManager.DoPasswordsMatch(account.PasswordHash, req.Password))
         {
-            // return token
+            var response = new AccountLoginResponse
+            {
+                AccessToken = tokenCreator.GetToken(account)
+            };
+            await SendAsync(response, cancellation: ct);
+            return;
         }
 
         await SendUnauthorizedAsync(ct);
