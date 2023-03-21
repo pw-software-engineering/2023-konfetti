@@ -4,3 +4,5 @@ services:
     container_name: backend
     image: backend
     build: .
+    ports:
+      - "8080:80"
