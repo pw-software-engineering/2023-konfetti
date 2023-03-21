@@ -40,15 +40,11 @@ public class Program
         builder.Services.AddFastEndpoints();
         
         builder.Services.AddSwaggerDoc();
-        
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            options.Authority = builder.Configuration["JwtAuthority"];
-            options.Audience = builder.Configuration["JwtAudience"];
         });
         
         var app = builder.Build();
