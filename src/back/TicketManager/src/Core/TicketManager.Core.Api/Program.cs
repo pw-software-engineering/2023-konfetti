@@ -54,6 +54,7 @@ public class Program
         
         var app = builder.Build();
 
+        app.UseAuthentication();
         app.UseAuthorization();
         app.UseFastEndpoints(c =>
         {
