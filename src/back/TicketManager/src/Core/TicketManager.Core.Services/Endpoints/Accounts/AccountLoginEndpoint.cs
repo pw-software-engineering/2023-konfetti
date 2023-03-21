@@ -23,7 +23,7 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
 
     public override void Configure()
     {
-        Get("/account/login");
+        Post("/account/login");
         AllowAnonymous();
     }
 
