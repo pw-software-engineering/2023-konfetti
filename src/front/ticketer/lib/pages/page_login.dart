@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/pages/page_organizer_register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -44,11 +45,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
+      Credentials credentials =
+          Credentials(_controllerEmail.text, _controllerPassword.text);
       // Register
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: ((context) => const OrganizerRegisterPage())));
+              builder: ((context) =>
+                  OrganizerRegisterPage(credentials: credentials))));
     }
   }
 

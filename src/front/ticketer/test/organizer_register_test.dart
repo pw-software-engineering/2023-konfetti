@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ticketer/model/credentials.dart';
 
 import 'package:ticketer/pages/page_organizer_register.dart';
 
 Widget _homeWidget() {
-  return const MaterialApp(home: OrganizerRegisterPage());
+  return MaterialApp(
+    home: OrganizerRegisterPage(
+      credentials: Credentials("jan.nowak@pw.edu.pl", "123456"),
+    ),
+  );
 }
 
 void main() {

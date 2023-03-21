@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/model/organizer.dart';
 import 'package:ticketer/model/tax_type.dart';
+import 'dart:convert';
+import 'package:http/http.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
-  const OrganizerRegisterPage({Key? key}) : super(key: key);
+  Credentials credentials;
+
+  OrganizerRegisterPage({Key? key, required this.credentials})
+      : super(key: key);
 
   @override
   State<OrganizerRegisterPage> createState() => _OrganizerDataState();
@@ -16,8 +23,20 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
   final TextEditingController _taxId = TextEditingController();
   final TextEditingController _displayName = TextEditingController();
   final TextEditingController _phone = TextEditingController();
+  late Credentials credentials;
 
   final _formKey = GlobalKey<FormState>();
+
+  late TaxType taxType = TaxType.NIP;
+  void setTaxType(TaxType t) {
+    taxType = t;
+  }
+
+  @override
+  void initState() {
+    credentials = widget.credentials;
+    super.initState();
+  }
 
   Widget _companyNameEntryField() {
     return TextFormField(
@@ -139,14 +158,7 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              "Join us as an organizer",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueAccent,
-              ),
-            ),
+            _titleBanner(),
             _companyNameEntryField(),
             _companyCityEntryField(),
             _companyZipCodeEntryField(),
@@ -161,14 +173,25 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
     );
   }
 
+  Text _titleBanner() {
+    return const Text(
+      "Join us as an organizer",
+      style: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: Colors.blueAccent,
+      ),
+    );
+  }
+
   Row _taxTypeRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        const Flexible(
+        Flexible(
           flex: 3,
-          child: TaxTypeDropdown(),
+          child: TaxTypeDropdown(setTaxType: setTaxType),
         ),
         const Spacer(),
         Flexible(
@@ -181,6 +204,17 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
 
   Future<void> submitOrganizerData() async {
     if (_formKey.currentState!.validate()) {
+      Organizer organizer = Organizer(
+          _companyName.text,
+          '${_addressStreet.text}/${_addressZip.text}/${_addressCity.text}',
+          taxType,
+          _taxId.text,
+          _displayName.text,
+          credentials.email,
+          credentials.password,
+          _phone.text);
+      sendOrganizerRegistrationRequest(organizer);
+
       showDialog(
         context: context,
         builder: (context) {
@@ -198,6 +232,22 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
         },
       );
     }
+  }
+
+  void sendOrganizerRegistrationRequest(Organizer organizer) async {
+    String url = "localhost:5166";
+    var response = await post(
+      Uri.http(url, '/organizer/register'),
+      headers: <String, String>{
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
+      body: jsonEncode(organizer),
+    );
+    // sanity check
+    print(jsonEncode(organizer));
+    print(response.statusCode);
   }
 
   @override
@@ -218,14 +268,25 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
 }
 
 class TaxTypeDropdown extends StatefulWidget {
-  const TaxTypeDropdown({super.key});
+  final void Function(TaxType) setTaxType;
+
+  const TaxTypeDropdown({super.key, required this.setTaxType});
 
   @override
   State<TaxTypeDropdown> createState() => _TaxTypeDropdownState();
 }
 
 class _TaxTypeDropdownState extends State<TaxTypeDropdown> {
-  String dropdownValue = taxType.first;
+  List<String> list = TaxType.values.map((e) => e.name).toList();
+  late String dropdownValue;
+  late void Function(TaxType) setTaxType;
+
+  @override
+  void initState() {
+    dropdownValue = list.first;
+    setTaxType = widget.setTaxType;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,10 +299,11 @@ class _TaxTypeDropdownState extends State<TaxTypeDropdown> {
         setState(
           () {
             dropdownValue = value!;
+            setTaxType(TaxType.values.firstWhere((e) => e.name == value));
           },
         );
       },
-      items: taxType.map<DropdownMenuItem<String>>(
+      items: list.map<DropdownMenuItem<String>>(
         (String value) {
           return DropdownMenuItem<String>(
             value: value,

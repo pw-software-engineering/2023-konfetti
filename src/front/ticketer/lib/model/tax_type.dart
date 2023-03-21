@@ -1,1 +1,7 @@
-const List<String> taxType = <String>['NIP', 'REGON', 'KRS', 'PESEL', 'VATIN'];
+enum TaxType {
+  NIP,
+  REGON,
+  KRS,
+  PESEL,
+  VATIN,
+}
