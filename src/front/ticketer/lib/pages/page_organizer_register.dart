@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/model/tax_type.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   const OrganizerRegisterPage({Key? key}) : super(key: key);
@@ -141,9 +142,10 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
             const Text(
               "Join us as an organizer",
               style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.blueAccent),
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: Colors.blueAccent,
+              ),
             ),
             _companyNameEntryField(),
             _companyCityEntryField(),
@@ -161,19 +163,20 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
 
   Row _taxTypeRow() {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const Flexible(
-            flex: 3,
-            child: TaxTypeDropdown(),
-          ),
-          const Spacer(),
-          Flexible(
-            flex: 7,
-            child: _companyTaxIdEntryField(),
-          ),
-        ]);
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const Flexible(
+          flex: 3,
+          child: TaxTypeDropdown(),
+        ),
+        const Spacer(),
+        Flexible(
+          flex: 7,
+          child: _companyTaxIdEntryField(),
+        ),
+      ],
+    );
   }
 
   Future<void> submitOrganizerData() async {
@@ -183,12 +186,13 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text("Thank you"),
-            content: const Text(
-                "Administrators have received your form. We will try to verify your data as soon as possible."),
+            content: const Text("Administrators have received your form. "
+                "We will try to verify your data as soon as possible."),
             actions: [
               ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK')),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
             ],
           );
         },
@@ -221,14 +225,7 @@ class TaxTypeDropdown extends StatefulWidget {
 }
 
 class _TaxTypeDropdownState extends State<TaxTypeDropdown> {
-  static const List<String> list = <String>[
-    'NIP',
-    'REGON',
-    'KRS',
-    'PESEL',
-    'VATIN'
-  ];
-  String dropdownValue = list.first;
+  String dropdownValue = taxType.first;
 
   @override
   Widget build(BuildContext context) {
@@ -238,16 +235,20 @@ class _TaxTypeDropdownState extends State<TaxTypeDropdown> {
       style: const TextStyle(fontSize: 14),
       onChanged: (String? value) {
         // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+        setState(
+          () {
+            dropdownValue = value!;
+          },
         );
-      }).toList(),
+      },
+      items: taxType.map<DropdownMenuItem<String>>(
+        (String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        },
+      ).toList(),
     );
   }
 }
