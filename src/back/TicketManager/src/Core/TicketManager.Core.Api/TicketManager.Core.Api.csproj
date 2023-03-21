@@ -12,7 +12,9 @@
 
     <ItemGroup>
       <PackageReference Include="FastEndpoints" Version="5.8.0" />
+      <PackageReference Include="FastEndpoints.Security" Version="5.8.0" />
       <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.13" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.3" />
     </ItemGroup>
