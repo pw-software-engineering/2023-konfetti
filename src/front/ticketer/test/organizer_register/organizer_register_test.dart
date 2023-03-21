@@ -16,10 +16,10 @@ void main() {
   testWidgets(
     'Should render organizer registration page',
     (WidgetTester tester) async {
-      // Enter tested screen
+      // given
       await tester.pumpWidget(_homeWidget());
 
-      // Verify that we see all the components
+      // when then
       expect(
           find.widgetWithText(TextFormField, "Company name"), findsOneWidget);
       expect(find.widgetWithText(TextFormField, "City"), findsOneWidget);
@@ -38,10 +38,10 @@ void main() {
   testWidgets(
     'Should validate fields on organizer registration page',
     (WidgetTester tester) async {
-      // Enter tested screen
+      // given
       await tester.pumpWidget(_homeWidget());
 
-      // Verify that fields are validated
+      // when
       await tester.enterText(
           find.widgetWithText(TextFormField, "Tax id number"), "1f23b");
       await tester.enterText(
@@ -49,6 +49,7 @@ void main() {
       await tester.tap(find.widgetWithText(ElevatedButton, "Submit"));
       await tester.pump();
 
+      // then
       expect(
           find.text("Please enter tax identification number"), findsOneWidget);
       expect(find.text("Please enter correct code in XX-XXX format"),

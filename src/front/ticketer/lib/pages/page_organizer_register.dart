@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/model/organizer.dart';
 import 'package:ticketer/model/tax_type.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:ticketer/pages/page_login.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   Credentials credentials;
@@ -224,7 +228,13 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
                 "We will try to verify your data as soon as possible."),
             actions: [
               ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => {
+                  Navigator.pop(context),
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const LoginPage())))
+                },
                 child: const Text('OK'),
               ),
             ],
@@ -235,19 +245,25 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
   }
 
   void sendOrganizerRegistrationRequest(Organizer organizer) async {
-    String url = "localhost:5166";
-    var response = await post(
-      Uri.http(url, '/organizer/register'),
-      headers: <String, String>{
-        "Access-Control-Allow-Origin": "*",
-        'Content-Type': 'application/json',
-        'Accept': '*/*'
-      },
-      body: jsonEncode(organizer),
-    );
+    String? url = dotenv.env['BACKEND_URL'];
+    Response response;
+    try {
+      response = await post(
+        Uri.http(url!, '/organizer/register'),
+        headers: <String, String>{
+          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Accept': '*/*'
+        },
+        body: jsonEncode(organizer),
+      );
+    } catch (e) {
+      log(e.toString());
+      return;
+    }
+
     // sanity check
-    print(jsonEncode(organizer));
-    print(response.statusCode);
+    log('${response.statusCode} : ${response.body}');
   }
 
   @override
