@@ -1,6 +1,7 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
