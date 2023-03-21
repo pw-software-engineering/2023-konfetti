@@ -2,6 +2,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
@@ -27,6 +28,7 @@ public class Program
         builder.Services.AddSingleton<MockableCoreDbResolver>();
         
         builder.Services.AddScoped<Repository<User, Guid>>();
+        builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
         
         builder.Services.AddFastEndpoints();
