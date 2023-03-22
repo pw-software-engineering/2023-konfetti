@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:ticketer/auth/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:ticketer/model/credentials.dart';
 
 class AuthModel extends ChangeNotifier {
@@ -44,11 +43,9 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
-  AuthProvider() : _controller = StreamController<User?>() {
-    _initAndCheckIfLoggedIn();
-  }
+  AuthProvider() : _controller = StreamController<User?>();
 
-  Future<void> _initAndCheckIfLoggedIn() async {
+  init() async {
     await authModel.init();
     if (authModel.isAuthorized) {
       _controller.add(User());
@@ -122,7 +119,9 @@ class Auth {
     return _singleton;
   }
 
-  Auth._internal() : _provider = AuthProvider();
+  Auth._internal() : _provider = AuthProvider() {
+    _provider.init();
+  }
 
   Future<void> logInWithEmailAndPassword({
     required String email,
