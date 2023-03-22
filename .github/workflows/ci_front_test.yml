@@ -1,10 +1,19 @@
 name: Front-end - Test application
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches:
+      - 'master'
+      - 'dev'
+  push:
+    branches: 
+      - 'master'
+      - 'dev'
+      - 'feature/*'
+      - 'fix/*'
+      - 'hotfix/*'
+    paths:
+      - 'src/front/ticketer/*'
 
   workflow_dispatch:
 
