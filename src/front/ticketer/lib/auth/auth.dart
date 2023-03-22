@@ -40,11 +40,14 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
-  Auth() async {
+  AuthProvider() : _controller = StreamController<User?>() {
     authModel.init();
+    if (authModel.isAuthorized) {
+      _controller.add(User());
+    }
   }
 
-  final StreamController<User?> _controller = StreamController<User?>();
+  final StreamController<User?> _controller;
 
   Future<void> logInWithEmailAndPassword({
     required String email,
@@ -60,6 +63,7 @@ class AuthProvider {
       authModel.login(decodedResponse['access_token']);
 
       print("Logged in");
+      print(decodedResponse['access_token']);
 
       _controller.add(User());
     }
