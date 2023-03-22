@@ -4,7 +4,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/pages/page_organizer_register.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:ticketer/auth/auth.dart';
 
 class LoginPage extends StatefulWidget {

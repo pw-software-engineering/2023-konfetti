@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.only(top: 15.0),
       child: ElevatedButton(
         onPressed: logOut,
-        child: Text("Log out"),
+        child: const Text("Log out"),
       ),
     );
   }

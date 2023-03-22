@@ -80,6 +80,7 @@ class AuthProvider {
       }
 
       if (response.statusCode != 200) {
+        // Something to do with it later
         log("Resposne ${response.statusCode} : ${response.reasonPhrase}");
         return;
       }
@@ -91,8 +92,8 @@ class AuthProvider {
 
       authModel.login(decodedResponse['accessToken']);
 
-      print("Logged in");
-      print(decodedResponse['accessToken']);
+      log("Logged in");
+      log(decodedResponse['accessToken']);
 
       _controller.add(User());
     }
@@ -101,7 +102,7 @@ class AuthProvider {
   Future<void> logOut() async {
     if (authModel.isAuthorized) {
       authModel.logout();
-      print("Logged out");
+      log("Logged out");
       _controller.add(null);
     } else {
       throw Exception("How did You get here?");
