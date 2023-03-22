@@ -17,6 +17,13 @@ public class CoreDbContext : DbContext
 
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
+    
+#if DEBUG
+    protected override void OnConfiguring(DbContextOptionsBuilder builder)
+    {
+        builder.EnableSensitiveDataLogging();
+    }
+#endif
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
