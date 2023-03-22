@@ -67,12 +67,21 @@ class _LoginPageState extends State<LoginPage> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please enter password";
-        } else if (value.length < 6) {
-          return "Password needs to be at least 6 charachters";
+        } else if (value.length < 8 || value.length > 32) {
+          return "Password length needs to be betweeen 8 and 32 characters";
+        } else if (!isPasswordValid(value)) {
+          return "Password must contain digit, "
+              "small and capital letter";
         }
         return null;
       },
     );
+  }
+
+  bool isPasswordValid(String password) {
+    return password.contains(RegExp('[0-9]')) &&
+        password.contains(RegExp('[a-z]')) &&
+        password.contains(RegExp('[A-Z]'));
   }
 
   Widget _passwordCreateRepeatEntryFiled() {
