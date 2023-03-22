@@ -2,16 +2,18 @@ name: Front-end - Build iOS
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - 'master'
   pull_request:
-    branches: [ "master", "dev" ]
-    types: [ "labeled" ]
-
+    branches:
+      - 'dev'
+      - 'master'
+    paths:
+      - 'src/front/ticketer/*'
   workflow_dispatch:
 
 jobs:
   build:
-    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     name: Build front-end iOS application
     runs-on: macos-latest
     defaults:
