@@ -56,8 +56,9 @@ class AuthProvider {
   init() async {
     await authModel.init();
     if (authModel.isAuthorized) {
-      var token = await authModel.getToken();
-      if (token == null) return;
+      if (authModel._token == null) return;
+      String token = authModel._token ?? "";
+
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
       log("Logged in as ${decodedToken["role"]}");
@@ -111,6 +112,7 @@ class AuthProvider {
           JwtDecoder.decode(decodedResponse['accessToken']);
 
       log("Logged in as ${decodedToken["role"]}");
+
       log(decodedResponse['accessToken']);
 
       _controller.add(User(decodedToken["role"]));
