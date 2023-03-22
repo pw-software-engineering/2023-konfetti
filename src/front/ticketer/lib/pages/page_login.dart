@@ -28,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> signInWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
       // Login
-      Auth().logInWithEmailAndPassword(email: "email", password: "password");
+      Auth().logInWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
     }
   }
 

@@ -82,6 +82,11 @@ class AuthProvider {
         return;
       }
 
+      if (response.statusCode != 200) {
+        log("Resposne ${response.statusCode} : ${response.reasonPhrase}");
+        return;
+      }
+
       // sanity check
       log('${response.statusCode} : ${response.body}');
 
