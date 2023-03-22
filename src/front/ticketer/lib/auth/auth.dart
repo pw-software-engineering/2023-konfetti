@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/model/credentials.dart';
 
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:ticketer/model/user_type.dart';
+
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String? _token;
@@ -38,6 +41,10 @@ class AuthModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: 'token');
+  }
 }
 
 class AuthProvider {
@@ -52,7 +59,14 @@ class AuthProvider {
   init() async {
     await authModel.init();
     if (authModel.isAuthorized) {
-      _controller.add(User());
+      var token = await authModel.getToken();
+      if (token == null) return;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+      log("Logged in as ${decodedToken["role"]}");
+      log(token);
+
+      _controller.add(User(decodedToken["role"]));
     }
   }
 
@@ -96,10 +110,13 @@ class AuthProvider {
 
       authModel.login(decodedResponse['accessToken']);
 
-      log("Logged in");
+      Map<String, dynamic> decodedToken =
+          JwtDecoder.decode(decodedResponse['accessToken']);
+
+      log("Logged in as ${decodedToken["role"]}");
       log(decodedResponse['accessToken']);
 
-      _controller.add(User());
+      _controller.add(User(decodedToken["role"]));
     }
   }
 
