@@ -2,6 +2,6 @@
 
 enum UserType {
   User,
-  Organiser,
+  Organizer,
   Admin,
 }
