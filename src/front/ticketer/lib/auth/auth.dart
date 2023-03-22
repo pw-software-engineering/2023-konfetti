@@ -43,6 +43,10 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
+  // Here should be
+  // AuthProvider() : _controller = StreamController<User?>();
+  // But this approach breaks tests because tests run at the same time
+  // and there can be only one listner to stream
   AuthProvider() : _controller = StreamController<User?>.broadcast();
 
   init() async {
