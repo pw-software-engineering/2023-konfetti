@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.DataAccess.DtoMappers;
 
 namespace TicketManager.Core.Services.Endpoints.Organizers;
 
@@ -25,17 +26,7 @@ public class OrganizerViewEndpoint : Endpoint<OrganizerViewRequest>
     {
         var response = await dbContext
             .Organizers
-            .Select(o => new OrganizerDto
-            {
-                Id = o.Id,
-                Address = o.Address,
-                CompanyName = o.CompanyName,
-                DisplayName = o.DisplayName,
-                Email = o.Email,
-                PhoneNumber = o.PhoneNumber,
-                TaxIdType = (TaxIdTypeDto)o.TaxIdType,
-                VerificationStatus = VerificationStatusDto.VerifiedPositively, // TODO: fix it
-            })
+            .Select(OrganizerDtoMapper.ToDtoMapper)
             .FirstOrDefaultAsync(o => o.Id == req.AccountId, ct);
 
         if (response is null)
