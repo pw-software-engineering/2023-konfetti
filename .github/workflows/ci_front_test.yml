@@ -1,16 +1,14 @@
 name: Front-end - Test application
 
 on:
-  push:
-    branches: 
-      - 'master'
-      - 'dev'
   pull_request:
     branches:
       - 'master'
       - 'dev'
   push:
     branches: 
+      - 'master'
+      - 'dev'
       - 'feature/*'
       - 'fix/*'
       - 'hotfix/*'

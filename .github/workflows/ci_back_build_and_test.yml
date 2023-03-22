@@ -4,22 +4,19 @@
 name: Back-end build and test
 
 on:
-  push:
-    branches: 
-      - 'master'
-      - 'dev'
   pull_request:
     branches:
       - 'master'
       - 'dev'
   push:
     branches: 
+      - 'master'
+      - 'dev'
       - 'feature/*'
       - 'fix/*'
       - 'hotfix/*'
     paths:
       - 'src/back/*'
-  
   workflow_dispatch:
   
 jobs:
