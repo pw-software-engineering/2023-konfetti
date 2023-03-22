@@ -4,14 +4,14 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
     types: [ "labeled" ]
 
   workflow_dispatch:
 
 jobs:
   build:
-    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
+    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     name: Build front-end Web application
     runs-on: ubuntu-latest
     defaults:
