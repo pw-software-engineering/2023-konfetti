@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/pages/page_organizer_register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -43,22 +45,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
-      // Login
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Warning!"),
-            content:
-                const Text("Something went wrong, can't retrive error message"),
-            actions: [
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK')),
-            ],
-          );
-        },
-      );
+      Credentials credentials =
+          Credentials(_controllerEmail.text, _controllerPassword.text);
+      // Register
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: ((context) =>
+                  OrganizerRegisterPage(credentials: credentials))));
     }
   }
 
@@ -116,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           labelText: "e-mail", hintText: 'Enter your e-mail'),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Pleas enter email";
+          return "Please enter email";
         } else if (!EmailValidator.validate(value)) {
           return "Not a valid email";
         }
