@@ -17,7 +17,6 @@ on:
 
 jobs:
   build:
-    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
     name: Build front-end Android application
     runs-on: ubuntu-latest
     defaults:
