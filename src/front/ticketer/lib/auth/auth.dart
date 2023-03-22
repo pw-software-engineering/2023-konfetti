@@ -43,7 +43,7 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
-  AuthProvider() : _controller = StreamController<User?>();
+  AuthProvider() : _controller = StreamController<User?>.broadcast();
 
   init() async {
     await authModel.init();
