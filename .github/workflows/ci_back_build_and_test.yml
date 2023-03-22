@@ -5,9 +5,20 @@ name: Back-end build and test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: 
+      - 'master'
+      - 'dev'
   pull_request:
-    branches: [ "master", "dev" ]
+    branches:
+      - 'master'
+      - 'dev'
+  push:
+    branches: 
+      - 'feature/*'
+      - 'fix/*'
+      - 'hotfix/*'
+    paths:
+      - 'src/back/*'
   
   workflow_dispatch:
   

@@ -2,10 +2,16 @@ name: Front-end - Build Android
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - 'master'
   pull_request:
-    branches: [ "master", "dev" ]
-    types: [ "labeled" ]
+    branches:
+      - 'dev'
+    paths:
+      - 'src/front/ticketer/*'
+  pull_request:
+    branches:
+      - 'master'
 
   workflow_dispatch:
 
