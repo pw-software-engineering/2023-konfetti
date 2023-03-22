@@ -4,6 +4,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/pages/page_organizer_register.dart';
 
+import 'package:ticketer/auth/auth.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -25,21 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> signInWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
       // Login
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Warning!"),
-            content:
-                const Text("Something went wrong, can't retrive error message"),
-            actions: [
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK')),
-            ],
-          );
-        },
-      );
+      Auth().logInWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
     }
   }
 
