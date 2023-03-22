@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import 'package:ticketer/auth/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ticketer/model/credentials.dart';
 
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
@@ -41,7 +45,11 @@ class AuthProvider {
   var authModel = AuthModel();
 
   AuthProvider() : _controller = StreamController<User?>() {
-    authModel.init();
+    _initAndCheckIfLoggedIn();
+  }
+
+  Future<void> _initAndCheckIfLoggedIn() async {
+    await authModel.init();
     if (authModel.isAuthorized) {
       _controller.add(User());
     }
@@ -56,14 +64,33 @@ class AuthProvider {
     if (authModel.isAuthorized) {
       throw Exception("How did You get here?");
     } else {
-      var url = Uri.parse('http://localhost:8080/login');
-      var response = await http.post(url);
+      Credentials cred = Credentials(email, password);
+      String? url = dotenv.env['BACKEND_URL'];
+      Response response;
+      try {
+        response = await post(
+          Uri.http(url!, '/account/login'),
+          headers: <String, String>{
+            "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
+          },
+          body: jsonEncode(cred),
+        );
+      } catch (e) {
+        log(e.toString());
+        return;
+      }
+
+      // sanity check
+      log('${response.statusCode} : ${response.body}');
+
       var decodedResponse = jsonDecode(response.body) as Map;
 
-      authModel.login(decodedResponse['access_token']);
+      authModel.login(decodedResponse['accessToken']);
 
       print("Logged in");
-      print(decodedResponse['access_token']);
+      print(decodedResponse['accessToken']);
 
       _controller.add(User());
     }
