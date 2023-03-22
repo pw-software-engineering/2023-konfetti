@@ -17,6 +17,7 @@ public class Organizer : IAggregateRoot<Guid>, IAccount
     public Organizer(string email, string companyName, string address, string taxId, TaxIdType taxIdType,
         string displayName, string phoneNumber)
     {
+        Id = Guid.NewGuid();
         Email = email;
         CompanyName = companyName;
         Address = address;
