@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
-import 'package:ticketer/auth/user.dart';
+import 'package:ticketer/auth/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/model/credentials.dart';
@@ -50,7 +50,7 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
-  AuthProvider() : _controller = StreamController<User?>();
+  AuthProvider() : _controller = StreamController<Account?>();
 
   init() async {
     await authModel.init();
@@ -63,11 +63,11 @@ class AuthProvider {
       log("Logged in as ${decodedToken["role"]}");
       log(token);
 
-      _controller.add(User(decodedToken["role"]));
+      _controller.add(Account(decodedToken["role"]));
     }
   }
 
-  final StreamController<User?> _controller;
+  final StreamController<Account?> _controller;
 
   Future<void> logInWithEmailAndPassword({
     required String email,
@@ -114,7 +114,7 @@ class AuthProvider {
 
       log(decodedResponse['accessToken']);
 
-      _controller.add(User(decodedToken["role"]));
+      _controller.add(Account(decodedToken["role"]));
     }
   }
 
@@ -128,7 +128,7 @@ class AuthProvider {
     }
   }
 
-  Stream<User?> get authStateChanges => _controller.stream;
+  Stream<Account?> get authStateChanges => _controller.stream;
 }
 
 class Auth {
@@ -154,5 +154,5 @@ class Auth {
     await _provider.logOut();
   }
 
-  Stream<User?> get authStateChanges => _provider.authStateChanges;
+  Stream<Account?> get authStateChanges => _provider.authStateChanges;
 }
