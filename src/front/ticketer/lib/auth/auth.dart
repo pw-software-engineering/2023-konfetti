@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/model/credentials.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:ticketer/model/account_type.dart';
 
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
@@ -51,6 +52,10 @@ class AuthProvider {
   var authModel = AuthModel();
 
   AuthProvider() : _controller = StreamController<Account?>();
+
+  Account? getCurrentUser() {
+    return Account(AccountType.Organizer.name);
+  }
 
   init() async {
     await authModel.init();
@@ -96,7 +101,7 @@ class AuthProvider {
 
       if (response.statusCode != 200) {
         // Something to do with it later
-        log("Resposne ${response.statusCode} : ${response.reasonPhrase}");
+        log("Response ${response.statusCode} : ${response.reasonPhrase}");
         return;
       }
 
@@ -155,4 +160,6 @@ class Auth {
   }
 
   Stream<Account?> get authStateChanges => _provider.authStateChanges;
+
+  User? get getCurrentUser => _provider.getCurrentUser();
 }
