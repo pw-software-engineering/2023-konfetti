@@ -7,10 +7,10 @@ import 'package:http/http.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ticketer/model/account_type.dart';
 import 'package:ticketer/model/credentials.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:ticketer/model/account_type.dart';
 
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
@@ -53,7 +53,7 @@ class AuthProvider {
 
   AuthProvider() : _controller = StreamController<Account?>();
 
-  Account? getCurrentUser() {
+  Account? getCurrentAccount() {
     return Account(AccountType.Organizer.name);
   }
 
@@ -161,5 +161,5 @@ class Auth {
 
   Stream<Account?> get authStateChanges => _provider.authStateChanges;
 
-  User? get getCurrentUser => _provider.getCurrentUser();
+  Account? get getCurrentUser => _provider.getCurrentAccount();
 }

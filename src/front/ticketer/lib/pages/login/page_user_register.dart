@@ -3,9 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
-
-import '../model/user.dart';
-import 'page_login.dart';
+import 'package:ticketer/model/user.dart';
+import 'package:ticketer/pages/page_login.dart';
 
 class UserRegisterPage extends StatefulWidget {
   Credentials credentials;
