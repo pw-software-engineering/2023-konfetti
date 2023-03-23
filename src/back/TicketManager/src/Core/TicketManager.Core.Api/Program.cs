@@ -3,6 +3,7 @@ using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
@@ -59,6 +60,15 @@ public class Program
         app.UseFastEndpoints(c =>
         {
             c.Serializer.Options.Converters.Add(new DateOnlyConverter());
+            c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
+            {
+                Errors = failures.Select(f => new ValidationError
+                {
+                    ErrorCode = int.Parse(f.ErrorCode),
+                    ErrorMessage = f.ErrorMessage,
+                })
+                .ToList(),
+            };
         });
         app.UseSwaggerGen();
 
