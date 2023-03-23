@@ -1,7 +1,4 @@
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/auth/user.dart';
-import 'package:ticketer/model/user_type.dart';
-import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 import 'package:ticketer/pages/page_home.dart';
 import 'package:flutter/material.dart';
 
