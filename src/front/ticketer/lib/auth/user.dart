@@ -4,7 +4,6 @@ class User {
   late UserType type;
 
   User(String userType) {
-    UserType type = UserType.values.firstWhere((e) => e.name == userType);
-    type = type;
+    type = UserType.values.firstWhere((e) => e.name == userType);
   }
 }

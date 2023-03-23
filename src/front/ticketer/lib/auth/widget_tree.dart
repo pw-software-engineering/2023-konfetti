@@ -15,21 +15,8 @@ class WidgetTree extends StatelessWidget {
     return StreamBuilder(
       stream: Auth().authStateChanges,
       builder: (context, snapshot) {
-        // User? user = Auth().getLoggedUser();
-        // print('user: $user');
-        // if (snapshot.hasData && user != null) {
-        //   // After logging in
-        //   switch (user.type) {
-        //     case UserType.User:
-        //     case UserType.Admin:
-        //       return const HomePage();
-        //     case UserType.Organizer:
-        //       return const OrganizerLandingPage();
-        //     default:
-        //       return const LoginPage();
-        //   }
         if (snapshot.hasData) {
-          return const OrganizerLandingPage();
+          return const HomePage();
         } else {
           return const LoginPage();
         }

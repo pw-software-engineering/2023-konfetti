@@ -53,6 +53,10 @@ class AuthProvider {
 
   AuthProvider() : _controller = StreamController<User?>();
 
+  User? getCurrentUser() {
+    return User(UserType.Organizer.name);
+  }
+
   init() async {
     await authModel.init();
     if (authModel.isAuthorized) {
@@ -97,7 +101,7 @@ class AuthProvider {
 
       if (response.statusCode != 200) {
         // Something to do with it later
-        log("Resposne ${response.statusCode} : ${response.reasonPhrase}");
+        log("Response ${response.statusCode} : ${response.reasonPhrase}");
         return;
       }
 
@@ -156,4 +160,6 @@ class Auth {
   }
 
   Stream<User?> get authStateChanges => _provider.authStateChanges;
+
+  User? get getCurrentUser => _provider.getCurrentUser();
 }
