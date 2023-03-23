@@ -1,3 +1,8 @@
+# We do not build Windows, Linux and macOs apps
+windows/
+linux/
+macos/
+
 # Miscellaneous
 *.class
 *.log
