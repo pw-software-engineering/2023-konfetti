@@ -136,6 +136,7 @@ class _UserDataState extends State<UserRegisterPage> {
             actions: [
               ElevatedButton(
                 onPressed: () => {
+                  Navigator.pop(context),
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
