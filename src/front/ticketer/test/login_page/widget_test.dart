@@ -20,7 +20,8 @@ void main() {
 
     // Verify that we see a register page
     expect(find.widgetWithText(ElevatedButton, "Login"), findsNothing);
-    expect(find.widgetWithText(ElevatedButton, "Register"), findsOneWidget);
+    expect(find.widgetWithText(ElevatedButton, "Register as user"),
+        findsOneWidget);
     expect(find.widgetWithText(TextFormField, "e-mail"), findsOneWidget);
   });
 }
