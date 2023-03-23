@@ -10,7 +10,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/model/credentials.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:ticketer/model/user_type.dart';
 
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
@@ -51,10 +50,6 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
-  // Here should be
-  // AuthProvider() : _controller = StreamController<User?>();
-  // But this approach breaks tests because tests run at the same time
-  // and there can be only one listner to stream
   AuthProvider() : _controller = StreamController<User?>();
 
   init() async {
