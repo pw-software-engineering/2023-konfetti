@@ -1,8 +1,7 @@
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/login/page_login.dart';
 import 'package:ticketer/pages/page_home.dart';
 import 'package:flutter/material.dart';
-
-import '../pages/login/page_login.dart';
 
 class WidgetTree extends StatelessWidget {
   const WidgetTree({Key? key}) : super(key: key);
