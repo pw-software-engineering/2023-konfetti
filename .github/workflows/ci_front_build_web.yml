@@ -2,19 +2,17 @@ name: Front-end - Build Web
 
 on:
   push:
-    branches:
-      - 'master'
+    branches: [ "master" ]
   pull_request:
-    branches:
-      - 'dev'
-      - 'master'
-    paths:
-      - 'src/front/ticketer/*'
+    branches: [ "master" ]
+    types: [ "labeled" ]
+
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build front-end Web application
+    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
+    name: Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,9 +31,16 @@ jobs:
         run: flutter test
       - name: Build web app
         run: flutter build web
+      - name: Zip builded files
+        uses: vimtor/action-zip@v1.1
+        with:
+          # Files or directories to zip
+          files: ./src/front/ticketer/build/web
+          # Name of output zip file
+          dest: ./src/front/ticketer/build/web.zip
       - name: Save web build
         uses: actions/upload-artifact@v3
         with:
           name: release-web-build
           retention-days: 1
-          path: ./src/front/ticketer/build/web/
+          path: ./src/front/ticketer/build/web.zip

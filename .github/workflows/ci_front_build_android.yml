@@ -1,20 +1,19 @@
+
 name: Front-end - Build Android
 
 on:
   push:
-    branches:
-      - 'master'
+    branches: [ "master" ]
   pull_request:
-    branches:
-      - 'dev'
-      - 'master'
-    paths:
-      - 'src/front/ticketer/*'
+    branches: [ "master" ]
+    types: [ "labeled" ]
+
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build front-end Android application
+    if: github.event.label.name == 'front-end-build' || github.ref == 'refs/heads/master'
+    name: Build
     runs-on: ubuntu-latest
     defaults:
       run:
