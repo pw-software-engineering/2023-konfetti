@@ -7,7 +7,7 @@ import 'package:ticketer/model/organizer.dart';
 import 'package:ticketer/model/tax_type.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:ticketer/pages/page_login.dart';
+import 'package:ticketer/pages/login/page_login.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   Credentials credentials;
