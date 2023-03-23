@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:ticketer/main.dart';
-import 'package:ticketer/pages/page_login.dart';
+import 'package:ticketer/pages/login/page_login.dart';
 
 Widget _homeWidget() {
   return const MaterialApp(
