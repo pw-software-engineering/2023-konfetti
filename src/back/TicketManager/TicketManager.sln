@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1AEF80AF-AF0C-4F54-B9EA-9729BB689371}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C43ECA36-71F6-44DA-BA78-8954912424FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.Api", "src\Core\TicketManager.Core.Api\TicketManager.Core.Api.csproj", "{A6487454-9E5A-45DF-83AF-3B31355AE3E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.Domain", "src\Core\TicketManager.Core.Domain\TicketManager.Core.Domain.csproj", "{2904468F-498D-4408-B5EA-78630EAD9ECE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.Contracts", "src\Core\TicketManager.Core.Contracts\TicketManager.Core.Contracts.csproj", "{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.Services", "src\Core\TicketManager.Core.Services\TicketManager.Core.Services.csproj", "{4BC0EC9F-DCA8-41B8-9D2B-D95041650795}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{148FA83E-BB3F-41AC-84D0-7F0A9C7EB026}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{72105F30-6316-4B66-8D6C-BB645BB13431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.DomainTests", "tests\Core\TicketManager.Core.DomainTests\TicketManager.Core.DomainTests.csproj", "{D79368C1-7486-44CA-A267-FD1107398018}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.ServicesTests", "tests\Core\TicketManager.Core.ServicesTests\TicketManager.Core.ServicesTests.csproj", "{AD44C1C8-B39B-4940-8B62-C433095BD871}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6487454-9E5A-45DF-83AF-3B31355AE3E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6487454-9E5A-45DF-83AF-3B31355AE3E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6487454-9E5A-45DF-83AF-3B31355AE3E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6487454-9E5A-45DF-83AF-3B31355AE3E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2904468F-498D-4408-B5EA-78630EAD9ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2904468F-498D-4408-B5EA-78630EAD9ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2904468F-498D-4408-B5EA-78630EAD9ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2904468F-498D-4408-B5EA-78630EAD9ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC0EC9F-DCA8-41B8-9D2B-D95041650795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC0EC9F-DCA8-41B8-9D2B-D95041650795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC0EC9F-DCA8-41B8-9D2B-D95041650795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC0EC9F-DCA8-41B8-9D2B-D95041650795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D79368C1-7486-44CA-A267-FD1107398018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79368C1-7486-44CA-A267-FD1107398018}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79368C1-7486-44CA-A267-FD1107398018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79368C1-7486-44CA-A267-FD1107398018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD44C1C8-B39B-4940-8B62-C433095BD871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD44C1C8-B39B-4940-8B62-C433095BD871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD44C1C8-B39B-4940-8B62-C433095BD871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD44C1C8-B39B-4940-8B62-C433095BD871}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C43ECA36-71F6-44DA-BA78-8954912424FB} = {1AEF80AF-AF0C-4F54-B9EA-9729BB689371}
+		{A6487454-9E5A-45DF-83AF-3B31355AE3E0} = {C43ECA36-71F6-44DA-BA78-8954912424FB}
+		{2904468F-498D-4408-B5EA-78630EAD9ECE} = {C43ECA36-71F6-44DA-BA78-8954912424FB}
+		{B5B0E6D4-4B42-4C11-92E9-52A61F1CCFED} = {C43ECA36-71F6-44DA-BA78-8954912424FB}
+		{4BC0EC9F-DCA8-41B8-9D2B-D95041650795} = {C43ECA36-71F6-44DA-BA78-8954912424FB}
+		{72105F30-6316-4B66-8D6C-BB645BB13431} = {148FA83E-BB3F-41AC-84D0-7F0A9C7EB026}
+		{D79368C1-7486-44CA-A267-FD1107398018} = {72105F30-6316-4B66-8D6C-BB645BB13431}
+		{AD44C1C8-B39B-4940-8B62-C433095BD871} = {72105F30-6316-4B66-8D6C-BB645BB13431}
+	EndGlobalSection
+EndGlobal
