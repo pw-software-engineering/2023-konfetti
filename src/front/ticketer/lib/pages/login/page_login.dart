@@ -33,17 +33,18 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> createUserWithEmailAndPassword() async {
+  Future<void> createAccountWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
+      Credentials credentials =
+        Credentials(_controllerEmail.text, _controllerPassword.text);
       if (_registerAsUser) {
         // Register User
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: ((context) => const UserRegisterPage())),
+          MaterialPageRoute(builder: ((context) =>
+              UserRegisterPage(credentials: credentials))),
         );
       } else {
-        Credentials credentials =
-            Credentials(_controllerEmail.text, _controllerPassword.text);
         // Register Organisator
         Navigator.pushReplacement(
           context,
@@ -155,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
       child: ElevatedButton(
         onPressed: isLogin
             ? signInWithEmailAndPassword
-            : createUserWithEmailAndPassword,
+            : createAccountWithEmailAndPassword,
         child: Text(isLogin
             ? 'Login'
             : _registerAsUser
