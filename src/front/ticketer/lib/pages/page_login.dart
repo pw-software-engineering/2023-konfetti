@@ -5,6 +5,7 @@ import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/pages/page_organizer_register.dart';
 
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/page_user_register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   bool _passwordVisible = false;
+  bool _registerAsUser = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -34,14 +36,23 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
-      Credentials credentials =
-          Credentials(_controllerEmail.text, _controllerPassword.text);
-      // Register
-      Navigator.pushReplacement(
+      if (_registerAsUser) {
+        // Register User
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: ((context) => const UserRegisterPage())),
+        );
+      } else {
+        Credentials credentials =
+            Credentials(_controllerEmail.text, _controllerPassword.text);
+        // Register Organisator
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: ((context) =>
-                  OrganizerRegisterPage(credentials: credentials))));
+                  OrganizerRegisterPage(credentials: credentials))),
+        );
+      }
     }
   }
 
@@ -146,7 +157,11 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: isLogin
             ? signInWithEmailAndPassword
             : createUserWithEmailAndPassword,
-        child: Text(isLogin ? 'Login' : 'Register'),
+        child: Text(isLogin
+            ? 'Login'
+            : _registerAsUser
+                ? "Register as user"
+                : "Register as organiser"),
       ),
     );
   }
@@ -190,6 +205,16 @@ class _LoginPageState extends State<LoginPage> {
           _passwordCreateRepeatEntryFiled(),
           _submitButton(),
           _loginOrRegisterButton(),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _registerAsUser = !_registerAsUser;
+              });
+            },
+            child: Text(_registerAsUser
+                ? 'Register as organizer instead'
+                : 'Register as user instead'),
+          ),
         ],
       ),
     );

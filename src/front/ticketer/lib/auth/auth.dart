@@ -9,15 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/model/credentials.dart';
 
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 class AuthModel extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   String? _token;
-  bool isAuthorized = false;
+  bool get isAuthorized => _token != null;
 
   init() async {
-    _token = await storage.read(key: 'token');
-
-    isAuthorized = _token != null;
+    try {
+      _token = await storage.read(key: 'token');
+      log("Retrived token from storage");
+    } catch (e) {
+      log("Error when retriving token: ${e.toString()}");
+    }
 
     notifyListeners();
   }
@@ -26,33 +31,39 @@ class AuthModel extends ChangeNotifier {
     storage.write(key: 'token', value: token);
 
     _token = token;
-    isAuthorized = true;
 
     notifyListeners();
   }
 
   logout() {
     _token = null;
-    isAuthorized = false;
     storage.delete(key: 'token');
 
     notifyListeners();
+  }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: 'token');
   }
 }
 
 class AuthProvider {
   var authModel = AuthModel();
 
-  // Here should be
-  // AuthProvider() : _controller = StreamController<User?>();
-  // But this approach breaks tests because tests run at the same time
-  // and there can be only one listner to stream
-  AuthProvider() : _controller = StreamController<User?>.broadcast();
+  AuthProvider() : _controller = StreamController<User?>();
 
   init() async {
     await authModel.init();
     if (authModel.isAuthorized) {
-      _controller.add(User());
+      if (authModel._token == null) return;
+      String token = authModel._token ?? "";
+
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+      log("Logged in as ${decodedToken["role"]}");
+      log(token);
+
+      _controller.add(User(decodedToken["role"]));
     }
   }
 
@@ -94,12 +105,16 @@ class AuthProvider {
 
       var decodedResponse = jsonDecode(response.body) as Map;
 
-      authModel.login(decodedResponse['accessToken']);
+      await authModel.login(decodedResponse['accessToken']);
 
-      log("Logged in");
+      Map<String, dynamic> decodedToken =
+          JwtDecoder.decode(decodedResponse['accessToken']);
+
+      log("Logged in as ${decodedToken["role"]}");
+
       log(decodedResponse['accessToken']);
 
-      _controller.add(User());
+      _controller.add(User(decodedToken["role"]));
     }
   }
 
