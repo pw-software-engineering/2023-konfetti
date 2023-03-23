@@ -1,3 +1,8 @@
+# We do not build Windows, Linux and macOs apps
+windows/
+linux/
+macos/
+
 # Miscellaneous
 *.class
 *.log
@@ -42,3 +47,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Test coverage
+coverage/

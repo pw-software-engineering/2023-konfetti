@@ -1,16 +1,23 @@
 name: Front-end - Test application
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - 'master'
+      - 'dev'
+  push:
+    branches: 
+      - 'feature/*'
+      - 'fix/*'
+      - 'hotfix/*'
+    paths:
+      - 'src/front/ticketer/*'
 
   workflow_dispatch:
 
 jobs:
   build:
-    name: Test
+    name: Test front-end
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,4 +38,9 @@ jobs:
       - name: Update dependencies
         run: flutter pub get
       - name: Test app
-        run: flutter test
+        run: flutter test --coverage
+      - name: Check test coverage
+        uses: terencetcf/github-actions-lcov-minimum-coverage-checker@v1
+        with:
+          coverage-file: ./src/front/ticketer/coverage/lcov.info
+          minimum-coverage: 50
