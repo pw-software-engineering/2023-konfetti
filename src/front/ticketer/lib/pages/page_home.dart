@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/auth/user.dart';
-import 'package:ticketer/model/user_type.dart';
+import 'package:ticketer/model/account_type.dart';
 import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 import 'package:ticketer/pages/login/page_login.dart';
 
@@ -17,13 +17,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    User? user = Auth().getCurrentUser;
+    Account? user = Auth().getCurrentAccount;
 
     switch (user!.type) {
-      case UserType.Organizer:
+      case AccountType.Organizer:
         return const OrganizerLandingPage();
-      case UserType.Admin:
-      case UserType.User:
+      case AccountType.Admin:
+      case AccountType.User:
       default:
         return const LoginPage();
     }
