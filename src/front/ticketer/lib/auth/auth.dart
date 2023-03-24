@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth_provider.dart';
+import 'package:ticketer/model/organizer.dart';
+import 'package:ticketer/model/user.dart';
 
 class Auth {
   static final Auth _singleton = Auth._internal();
@@ -31,4 +33,12 @@ class Auth {
   Stream<Account?> get authStateChanges => _provider.authStateChanges;
 
   Account? get getCurrentAccount => _provider.getCurrentAccount;
+
+  Future<void> registerUser(User user) async {
+    await _provider.registerUser(user);
+  }
+
+  Future<void> registerOrganizer(Organizer organizer) async {
+    await _provider.registerOrginizer(organizer);
+  }
 }

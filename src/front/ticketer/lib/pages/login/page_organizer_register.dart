@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'package:ticketer/model/organizer.dart';
 import 'package:ticketer/model/tax_type.dart';
@@ -217,7 +218,7 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           credentials.email,
           credentials.password,
           _phone.text);
-      sendOrganizerRegistrationRequest(organizer);
+      Auth().registerOrganizer(organizer);
 
       showDialog(
         context: context,
@@ -242,28 +243,6 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
         },
       );
     }
-  }
-
-  void sendOrganizerRegistrationRequest(Organizer organizer) async {
-    String? url = dotenv.env['BACKEND_URL'];
-    Response response;
-    try {
-      response = await post(
-        Uri.http(url!, '/organizer/register'),
-        headers: <String, String>{
-          "Access-Control-Allow-Origin": "*",
-          'Content-Type': 'application/json',
-          'Accept': '*/*'
-        },
-        body: jsonEncode(organizer),
-      );
-    } catch (e) {
-      log(e.toString());
-      return;
-    }
-
-    // sanity check
-    log('${response.statusCode} : ${response.body}');
   }
 
   @override

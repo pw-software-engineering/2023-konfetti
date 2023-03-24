@@ -9,6 +9,8 @@ import 'package:ticketer/auth/jwt_token.dart';
 import 'package:ticketer/model/credentials.dart';
 
 import 'package:dio/dio.dart';
+import 'package:ticketer/model/organizer.dart';
+import 'package:ticketer/model/user.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();
@@ -17,6 +19,8 @@ class AuthProvider {
   final StreamController<Account?> _controller;
   final dio = Dio();
   static const String loginEndpoint = '/account/login';
+  static const String organizerRegisterEndpoint = '/organizer/register';
+  static const String userRegisterEndpoint = '/user/register';
   static const Map<String, dynamic> headers = <String, String>{
     "Access-Control-Allow-Origin": "*",
     'Content-Type': 'application/json',
@@ -98,6 +102,8 @@ class AuthProvider {
       log("Response ${response.statusCode} : ${response.statusMessage}");
       throw Exception(
           "Response ${response.statusCode} : ${response.statusMessage}");
+    } else {
+      log("Response ${response.statusCode} on login request");
     }
 
     return response.data['accessToken'];
@@ -124,4 +130,43 @@ class AuthProvider {
   }
 
   Stream<Account?> get authStateChanges => _controller.stream;
+
+  Future<void> registerOrginizer(Organizer organizer) async {
+    Response response;
+
+    try {
+      response = await dio.post(organizerRegisterEndpoint,
+          data: jsonEncode(organizer));
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Connection error: ${e.toString()}");
+    }
+    if (response.statusCode != 200) {
+      // Something to do with it later
+      log("Response ${response.statusCode} : ${response.statusMessage}");
+      throw Exception(
+          "Response ${response.statusCode} : ${response.statusMessage}");
+    } else {
+      log("Response ${response.statusCode} on organizer registration");
+    }
+  }
+
+  Future<void> registerUser(User user) async {
+    Response response;
+
+    try {
+      response = await dio.post(userRegisterEndpoint, data: jsonEncode(user));
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Connection error: ${e.toString()}");
+    }
+    if (response.statusCode != 200) {
+      // Something to do with it later
+      log("Response ${response.statusCode} : ${response.statusMessage}");
+      throw Exception(
+          "Response ${response.statusCode} : ${response.statusMessage}");
+    } else {
+      log("Response ${response.statusCode} on user registration");
+    }
+  }
 }
