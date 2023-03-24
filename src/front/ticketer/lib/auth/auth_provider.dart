@@ -16,7 +16,7 @@ class AuthProvider {
   AuthProvider() : _controller = StreamController<Account?>();
   final StreamController<Account?> _controller;
   final dio = Dio();
-  static const String login_endpoint = '/account/login';
+  static const String loginEndpoint = '/account/login';
   static const Map<String, dynamic> headers = <String, String>{
     "Access-Control-Allow-Origin": "*",
     'Content-Type': 'application/json',
@@ -47,7 +47,8 @@ class AuthProvider {
   }
 
   // Check if token is valid and propagate logged in state
-  void _authToken(String? token) {
+  // Debug skips checking if token is correct in terms of expiration dates
+  void _authToken(String? token) async {
     if (token != null) {
       Token jwtToken;
       try {
@@ -57,9 +58,7 @@ class AuthProvider {
         return;
       }
 
-      if (jwtToken.expire.isAfter(DateTime.now()) &&
-          jwtToken.issued.isBefore(DateTime.now()) &&
-          jwtToken.notBefore.isBefore(DateTime.now())) {
+      if (isTokenValid(jwtToken)) {
         _currentAccount =
             Account(jwtToken.role, jwtToken.accountId, jwtToken.token);
         _pushTokenToStorage(token);
@@ -68,6 +67,12 @@ class AuthProvider {
       }
     }
   }
+
+  bool isTokenValid(Token? jwtToken) =>
+      jwtToken != null &&
+      jwtToken.expire.isAfter(DateTime.now()) &&
+      jwtToken.issued.isBefore(DateTime.now()) &&
+      jwtToken.notBefore.isBefore(DateTime.now());
 
   Future<void> _pushTokenToStorage(String token) async {
     await storage.write(key: 'token', value: token);
@@ -83,7 +88,7 @@ class AuthProvider {
     Response response;
 
     try {
-      response = await dio.post(login_endpoint, data: jsonEncode(credentials));
+      response = await dio.post(loginEndpoint, data: jsonEncode(credentials));
     } catch (e) {
       log(e.toString());
       throw Exception("Connection error: ${e.toString()}");
