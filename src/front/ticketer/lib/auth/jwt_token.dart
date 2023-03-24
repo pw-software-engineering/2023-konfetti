@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:ticketer/model/account_type.dart';
 
