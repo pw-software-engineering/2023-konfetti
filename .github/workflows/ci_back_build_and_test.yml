@@ -39,4 +39,4 @@ jobs:
     - name: Test Domain Tests
       run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --verbosity normal
     - name: Test Services Tests
-      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build --verbosity normal
+      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --verbosity normal
