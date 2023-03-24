@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Common;
+using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Services.PasswordManagers;
@@ -13,8 +14,8 @@ public class CoreDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Organizer> Organizers => Set<Organizer>();
     public virtual DbSet<Account> Accounts => Set<Account>();
+    public DbSet<Event> Events => Set<Event>();
     
-
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
     
@@ -30,6 +31,7 @@ public class CoreDbContext : DbContext
         ConfigureUsers(modelBuilder);
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
+        ConfigureEvents(modelBuilder);
     }
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
@@ -69,6 +71,26 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.Email).HasMaxLength(StringLengths.MediumString);
             cfg.Property(e => e.PasswordHash).HasMaxLength(PasswordManager.HashLength + PasswordManager.SaltLength);
             cfg.Property(e => e.Role).HasMaxLength(StringLengths.LittleString);
+
+            // cfg.IsOptimisticConcurrent();
+        });
+    }
+    
+    private void ConfigureEvents(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Event>(cfg =>
+        {
+            cfg.HasKey(e => e.Id);
+            cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
+            cfg.Property(e => e.Description).HasMaxLength(StringLengths.MediumString);
+            cfg.Property(e => e.Location).HasMaxLength(StringLengths.MediumString);
+            cfg.OwnsMany(e => e.Sectors, cfg =>
+            {
+                cfg.HasKey(e => e.Id);
+                cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
+
+                cfg.HasIndex(e => e.EventId).IsUnique(false);
+            });
 
             // cfg.IsOptimisticConcurrent();
         });
