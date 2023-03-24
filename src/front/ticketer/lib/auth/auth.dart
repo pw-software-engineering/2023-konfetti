@@ -51,6 +51,8 @@ class AuthModel extends ChangeNotifier {
 class AuthProvider {
   var authModel = AuthModel();
 
+  bool initialized = false;
+
   AuthProvider() : _controller = StreamController<Account?>();
 
   Account? getCurrentAccount() {
@@ -70,6 +72,7 @@ class AuthProvider {
 
       _controller.add(Account(decodedToken["role"]));
     }
+    initialized = true;
   }
 
   final StreamController<Account?> _controller;
@@ -144,8 +147,10 @@ class Auth {
     return _singleton;
   }
 
-  Auth._internal() : _provider = AuthProvider() {
-    _provider.init();
+  Auth._internal() : _provider = AuthProvider();
+
+  void init() async {
+    await _provider.init();
   }
 
   Future<void> logInWithEmailAndPassword({
