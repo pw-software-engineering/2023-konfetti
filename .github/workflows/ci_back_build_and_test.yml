@@ -41,4 +41,4 @@ jobs:
     - name: Test Services Tests
       run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build --verbosity normal
     - name: Test Integration Tests
-      run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.Core.IntegrationTests.csproj --no-build --verbosity normal
+      run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.IntegrationTests.csproj --no-build --verbosity normal
