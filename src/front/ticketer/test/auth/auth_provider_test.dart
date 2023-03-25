@@ -12,7 +12,7 @@ class MockAuthProvider extends Mock implements AuthProvider {}
 void main() async {
   late Dio dio;
   late DioAdapter dioAdapter;
-
+  TestWidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "dotenv");
 
   group('Accounts', () {
