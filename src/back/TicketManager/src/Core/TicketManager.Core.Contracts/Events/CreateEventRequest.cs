@@ -1,7 +1,12 @@
+using FastEndpoints;
+
 namespace TicketManager.Core.Contracts.Events;
 
 public class CreateEventRequest
 {
+    [FromClaim(ClaimType = "AccountId")]
+    public Guid AccountId { get; set; }
+    
     public string Name { get; set; }
     public string Description { get; set; }
     public string Location { get; set; }
