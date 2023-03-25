@@ -87,6 +87,8 @@ public class CoreDbContext : DbContext
             cfg.OwnsMany(e => e.Sectors, cfg =>
             {
                 cfg.HasKey(e => e.Id);
+                cfg.WithOwner().HasForeignKey(e => e.EventId);
+                
                 cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
 
                 cfg.HasIndex(e => e.EventId).IsUnique(false);
