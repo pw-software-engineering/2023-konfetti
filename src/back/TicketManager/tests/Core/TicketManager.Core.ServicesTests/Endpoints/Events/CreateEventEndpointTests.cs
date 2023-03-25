@@ -5,7 +5,7 @@ using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
-using TicketManager.Core.Services.Events;
+using TicketManager.Core.Services.Endpoints.Events;
 using Xunit;
 
 namespace TicketManager.Core.ServicesTests.Endpoints.Events;

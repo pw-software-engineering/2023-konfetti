@@ -4,7 +4,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess.Repositories;
 
-namespace TicketManager.Core.Services.Events;
+namespace TicketManager.Core.Services.Endpoints.Events;
 
 public class CreateEventEndpoint : Endpoint<CreateEventRequest>
 {
