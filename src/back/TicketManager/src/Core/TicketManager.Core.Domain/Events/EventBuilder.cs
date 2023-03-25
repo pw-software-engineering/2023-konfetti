@@ -3,7 +3,7 @@ namespace TicketManager.Core.Domain.Events;
 public class EventBuilder
 {
     private Guid id;
-    private Guid organizerId;
+    private Guid? organizerId;
     private string name = "";
     private string description = "";
     private string location = "";
@@ -57,7 +57,7 @@ public class EventBuilder
         Validate();
         return new Event(
             id,
-            organizerId,
+            organizerId!.Value,
             name,
             description,
             location,
@@ -69,9 +69,11 @@ public class EventBuilder
 
     private void Validate()
     {
+        ValidateOrganizerId();
         ValidateName();
         ValidateDescription();
         ValidateLocation();
+        ValidateDate();
         ValidateSectors();
     }
 
@@ -101,6 +103,19 @@ public class EventBuilder
         {
             throw new ArgumentException("Number of rows has to be positive");
         }
+
+        if (sectors.DistinctBy(s => s.Name).Count() != sectors.Count)
+        {
+            throw new ArgumentException("Sector names have to be uniqe");
+        }
+    }
+
+    private void ValidateDate()
+    {
+        if (date <= DateTime.UtcNow)
+        {
+            throw new ArgumentException("Future date is required");
+        }
     }
 
     private void ValidateLocation()
@@ -124,6 +139,14 @@ public class EventBuilder
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name is required");
+        }
+    }
+
+    private void ValidateOrganizerId()
+    {
+        if (organizerId is null)
+        {
+            throw new ArgumentException("OrganizerId is required");
         }
     }
 
