@@ -6,11 +6,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/auth/jwt_token.dart';
-import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
 
 import 'package:dio/dio.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/user.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();

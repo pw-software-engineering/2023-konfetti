@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:ticketer/model/user.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 import 'package:ticketer/pages/login/page_login.dart';
 
 class UserRegisterPage extends StatefulWidget {

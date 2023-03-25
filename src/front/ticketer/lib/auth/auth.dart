@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth_provider.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/user.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 
 class Auth {
   static final Auth _singleton = Auth._internal();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
 import 'package:ticketer/pages/login/page_organizer_register.dart';
 import 'package:ticketer/pages/login/page_user_register.dart';
 import 'package:ticketer/auth/auth.dart';

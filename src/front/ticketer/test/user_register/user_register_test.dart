@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
 import 'package:ticketer/pages/login/page_user_register.dart';
-
 
 Widget _homeWidget() {
   return MaterialApp(
@@ -20,8 +19,7 @@ void main() {
       await tester.pumpWidget(_homeWidget());
 
       // when then
-      expect(
-          find.widgetWithText(TextFormField, "First Name"), findsOneWidget);
+      expect(find.widgetWithText(TextFormField, "First Name"), findsOneWidget);
       expect(find.widgetWithText(TextFormField, "Last Name"), findsOneWidget);
       expect(find.widgetWithText(TextFormField, "Birth Date"), findsOneWidget);
     },
