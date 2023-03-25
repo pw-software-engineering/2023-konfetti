@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/model/credentials.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
@@ -9,8 +10,7 @@ import 'package:ticketer/pages/login/page_login.dart';
 class UserRegisterPage extends StatefulWidget {
   Credentials credentials;
 
-  UserRegisterPage({Key? key, required this.credentials})
-      : super(key: key);
+  UserRegisterPage({Key? key, required this.credentials}) : super(key: key);
 
   @override
   State<UserRegisterPage> createState() => _UserDataState();
@@ -47,8 +47,8 @@ class _UserDataState extends State<UserRegisterPage> {
   Widget _lastNameEntryField() {
     return TextFormField(
       controller: _lastName,
-      decoration:
-      const InputDecoration(labelText: "Last Name", hintText: 'Enter your last name'),
+      decoration: const InputDecoration(
+          labelText: "Last Name", hintText: 'Enter your last name'),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please enter your last name";
@@ -61,12 +61,11 @@ class _UserDataState extends State<UserRegisterPage> {
   Widget _birthDateEntryField() {
     return TextFormField(
       controller: _birthDate,
-      decoration:
-      const InputDecoration(labelText: "Birth Date", hintText: 'Choose your birth date'),
+      decoration: const InputDecoration(
+          labelText: "Birth Date", hintText: 'Choose your birth date'),
       readOnly: true,
-      onTap: () => _selectDate(context, DateTime.now())
-          .then((date) => {
-            if(date != null)
+      onTap: () => _selectDate(context, DateTime.now()).then((date) => {
+            if (date != null)
               _birthDate.text = '${date.year}-${date.month}-${date.day}'
           }),
       validator: (value) {
@@ -119,56 +118,56 @@ class _UserDataState extends State<UserRegisterPage> {
 
   Future<void> submitUserData() async {
     if (_formKey.currentState!.validate()) {
-      User user = User(
-          _firstName.text,
-          _lastName.text,
-          _birthDate.text,
-          credentials.email,
-          credentials.password);
-      sendUserRegistrationRequest(user);
+      User user = User(_firstName.text, _lastName.text, _birthDate.text,
+          credentials.email, credentials.password);
+      try {
+        await Auth().registerUser(user);
+      } catch (e) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Error"),
+              content:
+                  Text("Couldn't sign up, error message:\n${e.toString()}"),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => {
+                    Navigator.pop(context),
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Thank you"),
-            content: const Text("You can sign in into the account now"),
-            actions: [
-              ElevatedButton(
-                onPressed: () => {
-                  Navigator.pop(context),
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) =>
-                          const LoginPage())))
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      await showDilogAfterRegistration();
     }
   }
 
-  void sendUserRegistrationRequest(User user) async {
-    String? url = dotenv.env['BACKEND_URL'];
-    var response = await post(
-      Uri.http(url!, '/user/register'),
-      headers: <String, String>{
-        "Access-Control-Allow-Origin": "*",
-        'Content-Type': 'application/json',
-        'Accept': '*/*'
+  Future<void> showDilogAfterRegistration() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Thank you"),
+          content: const Text("You can sign in into the account now"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
       },
-      body: jsonEncode(user),
     );
-    // sanity check
-    print(jsonEncode(user));
-    print(response.statusCode);
   }
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -36,17 +36,18 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> createAccountWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
       Credentials credentials =
-        Credentials(_controllerEmail.text, _controllerPassword.text);
+          Credentials(_controllerEmail.text, _controllerPassword.text);
       if (_registerAsUser) {
         // Register User
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: ((context) =>
-              UserRegisterPage(credentials: credentials))),
+          MaterialPageRoute(
+              builder: ((context) =>
+                  UserRegisterPage(credentials: credentials))),
         );
       } else {
         // Register Organisator
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
               builder: ((context) =>
