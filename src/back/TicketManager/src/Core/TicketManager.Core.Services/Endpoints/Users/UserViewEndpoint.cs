@@ -7,7 +7,7 @@ using TicketManager.Core.Services.DataAccess;
 
 namespace TicketManager.Core.Services.Endpoints.Users;
 
-public class UserViewEndpoint: Endpoint<UserViewRequest, UserViewResponse>
+public class UserViewEndpoint: Endpoint<UserViewRequest, UserDto>
 {
     private readonly CoreDbContext coreDbContext;
 
@@ -27,7 +27,7 @@ public class UserViewEndpoint: Endpoint<UserViewRequest, UserViewResponse>
     {
         var response = await coreDbContext
             .Users
-            .Select(u => new UserViewResponse
+            .Select(u => new UserDto
             {
                 Id = u.Id,
                 Email = u.Email,
