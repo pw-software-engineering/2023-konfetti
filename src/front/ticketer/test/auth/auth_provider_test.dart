@@ -34,7 +34,7 @@ void main() async {
       dioAdapter = DioAdapter(dio: dio);
     });
 
-    test('signs up user', () async {
+    test('Log in', () async {
       const route = '/account/login';
 
       dioAdapter.onPost(
@@ -58,5 +58,9 @@ void main() async {
       assert(provider.getCurrentAccount!.type == returnAccount.type);
       assert(provider.getCurrentAccount!.token == returnAccount.token);
     });
+
+    // TODO:
+    // - Add test for registration of user
+    // - Add test for registration of organizer
   });
 }
