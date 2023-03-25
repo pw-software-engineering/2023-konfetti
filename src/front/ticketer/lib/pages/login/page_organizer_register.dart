@@ -223,10 +223,14 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
       }
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
+<<<<<<< HEAD
+=======
+      await showDialogAfterRegistration();
+>>>>>>> 2910a2a (Add text fields to event creation form)
     }
   }
 
-  Future<void> showDilogAfterRegistration() async {
+  Future<void> showDialogAfterRegistration() async {
     await showDialog(
       context: context,
       builder: (context) {
