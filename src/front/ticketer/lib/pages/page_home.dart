@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       case AccountType.Admin:
       case AccountType.User:
       default:
-        return const LoginPage();
+        throw UnimplementedError("This is not implemented yet");
     }
   }
 }

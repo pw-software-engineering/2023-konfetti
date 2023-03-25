@@ -120,30 +120,53 @@ class _UserDataState extends State<UserRegisterPage> {
     if (_formKey.currentState!.validate()) {
       User user = User(_firstName.text, _lastName.text, _birthDate.text,
           credentials.email, credentials.password);
-      Auth().registerUser(user);
+      try {
+        await Auth().registerUser(user);
+      } catch (e) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Error"),
+              content:
+                  Text("Couldn't sign up, error message:\n${e.toString()}"),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => {
+                    Navigator.pop(context),
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Thank you"),
-            content: const Text("You can sign in into the account now"),
-            actions: [
-              ElevatedButton(
-                onPressed: () => {
-                  Navigator.pop(context),
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => const LoginPage())))
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      await showDilogAfterRegistration();
     }
+  }
+
+  Future<void> showDilogAfterRegistration() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Thank you"),
+          content: const Text("You can sign in into the account now"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

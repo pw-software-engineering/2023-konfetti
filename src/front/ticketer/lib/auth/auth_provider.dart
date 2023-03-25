@@ -42,6 +42,8 @@ class AuthProvider {
     // Configure request sending
     dio.options.baseUrl = url;
     dio.options.headers = headers;
+    dio.options.receiveDataWhenStatusError = true;
+    dio.interceptors.add(CustomInterceptors());
 
     String? token = await _fetchTokenToStorage();
 
@@ -168,5 +170,25 @@ class AuthProvider {
     } else {
       log("Response ${response.statusCode} on user registration");
     }
+  }
+}
+
+class CustomInterceptors extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    log('REQUEST[${options.method}] => PATH: ${options.path}');
+    super.onRequest(options, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    log('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    super.onResponse(response, handler);
+  }
+
+  @override
+  Future onError(DioError err, ErrorInterceptorHandler handler) async {
+    log('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+    return handler.next(err);
   }
 }

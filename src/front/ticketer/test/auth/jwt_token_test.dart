@@ -18,7 +18,7 @@ class JWTTokenParsed {
 }
 
 void main() {
-  group("formatDay should format dates correctly:", () {
+  group("Test JWT Token parsing", () {
     var inputsToExpected = {
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SWQiOiJiZGMzNjdmZC1kNGRlLTRiNWQtYmVjMi1kNjA1ZmQxMmE4OTEiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTY3OTUyNjEwNiwiZXhwIjoxNjc5NTQwNTA2LCJpYXQiOjE2Nzk1MjYxMDZ9.PXgKAaju2fEZ-ZRkiic5FfwfjpmXL03OhBciRibn1J0":
           JWTTokenParsed(
