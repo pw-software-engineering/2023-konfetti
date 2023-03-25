@@ -82,7 +82,7 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(e => e.Id);
             cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
-            cfg.Property(e => e.Description).HasMaxLength(StringLengths.MediumString);
+            cfg.Property(e => e.Description).HasMaxLength(StringLengths.VeryLongString);
             cfg.Property(e => e.Location).HasMaxLength(StringLengths.MediumString);
             cfg.OwnsMany(e => e.Sectors, cfg =>
             {
