@@ -22,6 +22,8 @@ public class CreateEventRequest
         public const int LocationIsEmpty = 5;
         public const int LocationIsTooLong = 6;
         public const int DateIsNotFuture = 7;
+        public const int SectorsAreEmpty = 8;
+        public const int SectorNamesAreNotUnique = 9;
 
         public class SectorErrorCodes : SectorDto.ErrorCodes { }
     }
