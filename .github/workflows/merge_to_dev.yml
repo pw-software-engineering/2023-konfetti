@@ -1,0 +1,17 @@
+name: Auto approve merges to dev from master
+
+on:
+  pull_request:
+    branches:
+      - 'dev'
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: hmarr/auto-approve-action@v3
+        with:
+          review-message: "Auto approved automated PR"

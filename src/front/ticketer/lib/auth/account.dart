@@ -1,9 +1,9 @@
 import 'package:ticketer/model/account_type.dart';
 
 class Account {
-  late AccountType type;
+  final AccountType type;
+  final String accountId;
+  final String token;
 
-  Account(String accountType) {
-    type = AccountType.values.firstWhere((e) => e.name == accountType);
-  }
+  Account(AccountType role, this.accountId, this.token) : type = role;
 }
