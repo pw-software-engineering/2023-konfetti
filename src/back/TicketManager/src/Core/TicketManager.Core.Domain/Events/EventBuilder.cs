@@ -3,6 +3,7 @@ namespace TicketManager.Core.Domain.Events;
 public class EventBuilder
 {
     private Guid id;
+    private Guid organizerId;
     private string name = "";
     private string description = "";
     private string location = "";
@@ -12,6 +13,12 @@ public class EventBuilder
     public EventBuilder WithGeneratedId()
     {
         id = Guid.NewGuid();
+        return this;
+    }
+    
+    public EventBuilder WithOrganizerId(Guid organizerId)
+    {
+        this.organizerId = organizerId;
         return this;
     }
 
@@ -50,6 +57,7 @@ public class EventBuilder
         Validate();
         return new Event(
             id,
+            organizerId,
             name,
             description,
             location,
