@@ -10,7 +10,7 @@ using Xunit;
 namespace TicketManager.IntegrationTests;
 
 
-public class TestBase : IAsyncLifetime
+public class TestBase : IAsyncDisposable
 {
     private readonly TicketManagerApp app;
     protected readonly HttpClient AnonymousClient;
@@ -22,6 +22,7 @@ public class TestBase : IAsyncLifetime
     public TestBase()
     {
         app = new();
+        app.InitializeAsync().Wait();
         AnonymousClient = app.CreateClient();
         
         UserClient = app.CreateClient();
@@ -74,12 +75,7 @@ public class TestBase : IAsyncLifetime
         OrganizerClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
     }
 
-    public async Task InitializeAsync()
-    {
-        await app.InitializeAsync();
-    }
-
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await app.DisposeAsync();
     }
