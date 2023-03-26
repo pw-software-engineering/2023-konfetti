@@ -20,6 +20,6 @@ class Sector {
 
   @override
   String toString() {
-    return '$name ($numberOfRows x $numberOfColumns) - \$$price';
+    return '$name ($numberOfRows \u00d7 $numberOfColumns) - \$$price';
   }
 }

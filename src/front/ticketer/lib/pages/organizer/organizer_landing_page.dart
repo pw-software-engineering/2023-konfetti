@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
 
@@ -20,6 +21,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   final TextEditingController _sectorPrice = TextEditingController();
   final TextEditingController _sectorColumns = TextEditingController();
   final TextEditingController _sectorRows = TextEditingController();
+
+  List<Sector> sectors = List.empty(growable: true);
 
   Widget _getContent() {
     return SingleChildScrollView(
@@ -79,6 +82,9 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
             _eventDescriptionEntryField(),
             _eventLocationEntryField(),
             _eventDateEntryField(),
+            _getSectorEntryField(),
+            _getSectorButtons(),
+            _getSectorsList(),
             _submitButton(),
           ],
         ),
@@ -153,17 +159,149 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   }
 
   Future<DateTime?> _selectDate(BuildContext context, DateTime initial) async {
+    const daysInAYear = 365;
+    const maxYearsTillEvent = 5;
     return await showDatePicker(
-        context: context,
-        initialDate: initial,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(
+        const Duration(days: daysInAYear * maxYearsTillEvent),
+      ),
+    );
+  }
+
+  Widget _getSectorEntryField() {
+    return SingleChildScrollView(
+      child: Row(
+        children: [
+          Flexible(
+            flex: 2,
+            child: _sectorNameEntryField(),
+          ),
+          Flexible(
+            flex: 1,
+            child: _sectorRowsEntryField(),
+          ),
+          Flexible(
+            flex: 1,
+            child: _sectorColumnsEntryField(),
+          ),
+          Flexible(
+            flex: 1,
+            child: _sectorPriceEntryField(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getSectorButtons() {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: sectors.isEmpty
+                ? null
+                : () => setState(
+                      () {
+                        sectors.removeLast();
+                      },
+                    ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              fixedSize: const Size(90, 30),
+            ),
+            child: const Text('Remove'),
+          ),
+          ElevatedButton(
+            onPressed: () => setState(
+              () {
+                try {
+                  sectors.add(
+                    Sector(
+                      _sectorName.text,
+                      double.parse(_sectorPrice.text),
+                      int.parse(_sectorRows.text),
+                      int.parse(_sectorColumns.text),
+                    ),
+                  );
+                  _sectorName.text = '';
+                  _sectorPrice.text = '';
+                  _sectorRows.text = '';
+                  _sectorColumns.text = '';
+                } catch (e) {}
+              },
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              fixedSize: const Size(90, 30),
+            ),
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getSectorsList() {
+    return SingleChildScrollView(
+      child: Column(children: sectors.map((e) => _getSector(e)).toList()),
+    );
+  }
+
+  Widget _getSector(Sector s) {
+    return Text(
+      s.toString(),
+      style: const TextStyle(fontSize: 16),
+    );
   }
 
   Widget _sectorNameEntryField() {
     return TextFormField(
       controller: _sectorName,
       decoration: const InputDecoration(labelText: "Sector name"),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _sectorRowsEntryField() {
+    return TextFormField(
+      controller: _sectorRows,
+      decoration: const InputDecoration(labelText: "No of rows"),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _sectorColumnsEntryField() {
+    return TextFormField(
+      controller: _sectorColumns,
+      decoration: const InputDecoration(labelText: "No of cols"),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _sectorPriceEntryField() {
+    return TextFormField(
+      controller: _sectorPrice,
+      decoration: const InputDecoration(labelText: "Price \$"),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "";

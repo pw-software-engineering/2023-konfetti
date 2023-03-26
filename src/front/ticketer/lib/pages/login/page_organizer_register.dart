@@ -223,7 +223,6 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
       }
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
-      await showDialogAfterRegistration();
     }
   }
 
