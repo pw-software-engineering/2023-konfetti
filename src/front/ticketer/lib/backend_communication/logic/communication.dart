@@ -3,7 +3,10 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ticketer/backend_communication/logic/account/communication_account.dart';
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
+import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
+import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:tuple/tuple.dart';
 
@@ -16,6 +19,14 @@ class BackendCommunication {
   BackendCommunication._internal();
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
+
+  final UserCommunication _userCommunication = UserCommunication();
+  UserCommunication get user => _userCommunication;
+  final OrganizerCommunication _organizerCommunication =
+      OrganizerCommunication();
+  OrganizerCommunication get organizer => _organizerCommunication;
+  final AccountCommunication _accountCommunication = AccountCommunication();
+  AccountCommunication get account => _accountCommunication;
 
   final dio = Dio();
   static const Map<String, dynamic> headers = <String, String>{

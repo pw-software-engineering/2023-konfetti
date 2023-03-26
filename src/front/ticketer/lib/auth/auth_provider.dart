@@ -39,6 +39,9 @@ class AuthProvider {
   // Initialize provider by checking if we have stored any valid token
   init() async {
     if (_isInitialized) return;
+    if (!BackendCommunication().isInitialized) {
+      throw Exception("Backend communication object is not initilized");
+    }
     String? url = dotenv.env['BACKEND_URL'];
 
     if (url == null) {
@@ -110,7 +113,7 @@ class AuthProvider {
     Credentials cred = Credentials(email, password);
 
     try {
-      var token = await _sentLogInRequest(cred);
+      var token = await BackendCommunication().account.login(cred);
       if ((token.item2.value) == 200) {
         _authToken(token.item1.data['accessToken']);
       }
@@ -131,8 +134,7 @@ class AuthProvider {
 
   Future<ResponseCode> registerOrginizer(Organizer organizer) async {
     try {
-      var token = await BackendCommunication()
-          .postCall(organizerRegisterEndpoint, data: jsonEncode(organizer));
+      var token = await BackendCommunication().organizer.register(organizer);
       return token.item2;
     } catch (e) {
       log("Error when trying to log-in: ${e.toString()}");
@@ -142,8 +144,7 @@ class AuthProvider {
 
   Future<ResponseCode> registerUser(User user) async {
     try {
-      var token = await BackendCommunication()
-          .postCall(userRegisterEndpoint, data: jsonEncode(user));
+      var token = await BackendCommunication().user.register(user);
       return token.item2;
     } catch (e) {
       log("Error when trying to log-in: ${e.toString()}");
