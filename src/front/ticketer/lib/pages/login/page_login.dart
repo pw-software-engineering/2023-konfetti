@@ -28,9 +28,32 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> signInWithEmailAndPassword() async {
     if (_formKey.currentState!.validate()) {
       // Login
-      Auth().logInWithEmailAndPassword(
+      var response = await Auth().logInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
+      if (response.value != 200) {
+        showDilogAfterUnsuccesfullLogIn(response.getResponseString());
+      }
     }
+  }
+
+  Future<void> showDilogAfterUnsuccesfullLogIn(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> createAccountWithEmailAndPassword() async {

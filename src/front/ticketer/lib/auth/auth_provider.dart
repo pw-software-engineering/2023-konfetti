@@ -6,12 +6,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/auth/jwt_token.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
 
 import 'package:dio/dio.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
+import 'package:tuple/tuple.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();
@@ -93,28 +96,14 @@ class AuthProvider {
 
   // Sends call to API with login credentials, throws error if something goes
   // wrong. If OK returns JWT Token as String
-  Future<String?> _sentLogInRequest(Credentials credentials) async {
-    Response response;
-
-    try {
-      response = await dio.post(loginEndpoint, data: jsonEncode(credentials));
-    } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
-    }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on login request");
-    }
-
-    return response.data['accessToken'];
+  Future<Tuple2<Response, ResponseCode>> _sentLogInRequest(
+      Credentials credentials) async {
+    var response = await BackendCommunication()
+        .postCall(loginEndpoint, data: jsonEncode(credentials));
+    return response;
   }
 
-  Future<void> logInWithEmailAndPassword({
+  Future<ResponseCode> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -122,9 +111,13 @@ class AuthProvider {
 
     try {
       var token = await _sentLogInRequest(cred);
-      _authToken(token);
+      if ((token.item2.value) == 200) {
+        _authToken(token.item1.data['accessToken']);
+      }
+      return token.item2;
     } catch (e) {
       log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
   }
 

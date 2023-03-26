@@ -48,12 +48,16 @@ class BackendCommunication {
 
     try {
       response = await dio.post(path, data: data);
-    } catch (e) {
+    } on DioError catch (e) {
       log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
+      if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
     }
 
     return Tuple2<Response, ResponseCode>(
-        response, ResponseCode.getByCode(response.statusCode));
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
   }
 }
