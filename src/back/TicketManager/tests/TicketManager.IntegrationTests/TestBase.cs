@@ -18,12 +18,15 @@ public class TestBase : IAsyncDisposable
     protected readonly HttpClient OrganizerClient;
 
     protected readonly UserDto DefaultUser;
+    protected readonly OrganizerDto DefaultOrganizer;
 
     public TestBase()
     {
         app = new();
         app.InitializeAsync().Wait();
         AnonymousClient = app.CreateClient();
+
+        var password = "Password1";
         
         UserClient = app.CreateClient();
         DefaultUser = new()
@@ -36,7 +39,7 @@ public class TestBase : IAsyncDisposable
         UserClient.POSTAsync<RegisterUserEndpoint, RegisterUserRequest>(new RegisterUserRequest
         {
             Email = DefaultUser.Email,
-            Password = "Password1",
+            Password = password,
             FirstName = DefaultUser.FirstName,
             LastName = DefaultUser.LastName,
             BirthDate = DefaultUser.BirthDate,
@@ -44,7 +47,7 @@ public class TestBase : IAsyncDisposable
         var userLoginTask = UserClient.POSTAsync<AccountLoginEndpoint, AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest
         {
             Email = DefaultUser.Email,
-            Password = "Password1",
+            Password = password,
         });
         userLoginTask.Wait();
         var token = userLoginTask.Result.Result!.AccessToken;
@@ -54,21 +57,32 @@ public class TestBase : IAsyncDisposable
         DefaultUser.Id = userIdTask.Result.Result!.Id;
         
         OrganizerClient = app.CreateClient();
-        OrganizerClient.POSTAsync<RegisterOrganizerEndpoint, RegisterOrganizerRequest>(new RegisterOrganizerRequest
+        DefaultOrganizer = new()
         {
             Email = "organizer@organizer.com",
-            Password = "Password1",
             Address = "address",
             CompanyName = "companyname",
             DisplayName = "displayname",
             PhoneNumber = "123456789",
             TaxId = "000000000",
             TaxIdType = TaxIdTypeDto.Pesel,
+            VerificationStatus = VerificationStatusDto.VerifiedPositively,
+        };
+        OrganizerClient.POSTAsync<RegisterOrganizerEndpoint, RegisterOrganizerRequest>(new RegisterOrganizerRequest
+        {
+            Email = DefaultOrganizer.Email,
+            Password = password,
+            Address = DefaultOrganizer.Address,
+            CompanyName = DefaultOrganizer.CompanyName,
+            DisplayName = DefaultOrganizer.DisplayName,
+            PhoneNumber = DefaultOrganizer.PhoneNumber,
+            TaxId = DefaultOrganizer.TaxId,
+            TaxIdType = TaxIdTypeDto.Pesel,
         }).Wait();
         var organizerLoginTask = OrganizerClient.POSTAsync<AccountLoginEndpoint, AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest
         {
-            Email = "organizer@organizer.com",
-            Password = "Password1",
+            Email = DefaultOrganizer.Email,
+            Password = password,
         });
         organizerLoginTask.Wait();
         token = organizerLoginTask.Result.Result!.AccessToken;
