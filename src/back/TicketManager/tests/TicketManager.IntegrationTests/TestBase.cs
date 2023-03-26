@@ -87,6 +87,9 @@ public class TestBase : IAsyncDisposable
         organizerLoginTask.Wait();
         token = organizerLoginTask.Result.Result!.AccessToken;
         OrganizerClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var organizerIdTask = OrganizerClient.GETAsync<OrganizerViewEndpoint, OrganizerViewRequest, OrganizerDto>(new());
+        organizerIdTask.Wait();
+        DefaultOrganizer.Id = organizerIdTask.Result.Result!.Id;
     }
 
     public async ValueTask DisposeAsync()
