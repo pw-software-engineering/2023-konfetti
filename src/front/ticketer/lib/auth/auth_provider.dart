@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/auth/jwt_token.dart';
+import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
 
 import 'package:dio/dio.dart';
@@ -14,7 +15,8 @@ import 'package:ticketer/backend_communication/model/user.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();
-  bool initialized = false;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
   AuthProvider() : _controller = StreamController<Account?>();
   final StreamController<Account?> _controller;
   final dio = Dio();
@@ -33,6 +35,7 @@ class AuthProvider {
 
   // Initialize provider by checking if we have stored any valid token
   init() async {
+    if (_isInitialized) return;
     String? url = dotenv.env['BACKEND_URL'];
 
     if (url == null) {
@@ -45,11 +48,11 @@ class AuthProvider {
     dio.options.receiveDataWhenStatusError = true;
     dio.interceptors.add(CustomInterceptors());
 
-    String? token = await _fetchTokenToStorage();
+    String? token = await _fetchTokenFromStorage();
 
     _authToken(token);
 
-    initialized = true;
+    _isInitialized = true;
   }
 
   // Check if token is valid and propagate logged in state
@@ -84,7 +87,7 @@ class AuthProvider {
     await storage.write(key: 'token', value: token);
   }
 
-  Future<String?> _fetchTokenToStorage() async {
+  Future<String?> _fetchTokenFromStorage() async {
     return await storage.read(key: 'token');
   }
 
@@ -170,25 +173,5 @@ class AuthProvider {
     } else {
       log("Response ${response.statusCode} on user registration");
     }
-  }
-}
-
-class CustomInterceptors extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    log('REQUEST[${options.method}] => PATH: ${options.path}');
-    super.onRequest(options, handler);
-  }
-
-  @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    log('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
-    super.onResponse(response, handler);
-  }
-
-  @override
-  Future onError(DioError err, ErrorInterceptorHandler handler) async {
-    log('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
-    return handler.next(err);
   }
 }

@@ -23,10 +23,12 @@ class Auth {
     required String email,
     required String password,
   }) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
     await _provider.logInWithEmailAndPassword(email: email, password: password);
   }
 
   Future<void> logOut() async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
     await _provider.logOut();
   }
 
@@ -35,10 +37,12 @@ class Auth {
   Account? get getCurrentAccount => _provider.getCurrentAccount;
 
   Future<void> registerUser(User user) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
     await _provider.registerUser(user);
   }
 
   Future<void> registerOrganizer(Organizer organizer) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
     await _provider.registerOrginizer(organizer);
   }
 }
