@@ -1,9 +1,7 @@
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Accounts;
-using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.DataAccess;
-using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
 
@@ -14,6 +12,7 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
     private readonly CoreDbContext coreDbContext;
     private readonly PasswordManager passwordManager;
     private readonly TokenCreator tokenCreator;
+    
     public AccountLoginEndpoint(CoreDbContext coreDbContext, PasswordManager passwordManager, TokenCreator tokenCreator)
     {
         this.coreDbContext = coreDbContext;

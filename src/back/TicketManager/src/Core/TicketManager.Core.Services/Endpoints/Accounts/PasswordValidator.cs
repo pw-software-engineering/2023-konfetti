@@ -8,7 +8,8 @@ public class PasswordValidator : AbstractValidator<string>
     public const int PasswordMinLength = 8;
     public const int PasswordMaxLength = 32;
 
-    public PasswordValidator(int passwordIsTooShortErrorCode,
+    public PasswordValidator(
+        int passwordIsTooShortErrorCode,
         int passwordIsTooLongErrorCode,
         int passwordIsInvalidErrorCode)
     {

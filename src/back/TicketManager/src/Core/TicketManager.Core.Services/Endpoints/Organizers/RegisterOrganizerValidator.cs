@@ -14,6 +14,7 @@ public class RegisterOrganizerValidator: Validator<RegisterOrganizerRequest>
 {
     private readonly IServiceScopeFactory scopeFactory;
     private readonly MockableCoreDbResolver dbResolver;
+    
     public RegisterOrganizerValidator(IServiceScopeFactory scopeFactory, MockableCoreDbResolver dbResolver)
     {
         this.scopeFactory = scopeFactory;
@@ -33,7 +34,8 @@ public class RegisterOrganizerValidator: Validator<RegisterOrganizerRequest>
         RuleFor(req => req.Password)
             .NotNull()
             .WithCode(RegisterOrganizerRequest.ErrorCodes.PasswordIsNull)
-            .SetValidator(new PasswordValidator(RegisterOrganizerRequest.ErrorCodes.PasswordIsTooShort,
+            .SetValidator(new PasswordValidator(
+                RegisterOrganizerRequest.ErrorCodes.PasswordIsTooShort,
                 RegisterOrganizerRequest.ErrorCodes.PasswordIsTooLong,
                 RegisterOrganizerRequest.ErrorCodes.PasswordIsInvalid));
         
@@ -69,11 +71,11 @@ public class RegisterOrganizerValidator: Validator<RegisterOrganizerRequest>
         
     }
     
-    private Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken)
+    private async Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         
-        return dbResolver.Resolve(scope)
+        return await dbResolver.Resolve(scope)
             .Accounts
             .AllAsync(a => a.Email != email, cancellationToken);
     }

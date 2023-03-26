@@ -26,8 +26,9 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // comment for debug purposes
         builder.ConfigureLogging(logging => logging.ClearProviders());
-
+        
         builder.ConfigureTestServices(services =>
         {
             var descriptor = services.SingleOrDefault(d =>
@@ -48,7 +49,7 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
         await database.StartAsync();
     }
 
-    public async Task DisposeAsync()
+    public new async Task DisposeAsync()
     {
         await database.DisposeAsync();
     }

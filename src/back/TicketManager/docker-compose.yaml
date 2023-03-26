@@ -6,3 +6,22 @@ services:
     build: .
     ports:
       - "8080:80"
+    networks:
+      - db
+    depends_on:
+      - api-postgres
+  api-postgres:
+    container_name: api-database
+    image: "postgres:latest"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=api
+      - POSTGRES_USER=admin
+    networks:
+      - db
+    volumes:
+      - /var/loans/postgres-ticket_manager:/var/lib/postgresql/data
+networks:
+  db:
+    name: db
+    driver: bridge
