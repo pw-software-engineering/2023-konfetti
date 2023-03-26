@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth_provider.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/user.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 
 class Auth {
   static final Auth _singleton = Auth._internal();
@@ -19,14 +20,17 @@ class Auth {
     await _provider.init();
   }
 
-  Future<void> logInWithEmailAndPassword({
+  Future<ResponseCode> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    await _provider.logInWithEmailAndPassword(email: email, password: password);
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
+    return await _provider.logInWithEmailAndPassword(
+        email: email, password: password);
   }
 
   Future<void> logOut() async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
     await _provider.logOut();
   }
 
@@ -34,11 +38,13 @@ class Auth {
 
   Account? get getCurrentAccount => _provider.getCurrentAccount;
 
-  Future<void> registerUser(User user) async {
-    await _provider.registerUser(user);
+  Future<ResponseCode> registerUser(User user) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
+    return await _provider.registerUser(user);
   }
 
-  Future<void> registerOrganizer(Organizer organizer) async {
-    await _provider.registerOrginizer(organizer);
+  Future<ResponseCode> registerOrganizer(Organizer organizer) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
+    return await _provider.registerOrginizer(organizer);
   }
 }

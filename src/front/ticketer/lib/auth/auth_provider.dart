@@ -1,20 +1,23 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/auth/jwt_token.dart';
-import 'package:ticketer/model/credentials.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
+import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
 
 import 'package:dio/dio.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/user.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();
-  bool initialized = false;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
   AuthProvider() : _controller = StreamController<Account?>();
   final StreamController<Account?> _controller;
   final dio = Dio();
@@ -33,6 +36,10 @@ class AuthProvider {
 
   // Initialize provider by checking if we have stored any valid token
   init() async {
+    if (_isInitialized) return;
+    if (!BackendCommunication().isInitialized) {
+      throw Exception("Backend communication object is not initilized");
+    }
     String? url = dotenv.env['BACKEND_URL'];
 
     if (url == null) {
@@ -45,11 +52,11 @@ class AuthProvider {
     dio.options.receiveDataWhenStatusError = true;
     dio.interceptors.add(CustomInterceptors());
 
-    String? token = await _fetchTokenToStorage();
+    String? token = await _fetchTokenFromStorage();
 
     _authToken(token);
 
-    initialized = true;
+    _isInitialized = true;
   }
 
   // Check if token is valid and propagate logged in state
@@ -84,44 +91,25 @@ class AuthProvider {
     await storage.write(key: 'token', value: token);
   }
 
-  Future<String?> _fetchTokenToStorage() async {
+  Future<String?> _fetchTokenFromStorage() async {
     return await storage.read(key: 'token');
   }
 
-  // Sends call to API with login credentials, throws error if something goes
-  // wrong. If OK returns JWT Token as String
-  Future<String?> _sentLogInRequest(Credentials credentials) async {
-    Response response;
-
-    try {
-      response = await dio.post(loginEndpoint, data: jsonEncode(credentials));
-    } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
-    }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on login request");
-    }
-
-    return response.data['accessToken'];
-  }
-
-  Future<void> logInWithEmailAndPassword({
+  Future<ResponseCode> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     Credentials cred = Credentials(email, password);
 
     try {
-      var token = await _sentLogInRequest(cred);
-      _authToken(token);
+      var token = await BackendCommunication().account.login(cred);
+      if ((token.item2.value) == 200) {
+        _authToken(token.item1.data['accessToken']);
+      }
+      return token.item2;
     } catch (e) {
       log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
   }
 
@@ -133,62 +121,23 @@ class AuthProvider {
 
   Stream<Account?> get authStateChanges => _controller.stream;
 
-  Future<void> registerOrginizer(Organizer organizer) async {
-    Response response;
-
+  Future<ResponseCode> registerOrginizer(Organizer organizer) async {
     try {
-      response = await dio.post(organizerRegisterEndpoint,
-          data: jsonEncode(organizer));
+      var token = await BackendCommunication().organizer.register(organizer);
+      return token.item2;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
-    }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on organizer registration");
+      log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
   }
 
-  Future<void> registerUser(User user) async {
-    Response response;
-
+  Future<ResponseCode> registerUser(User user) async {
     try {
-      response = await dio.post(userRegisterEndpoint, data: jsonEncode(user));
+      var token = await BackendCommunication().user.register(user);
+      return token.item2;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
+      log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on user registration");
-    }
-  }
-}
-
-class CustomInterceptors extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    log('REQUEST[${options.method}] => PATH: ${options.path}');
-    super.onRequest(options, handler);
-  }
-
-  @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    log('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
-    super.onResponse(response, handler);
-  }
-
-  @override
-  Future onError(DioError err, ErrorInterceptorHandler handler) async {
-    log('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
-    return handler.next(err);
   }
 }

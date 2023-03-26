@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/tax_type.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 
 void main() {
   test(

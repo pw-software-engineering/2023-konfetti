@@ -1,14 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/model/credentials.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/tax_type.dart';
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:ticketer/pages/login/page_login.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   Credentials credentials;
@@ -218,32 +213,16 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           credentials.email,
           credentials.password,
           _phone.text);
-      try {
-        await Auth().registerOrganizer(organizer);
-      } catch (e) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content:
-                  Text("Couldn't sign up, error message:\n${e.toString()}"),
-              actions: [
-                ElevatedButton(
-                  onPressed: () => {
-                    Navigator.pop(context),
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-        return;
+
+      var response = await Auth().registerOrganizer(organizer);
+      if (response.value != 200) {
+        await showDilogAfterUnsuccesfullRegistration(
+            response.getResponseString());
+      } else {
+        await showDilogAfterRegistration();
       }
+      if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
-      await showDilogAfterRegistration();
     }
   }
 
@@ -255,6 +234,26 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           title: const Text("Thank you"),
           content: const Text("Administrators have received your form. "
               "We will try to verify your data as soon as possible."),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDilogAfterUnsuccesfullRegistration(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
           actions: [
             ElevatedButton(
               onPressed: () => {

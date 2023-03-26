@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ticketer/auth/jwt_token.dart';
-import 'package:ticketer/model/account_type.dart';
+import 'package:ticketer/backend_communication/model/account_type.dart';
 
 class JWTTokenParsed {
   final String accountId;
