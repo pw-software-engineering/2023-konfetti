@@ -187,11 +187,15 @@ class _UserDataState extends State<UserRegisterPage> {
 }
 
 Future<DateTime?> _selectDate(BuildContext context, DateTime initial) async {
+  const daysInAYear = 365;
+  const maxAge = 100;
   return await showDatePicker(
       context: context,
       initialDate: initial,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101));
+      firstDate: DateTime.now()
+          .subtract(const Duration(days: maxAge * daysInAYear)),
+      lastDate: DateTime.now()
+  );
 }
 
 class DataDialog extends StatefulWidget {
