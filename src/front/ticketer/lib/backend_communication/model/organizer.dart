@@ -10,8 +10,16 @@ class Organizer {
   String password;
   String phoneNumber;
 
-  Organizer(this.companyName, this.address, this.taxIdType, this.taxId,
-      this.displayName, this.email, this.password, this.phoneNumber);
+  Organizer(
+    this.companyName,
+    this.address,
+    this.taxIdType,
+    this.taxId,
+    this.displayName,
+    this.email,
+    this.password,
+    this.phoneNumber,
+  );
 
   Map<String, dynamic> toJson() => {
         'companyName': companyName,

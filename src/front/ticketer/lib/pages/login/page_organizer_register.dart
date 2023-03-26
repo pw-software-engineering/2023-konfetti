@@ -219,14 +219,11 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
         await showDilogAfterUnsuccesfullRegistration(
             response.getResponseString());
       } else {
-        await showDilogAfterRegistration();
+        await showDialogAfterRegistration();
       }
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
-<<<<<<< HEAD
-=======
       await showDialogAfterRegistration();
->>>>>>> 2910a2a (Add text fields to event creation form)
     }
   }
 
