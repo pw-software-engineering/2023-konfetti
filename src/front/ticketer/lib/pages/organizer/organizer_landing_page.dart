@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
+import 'package:ticketer/pages/organizer/organizer_drawer.dart';
 
 class OrganizerLandingPage extends StatefulWidget {
   const OrganizerLandingPage({Key? key}) : super(key: key);
@@ -90,6 +91,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ticketerAppBar("Welcome"),
+      drawer: const OrganizerNavigationDrawer(),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(minWidth: 200, maxWidth: 500),
