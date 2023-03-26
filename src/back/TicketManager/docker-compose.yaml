@@ -20,7 +20,7 @@ services:
     networks:
       - db
     volumes:
-      - /var/loans/postgres-ticket_manager:/var/lib/postgresql/data
+      - /var/ticket_manager/postgres:/var/lib/postgresql/data
 networks:
   db:
     name: db
