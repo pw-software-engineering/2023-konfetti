@@ -6,7 +6,7 @@ import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'auth/auth.dart';
 
 void main() async {
-  await dotenv.load(fileName: "dotenv");
+  await dotenv.load(fileName: "assets/dotenv");
   BackendCommunication().init();
   Auth().init();
 
