@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/model/credentials.dart';
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:ticketer/model/user.dart';
-import 'package:ticketer/pages/login/page_login.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 
 class UserRegisterPage extends StatefulWidget {
   Credentials credentials;
@@ -120,32 +116,16 @@ class _UserDataState extends State<UserRegisterPage> {
     if (_formKey.currentState!.validate()) {
       User user = User(_firstName.text, _lastName.text, _birthDate.text,
           credentials.email, credentials.password);
-      try {
-        await Auth().registerUser(user);
-      } catch (e) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content:
-                  Text("Couldn't sign up, error message:\n${e.toString()}"),
-              actions: [
-                ElevatedButton(
-                  onPressed: () => {
-                    Navigator.pop(context),
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
 
-      await showDilogAfterRegistration();
+      var response = await Auth().registerUser(user);
+      if (response.value != 200) {
+        await showDilogAfterUnsuccesfullRegistration(
+            response.getResponseString());
+      } else {
+        await showDilogAfterRegistration();
+      }
+      if (!mounted) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
@@ -156,6 +136,26 @@ class _UserDataState extends State<UserRegisterPage> {
         return AlertDialog(
           title: const Text("Thank you"),
           content: const Text("You can sign in into the account now"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDilogAfterUnsuccesfullRegistration(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
           actions: [
             ElevatedButton(
               onPressed: () => {
@@ -187,11 +187,15 @@ class _UserDataState extends State<UserRegisterPage> {
 }
 
 Future<DateTime?> _selectDate(BuildContext context, DateTime initial) async {
+  const daysInAYear = 365;
+  const maxAge = 100;
   return await showDatePicker(
       context: context,
       initialDate: initial,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101));
+      firstDate: DateTime.now()
+          .subtract(const Duration(days: maxAge * daysInAYear)),
+      lastDate: DateTime.now()
+  );
 }
 
 class DataDialog extends StatefulWidget {

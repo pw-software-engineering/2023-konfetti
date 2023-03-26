@@ -1,4 +1,4 @@
-import 'package:ticketer/model/account_type.dart';
+import 'package:ticketer/backend_communication/model/account_type.dart';
 
 class Account {
   final AccountType type;

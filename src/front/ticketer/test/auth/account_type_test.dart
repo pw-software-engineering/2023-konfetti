@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ticketer/model/account_type.dart';
+import 'package:ticketer/backend_communication/model/account_type.dart';
 
 void main() {
   test('Should serialize account type enum', () {
