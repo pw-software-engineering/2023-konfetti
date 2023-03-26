@@ -1,14 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/tax_type.dart';
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:ticketer/pages/login/page_login.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   Credentials credentials;

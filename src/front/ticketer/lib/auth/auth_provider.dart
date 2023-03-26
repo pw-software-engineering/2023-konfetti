@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,7 +13,6 @@ import 'package:dio/dio.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
-import 'package:tuple/tuple.dart';
 
 class AuthProvider {
   final storage = const FlutterSecureStorage();
@@ -95,15 +93,6 @@ class AuthProvider {
 
   Future<String?> _fetchTokenFromStorage() async {
     return await storage.read(key: 'token');
-  }
-
-  // Sends call to API with login credentials, throws error if something goes
-  // wrong. If OK returns JWT Token as String
-  Future<Tuple2<Response, ResponseCode>> _sentLogInRequest(
-      Credentials credentials) async {
-    var response = await BackendCommunication()
-        .postCall(loginEndpoint, data: jsonEncode(credentials));
-    return response;
   }
 
   Future<ResponseCode> logInWithEmailAndPassword({

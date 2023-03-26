@@ -3,7 +3,6 @@ import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
-import 'package:ticketer/pages/login/page_login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
