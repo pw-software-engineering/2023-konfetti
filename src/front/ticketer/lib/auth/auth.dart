@@ -38,13 +38,13 @@ class Auth {
 
   Account? get getCurrentAccount => _provider.getCurrentAccount;
 
-  Future<void> registerUser(User user) async {
+  Future<ResponseCode> registerUser(User user) async {
     if (!_provider.isInitialized) throw Exception("Provider not initilized");
-    await _provider.registerUser(user);
+    return await _provider.registerUser(user);
   }
 
-  Future<void> registerOrganizer(Organizer organizer) async {
+  Future<ResponseCode> registerOrganizer(Organizer organizer) async {
     if (!_provider.isInitialized) throw Exception("Provider not initilized");
-    await _provider.registerOrginizer(organizer);
+    return await _provider.registerOrginizer(organizer);
   }
 }

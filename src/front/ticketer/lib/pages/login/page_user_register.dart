@@ -120,32 +120,16 @@ class _UserDataState extends State<UserRegisterPage> {
     if (_formKey.currentState!.validate()) {
       User user = User(_firstName.text, _lastName.text, _birthDate.text,
           credentials.email, credentials.password);
-      try {
-        await Auth().registerUser(user);
-      } catch (e) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content:
-                  Text("Couldn't sign up, error message:\n${e.toString()}"),
-              actions: [
-                ElevatedButton(
-                  onPressed: () => {
-                    Navigator.pop(context),
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
 
-      await showDilogAfterRegistration();
+      var response = await Auth().registerUser(user);
+      if (response.value != 200) {
+        await showDilogAfterUnsuccesfullRegistration(
+            response.getResponseString());
+      } else {
+        await showDilogAfterRegistration();
+      }
+      if (!mounted) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
@@ -156,6 +140,26 @@ class _UserDataState extends State<UserRegisterPage> {
         return AlertDialog(
           title: const Text("Thank you"),
           content: const Text("You can sign in into the account now"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDilogAfterUnsuccesfullRegistration(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
           actions: [
             ElevatedButton(
               onPressed: () => {

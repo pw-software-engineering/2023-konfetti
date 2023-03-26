@@ -129,42 +129,25 @@ class AuthProvider {
 
   Stream<Account?> get authStateChanges => _controller.stream;
 
-  Future<void> registerOrginizer(Organizer organizer) async {
-    Response response;
-
+  Future<ResponseCode> registerOrginizer(Organizer organizer) async {
     try {
-      response = await dio.post(organizerRegisterEndpoint,
-          data: jsonEncode(organizer));
+      var token = await BackendCommunication()
+          .postCall(organizerRegisterEndpoint, data: jsonEncode(organizer));
+      return token.item2;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
-    }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on organizer registration");
+      log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
   }
 
-  Future<void> registerUser(User user) async {
-    Response response;
-
+  Future<ResponseCode> registerUser(User user) async {
     try {
-      response = await dio.post(userRegisterEndpoint, data: jsonEncode(user));
+      var token = await BackendCommunication()
+          .postCall(userRegisterEndpoint, data: jsonEncode(user));
+      return token.item2;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Connection error: ${e.toString()}");
-    }
-    if (response.statusCode != 200) {
-      // Something to do with it later
-      log("Response ${response.statusCode} : ${response.statusMessage}");
-      throw Exception(
-          "Response ${response.statusCode} : ${response.statusMessage}");
-    } else {
-      log("Response ${response.statusCode} on user registration");
+      log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
     }
   }
 }
