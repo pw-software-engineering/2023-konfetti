@@ -1,4 +1,4 @@
-import 'package:ticketer/model/tax_type.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 
 class Organizer {
   String companyName;

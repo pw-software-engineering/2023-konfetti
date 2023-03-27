@@ -1,6 +1,6 @@
 namespace TicketManager.Core.Contracts.Users;
 
-public class UserViewResponse
+public class UserDto
 {
     public Guid Id { get; set; }
     public string Email { get; set; }

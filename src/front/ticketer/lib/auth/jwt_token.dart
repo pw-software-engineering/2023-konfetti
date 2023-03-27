@@ -1,5 +1,5 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:ticketer/model/account_type.dart';
+import 'package:ticketer/backend_communication/model/account_type.dart';
 
 class Token {
   final String token;
