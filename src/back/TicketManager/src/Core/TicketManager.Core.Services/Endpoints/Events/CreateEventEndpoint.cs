@@ -23,17 +23,15 @@ public class CreateEventEndpoint : Endpoint<CreateEventRequest>
 
     public override async Task HandleAsync(CreateEventRequest req, CancellationToken ct)
     {
-        var @event = new EventBuilder()
-            .WithGeneratedId()
-            .WithOrganizerId(req.AccountId)
-            .WithName(req.Name)
-            .WithDescription(req.Description)
-            .WithLocation(req.Location)
-            .WithDate(req.Date)
-            .WithSectors(req.Sectors
-                .Select(s => new EventBuilder.SectorData(s.Name, s.PriceInSmallestUnit, s.NumberOfColumns, s.NumberOfRows))
-                .ToList())
-            .Build();
+        var @event = new Event(
+            req.AccountId,
+            req.Name,
+            req.Description,
+            req.Location,
+            req.Date,
+            req.Sectors
+                .Select(s => new Event.SectorData(s.Name, s.PriceInSmallestUnit, s.NumberOfColumns, s.NumberOfRows))
+                .ToList());
 
         await events.AddAsync(@event, ct);
 

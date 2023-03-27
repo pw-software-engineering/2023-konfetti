@@ -15,14 +15,16 @@ public class Event : IAggregateRoot<Guid>
     
     private Event() { }
     
-    internal Event(Guid id, Guid organizerId, string name, string description, string location, DateTime date, List<Sector> sectors)
+    public Event(Guid organizerId, string name, string description, string location, DateTime date, List<SectorData> sectors)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         OrganizerId = organizerId;
         Name = name;
         Description = description;
         Location = location;
         Date = date;
-        this.sectors.AddRange(sectors);
+        this.sectors.AddRange(sectors.Select(s => new Sector(Id, s.Name, s.PriceInSmallestUnit, s.NumberOfColumns, s.NumberOfRows)));
     }
+    
+    public record SectorData(string Name, int PriceInSmallestUnit, int NumberOfColumns, int NumberOfRows);
 }
