@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Logging;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Common;
 using TicketManager.Core.Domain.Organizer;
@@ -67,7 +68,7 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(e => e.Id);
             cfg.Property(e => e.Email).HasMaxLength(StringLengths.MediumString);
-            cfg.Property(e => e.PasswordHash).HasMaxLength(PasswordManager.HashLength + PasswordManager.SaltLength);
+            cfg.Property(e => e.PasswordHash).HasMaxLength(StringLengths.MediumString);
             cfg.Property(e => e.Role).HasMaxLength(StringLengths.LittleString);
 
             // cfg.IsOptimisticConcurrent();
