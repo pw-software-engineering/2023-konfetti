@@ -13,6 +13,8 @@ public class Event : IAggregateRoot<Guid>
     public DateTime Date { get; private set; }
     public IReadOnlyList<Sector> Sectors => sectors;
     
+    private Event() { }
+    
     internal Event(Guid id, Guid organizerId, string name, string description, string location, DateTime date, List<Sector> sectors)
     {
         Id = id;
