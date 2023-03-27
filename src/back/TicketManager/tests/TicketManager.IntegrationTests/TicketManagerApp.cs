@@ -27,13 +27,13 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // comment for debug purposes
-        // builder.ConfigureLogging(logging => logging.ClearProviders());
+        builder.ConfigureLogging(logging => logging.ClearProviders());
         
         builder.ConfigureTestServices(services =>
         {
             var descriptor = services.SingleOrDefault(d =>
                 d.ServiceType == typeof(DbContextOptions<CoreDbContext>));
-            services.Remove(descriptor);
+            services.Remove(descriptor!);
 
             services.RemoveAll<CoreDbContext>();
             services.AddDbContext<CoreDbContext>(
