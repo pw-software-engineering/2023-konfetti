@@ -1,4 +1,5 @@
 using FastEndpoints;
+using TicketManager.Core.Contracts.Common;
 using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
@@ -6,7 +7,7 @@ using TicketManager.Core.Services.DataAccess.Repositories;
 
 namespace TicketManager.Core.Services.Endpoints.Events;
 
-public class CreateEventEndpoint : Endpoint<CreateEventRequest>
+public class CreateEventEndpoint : Endpoint<CreateEventRequest, IdResponse>
 {
     private readonly Repository<Event, Guid> events;
 
@@ -35,6 +36,6 @@ public class CreateEventEndpoint : Endpoint<CreateEventRequest>
 
         await events.AddAsync(@event, ct);
 
-        await SendOkAsync(ct);
+        await SendAsync(new IdResponse { Id = @event.Id }, cancellation: ct);
     }
 }
