@@ -3,7 +3,7 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Users;
 
-public class User : IAggregateRoot<Guid>, IAccount
+public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;
@@ -11,7 +11,7 @@ public class User : IAggregateRoot<Guid>, IAccount
     public string LastName { get; private init; } = null!;
     public DateOnly BirthDate { get; private init; }
 
-    // DateTime IOptimisticConcurrent.DateModified { get; set; }
+    public DateTime DateModified { get; set; }
     
     private User() {}
     

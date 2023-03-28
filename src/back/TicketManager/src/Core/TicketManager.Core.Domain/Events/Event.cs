@@ -2,7 +2,7 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Events;
 
-public class Event : IAggregateRoot<Guid>
+public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
 {
     private readonly List<Sector> sectors = new();
     public Guid Id { get; private init; }
@@ -12,6 +12,8 @@ public class Event : IAggregateRoot<Guid>
     public string Location { get; private set; } = null!;
     public DateTime Date { get; private set; }
     public IReadOnlyList<Sector> Sectors => sectors;
+    
+    public DateTime DateModified { get; set; }
     
     private Event() { }
     

@@ -2,14 +2,14 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Accounts;
 
-public class Account : IAggregateRoot<Guid>
+public class Account : IAggregateRoot<Guid>, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public string Role { get; private init; } = null!;
     
-    // DateTime IOptimisticConcurrent.DateModified { get; set; }
+    public DateTime DateModified { get; set; }
     
     private Account() {}
     
