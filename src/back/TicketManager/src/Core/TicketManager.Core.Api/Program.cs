@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
@@ -40,6 +41,7 @@ public class Program
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
+        builder.Services.AddScoped<Repository<Event, Guid>>();
         
         builder.Services.AddFastEndpoints();
         

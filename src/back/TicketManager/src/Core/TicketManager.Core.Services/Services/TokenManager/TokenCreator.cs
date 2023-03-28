@@ -1,4 +1,5 @@
 using FastEndpoints.Security;
+using TicketManager.Core.Contracts.Common;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.Configuration;
 
@@ -18,7 +19,7 @@ public class TokenCreator
         return JWTBearer.CreateToken(
             signingKey: tokenConfiguration.signingKey,
             expireAt: DateTime.UtcNow.AddHours(4),
-            claims: new[] { ("AccountId", account.Id.ToString()) },
+            claims: new[] { (Claims.AccountId, account.Id.ToString()) },
             roles: new[] { account.Role }).ToString();
     }
 }
