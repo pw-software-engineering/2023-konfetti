@@ -44,7 +44,7 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.FirstName).HasMaxLength(StringLengths.ShortString);
             cfg.Property(e => e.LastName).HasMaxLength(StringLengths.ShortString);
 
-            // cfg.IsOptimisticConcurrent();
+            cfg.IsOptimisticConcurrent();
         });
     }
     
@@ -60,7 +60,7 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.DisplayName).HasMaxLength(StringLengths.ShortString);
             cfg.Property(e => e.PhoneNumber).HasMaxLength(StringLengths.ShortString);
 
-            // cfg.IsOptimisticConcurrent();
+            cfg.IsOptimisticConcurrent();
         });
     }
     
@@ -73,7 +73,7 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.PasswordHash).HasMaxLength(StringLengths.MediumString);
             cfg.Property(e => e.Role).HasMaxLength(StringLengths.LittleString);
 
-            // cfg.IsOptimisticConcurrent();
+            cfg.IsOptimisticConcurrent();
         });
     }
     
@@ -97,7 +97,7 @@ public class CoreDbContext : DbContext
                 cfg.HasIndex(e => e.EventId).IsUnique(false);
             });
 
-            // cfg.IsOptimisticConcurrent();
+            cfg.IsOptimisticConcurrent();
         });
     }
 }

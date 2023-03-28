@@ -3,7 +3,7 @@ using TicketManager.Core.Domain.Common;
 
 namespace TicketManager.Core.Domain.Organizer;
 
-public class Organizer : IAggregateRoot<Guid>, IAccount
+public class Organizer : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
     public string Email { get; private init; } = null!;
@@ -13,6 +13,8 @@ public class Organizer : IAggregateRoot<Guid>, IAccount
     public TaxIdType TaxIdType { get; private init; }
     public string DisplayName { get; private init; } = null!;
     public string PhoneNumber { get; private init; } = null!;
+    
+    public DateTime DateModified { get; set; }
 
     public Organizer(string email, string companyName, string address, string taxId, TaxIdType taxIdType,
         string displayName, string phoneNumber)
