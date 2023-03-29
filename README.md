@@ -104,7 +104,7 @@ For now known issue is that using docker leaves dangling images. Those are image
 docker image prune
 ```
 
-## Test status
+### Test status
 
 On master
 ---
