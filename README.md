@@ -80,7 +80,31 @@ just comment out `'--disable-extension'` and add below it `'--disable-web-securi
     ];
 ```
 
-### Test status
+## Backend
+
+All backend applications in this repository run with Docker technology as well as several services that are necessary for communication processes. In order to build all aplications at once you can go to `src/back/TicketManager/` directory where `docker-compose` file is. Now run build command
+```
+docker-compose build
+```
+
+Now in order to launch whole backend environment just start containers
+```
+docker-compose up
+```
+
+This command can be also followed with `-d` flag which will run all containers in background. If you add `--build` flag it will auto-build before launching.
+
+When you want containers to stop run another docker command
+```
+docker-compose down
+```
+
+For now known issue is that using docker leaves dangling images. Those are images that were either used as an intermidiate step in building process or old application images. Removing all of them will result in building process to take longer as they contain NuGet data. If you want to free disk space simply run
+```
+docker image prune
+```
+
+## Test status
 
 On master
 ---
