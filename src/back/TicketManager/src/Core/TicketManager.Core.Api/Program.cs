@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
@@ -62,6 +63,7 @@ public class Program
         app.UseFastEndpoints(c =>
         {
             c.Serializer.Options.Converters.Add(new DateOnlyConverter());
+            c.Serializer.Options.Converters.Add(new DateTimeConverter());
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
             {
                 Errors = failures.Select(f => new ValidationError
