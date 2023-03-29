@@ -4,7 +4,7 @@ class Event {
   String name;
   String description;
   String location;
-  DateTime date;
+  String date;
   List<Sector> sectors;
 
   Event(

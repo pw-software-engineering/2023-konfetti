@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ticketer/backend_communication/logic/account/communication_account.dart';
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
+import 'package:ticketer/backend_communication/logic/event/communication_event.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
 import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
@@ -27,6 +28,8 @@ class BackendCommunication {
   OrganizerCommunication get organizer => _organizerCommunication;
   final AccountCommunication _accountCommunication = AccountCommunication();
   AccountCommunication get account => _accountCommunication;
+  final EventCommunication _eventCommunication = EventCommunication();
+  EventCommunication get event => _eventCommunication;
 
   final dio = Dio();
   static const Map<String, dynamic> headers = <String, String>{

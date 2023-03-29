@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
+import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
@@ -147,7 +150,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
       readOnly: true,
       onTap: () => _selectDate(context, DateTime.now()).then((date) => {
             if (date != null)
-              _eventDate.text = '${date.year}-${date.month}-${date.day}'
+              _eventDate.text =
+                  '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
           }),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -263,12 +267,6 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return TextFormField(
       controller: _sectorName,
       decoration: const InputDecoration(labelText: "Sector name"),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "";
-        }
-        return null;
-      },
     );
   }
 
@@ -276,12 +274,6 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return TextFormField(
       controller: _sectorRows,
       decoration: const InputDecoration(labelText: "No of rows"),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "";
-        }
-        return null;
-      },
     );
   }
 
@@ -289,12 +281,6 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return TextFormField(
       controller: _sectorColumns,
       decoration: const InputDecoration(labelText: "No of cols"),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "";
-        }
-        return null;
-      },
     );
   }
 
@@ -302,22 +288,80 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return TextFormField(
       controller: _sectorPrice,
       decoration: const InputDecoration(labelText: "Price \$"),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "";
-        }
-        return null;
-      },
     );
   }
 
   Widget _submitButton() {
     return Container(
-        margin: const EdgeInsets.only(top: 15.0),
-        child: ElevatedButton(
-          onPressed: () => print("Event created!"),
-          child: const Text("Create"),
-        ));
+      margin: const EdgeInsets.only(top: 15.0),
+      child: ElevatedButton(
+        onPressed: () => _submitEventCreation(),
+        child: const Text("Create"),
+      ),
+    );
+  }
+
+  Future<void> _submitEventCreation() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        Event event = Event(_eventName.text, _eventDescription.text,
+            _eventLocation.text, _eventDate.text, sectors);
+
+        print(event.toJson());
+        var response = await BackendCommunication().event.create(event);
+
+        if (response.item2 != ResponseCode.allGood) {
+          await showDialogOnFailure(response.item2.name);
+        } else {
+          await showDialogAfterEventCreation(response.item1.data);
+        }
+      } catch (e) {
+        print(e);
+      }
+
+      if (!mounted) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+  }
+
+  Future<void> showDialogOnFailure(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDialogAfterEventCreation(String id) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Event has been created"),
+          content: Text(id),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _getOrganizerInfo(String property, String value) {
