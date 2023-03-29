@@ -87,7 +87,7 @@ class BackendCommunication {
       if (!token.isValid) {
         throw ArgumentError("Token is not valid");
       }
-      dio.options.headers.addAll({"token": token.token});
+      dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
       response = await dio.post(path, data: data);
     } on DioError catch (e) {
       log(e.toString());

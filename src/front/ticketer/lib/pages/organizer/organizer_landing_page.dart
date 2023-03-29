@@ -20,6 +20,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   final TextEditingController _eventDescription = TextEditingController();
   final TextEditingController _eventLocation = TextEditingController();
   final TextEditingController _eventDate = TextEditingController();
+  final TextEditingController _eventTime = TextEditingController();
   final TextEditingController _sectorName = TextEditingController();
   final TextEditingController _sectorPrice = TextEditingController();
   final TextEditingController _sectorColumns = TextEditingController();
@@ -84,10 +85,10 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
             _eventNameEntryField(),
             _eventDescriptionEntryField(),
             _eventLocationEntryField(),
-            _eventDateEntryField(),
-            _getSectorEntryField(),
-            _getSectorButtons(),
-            _getSectorsList(),
+            _eventDateTimeEntryField(),
+            _sectorEntryField(),
+            _sectorButtons(),
+            _sectorsList(),
             _submitButton(),
           ],
         ),
@@ -142,6 +143,23 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
+  Widget _eventDateTimeEntryField() {
+    return SingleChildScrollView(
+      child: Row(
+        children: [
+          Flexible(
+            flex: 1,
+            child: _eventDateEntryField(),
+          ),
+          Flexible(
+            flex: 1,
+            child: _eventTimeEntryField(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _eventDateEntryField() {
     return TextFormField(
       controller: _eventDate,
@@ -152,6 +170,28 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
             if (date != null)
               _eventDate.text =
                   '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
+          }),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please choose your event date";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _eventTimeEntryField() {
+    return TextFormField(
+      controller: _eventTime,
+      decoration: const InputDecoration(
+        labelText: "Event time",
+        hintText: 'Choose your event time',
+      ),
+      readOnly: true,
+      onTap: () => _selectTime(context).then((time) => {
+            if (time != null)
+              _eventTime.text =
+                  '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
           }),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -175,7 +215,14 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Widget _getSectorEntryField() {
+  Future<TimeOfDay?> _selectTime(BuildContext context) {
+    return showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
+  }
+
+  Widget _sectorEntryField() {
     return SingleChildScrollView(
       child: Row(
         children: [
@@ -200,7 +247,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Widget _getSectorButtons() {
+  Widget _sectorButtons() {
     return Container(
       margin: const EdgeInsets.all(8.0),
       child: Row(
@@ -223,6 +270,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
           ElevatedButton(
             onPressed: () => setState(
               () {
+                if (_sectorName.text.isEmpty) return;
                 try {
                   sectors.add(
                     Sector(
@@ -250,13 +298,13 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Widget _getSectorsList() {
+  Widget _sectorsList() {
     return SingleChildScrollView(
-      child: Column(children: sectors.map((e) => _getSector(e)).toList()),
+      child: Column(children: sectors.map((e) => _sector(e)).toList()),
     );
   }
 
-  Widget _getSector(Sector s) {
+  Widget _sector(Sector s) {
     return Text(
       s.toString(),
       style: const TextStyle(fontSize: 16),
@@ -302,21 +350,24 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   }
 
   Future<void> _submitEventCreation() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && sectors.isNotEmpty) {
       try {
-        Event event = Event(_eventName.text, _eventDescription.text,
-            _eventLocation.text, _eventDate.text, sectors);
+        Event event = Event(
+            _eventName.text,
+            _eventDescription.text,
+            _eventLocation.text,
+            '${_eventDate.text}T${_eventTime.text}:00.000Z',
+            sectors);
 
-        print(event.toJson());
         var response = await BackendCommunication().event.create(event);
 
         if (response.item2 != ResponseCode.allGood) {
-          await showDialogOnFailure(response.item2.name);
+          await _showDialogOnFailure(response.item2.name);
         } else {
-          await showDialogAfterEventCreation(response.item1.data);
+          await _showDialogAfterEventCreation(response.item1.data['id']);
         }
       } catch (e) {
-        print(e);
+        await _showDialogOnFailure(e.toString());
       }
 
       if (!mounted) return;
@@ -324,7 +375,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     }
   }
 
-  Future<void> showDialogOnFailure(String errorMess) async {
+  Future<void> _showDialogOnFailure(String errorMess) async {
     await showDialog(
       context: context,
       builder: (context) {
@@ -344,7 +395,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Future<void> showDialogAfterEventCreation(String id) async {
+  Future<void> _showDialogAfterEventCreation(String id) async {
     await showDialog(
       context: context,
       builder: (context) {
