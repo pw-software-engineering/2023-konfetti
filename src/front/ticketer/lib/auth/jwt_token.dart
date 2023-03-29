@@ -46,6 +46,10 @@ class Token {
     }
   }
 
+  bool get isValid =>
+      expire.isAfter(DateTime.now()) &&
+      issued.isBefore(DateTime.now()) &&
+      notBefore.isBefore(DateTime.now());
   static AccountType _setRole(String roleString) {
     try {
       return AccountTypeConverter.toEnum(roleString);
