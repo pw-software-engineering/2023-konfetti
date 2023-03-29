@@ -1,5 +1,5 @@
 using FluentValidation;
-using TicketManager.Core.Services.ValidationExtensions;
+using TicketManager.Core.Services.Extensions;
 
 namespace TicketManager.Core.Services.Endpoints.Accounts;
 

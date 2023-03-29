@@ -11,7 +11,7 @@ using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
-using TicketManager.Core.Services.JsonConverters;
+using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
