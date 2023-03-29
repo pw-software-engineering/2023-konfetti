@@ -71,7 +71,7 @@ class AuthProvider {
         return;
       }
 
-      if (isTokenValid(jwtToken)) {
+      if (jwtToken.isValid) {
         _currentAccount =
             Account(jwtToken.role, jwtToken.accountId, jwtToken.token);
         _pushTokenToStorage(token);
@@ -80,12 +80,6 @@ class AuthProvider {
       }
     }
   }
-
-  bool isTokenValid(Token? jwtToken) =>
-      jwtToken != null &&
-      jwtToken.expire.isAfter(DateTime.now()) &&
-      jwtToken.issued.isBefore(DateTime.now()) &&
-      jwtToken.notBefore.isBefore(DateTime.now());
 
   Future<void> _pushTokenToStorage(String token) async {
     await storage.write(key: 'token', value: token);
