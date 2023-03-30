@@ -20,13 +20,15 @@ public class OrganizerDecideValidator : Validator<OrganizerDecideRequest>
         this.dbResolver = dbResolver;
 
         RuleFor(req => req.OrganizerId)
-            .MustAsync(IsIdPresent)
-            .WithCode(OrganizerDecideRequest.ErrorCodes.OrganizerNotInDatabase)
-            .MustAsync(IsUnverified)
-            .WithCode(OrganizerDecideRequest.ErrorCodes.OrganizerAlreadyVerified);
+            .MustAsync(IsIdPresentAsync)
+            .WithCode(OrganizerDecideRequest.ErrorCodes.OrganizerDoesNotExist)
+            .WithMessage("Organizer with this Id does not exist")
+            .MustAsync(IsUnverifiedAsync)
+            .WithCode(OrganizerDecideRequest.ErrorCodes.OrganizerAlreadyVerified)
+            .WithMessage("Organizer has been already verified");
     }
     
-    private async Task<bool> IsIdPresent(Guid id, CancellationToken cancellationToken)
+    private async Task<bool> IsIdPresentAsync(Guid id, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         
@@ -35,7 +37,7 @@ public class OrganizerDecideValidator : Validator<OrganizerDecideRequest>
             .AnyAsync(o => o.Id == id, cancellationToken);
     }
     
-    private async Task<bool> IsUnverified(Guid id, CancellationToken cancellationToken)
+    private async Task<bool> IsUnverifiedAsync(Guid id, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         

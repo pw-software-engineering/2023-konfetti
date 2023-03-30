@@ -7,7 +7,7 @@ public class OrganizerDecideRequest
 
     public static class ErrorCodes
     {
-        public static int OrganizerNotInDatabase = 1;
+        public static int OrganizerDoesNotExist = 1;
         public static int OrganizerAlreadyVerified = 2;
     }
 }

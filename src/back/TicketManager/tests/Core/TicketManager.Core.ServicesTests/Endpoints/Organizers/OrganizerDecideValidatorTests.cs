@@ -45,7 +45,7 @@ public class OrganizerDecideValidatorTests
     {
         request.OrganizerId = Guid.Empty;
         var result = await validator.ValidateAsync(request);
-        result.EnsureCorrectError(OrganizerDecideRequest.ErrorCodes.OrganizerNotInDatabase);
+        result.EnsureCorrectError(OrganizerDecideRequest.ErrorCodes.OrganizerDoesNotExist);
     }
 
     [Fact]
