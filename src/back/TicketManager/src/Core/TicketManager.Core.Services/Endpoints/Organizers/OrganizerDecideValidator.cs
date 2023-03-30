@@ -32,7 +32,7 @@ public class OrganizerDecideValidator : Validator<OrganizerDecideRequest>
         
         return await dbResolver.Resolve(scope)
             .Organizers
-            .AnyAsync(o => o.Id != id, cancellationToken);
+            .AnyAsync(o => o.Id == id, cancellationToken);
     }
     
     private async Task<bool> IsUnverified(Guid id, CancellationToken cancellationToken)
