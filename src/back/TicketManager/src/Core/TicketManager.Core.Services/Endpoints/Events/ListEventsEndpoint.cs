@@ -20,7 +20,7 @@ public class ListEventsEndpoint : Endpoint<ListEventsRequest, PaginatedResponse<
     public override void Configure()
     {
         Get("/event/list");
-        Roles(AccountRoles.User);
+        Roles(AccountRoles.User, AccountRoles.Organizer, AccountRoles.Admin);
     }
 
     public override async Task HandleAsync(ListEventsRequest req, CancellationToken ct)
