@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ticketer/auth/jwt_token.dart';
 import 'package:ticketer/backend_communication/logic/account/communication_account.dart';
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
@@ -66,6 +67,36 @@ class BackendCommunication {
       } else {
         response = Response(requestOptions: RequestOptions());
       }
+    }
+
+    return Tuple2<Response, ResponseCode>(
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> postCallAuthorized(
+      String path, Token token,
+      {Object? data}) async {
+    if (!isInitialized) throw Exception("Not initilized");
+    Response response;
+    var options = dio.options;
+
+    try {
+      if (!token.isValid) {
+        throw ArgumentError("Token is not valid");
+      }
+      dio.options.headers.addAll({"token": token.token});
+      response = await dio.post(path, data: data);
+    } on DioError catch (e) {
+      log(e.toString());
+      if (!token.isValid) {
+        response = Response(requestOptions: RequestOptions(), statusCode: 401);
+      } else if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
+    } finally {
+      dio.options = options;
     }
 
     return Tuple2<Response, ResponseCode>(
