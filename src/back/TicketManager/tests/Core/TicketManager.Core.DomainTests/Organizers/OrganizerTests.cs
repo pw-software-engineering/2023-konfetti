@@ -5,7 +5,7 @@ using Xunit;
 
 namespace TicketManager.Core.DomainTests.Organizers;
 
-public class OrganizerTest
+public class OrganizerTests
 {
     public class ConstructorTests
     {
