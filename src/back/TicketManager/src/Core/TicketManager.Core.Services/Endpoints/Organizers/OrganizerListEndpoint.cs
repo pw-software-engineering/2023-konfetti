@@ -53,10 +53,8 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
             OrganizerListSortByDto.DisplayName => (o) => o.DisplayName,
             _ => (o) => o.Id.ToString()
         };
-        
-        query = req.ShowAscending
-            ? query.OrderBy(sortExpression)
-            : query.OrderByDescending(sortExpression);
+
+        query = query.ToOrderedQueryable(sortExpression, req);
         
         var result = await query.Select(OrganizerDtoMapper.ToDtoMapper).ToPaginatedResponseAsync(req, ct);
         await SendAsync(result, cancellation: ct);

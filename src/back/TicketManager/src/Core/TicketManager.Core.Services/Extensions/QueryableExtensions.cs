@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Common;
 
@@ -26,5 +28,12 @@ public static class QueryableExtensions
             Items = items,
             TotalCount = count,
         };
+    }
+
+    public static IQueryable<T> ToOrderedQueryable<T, TKey, TSort>(this IQueryable<T> query, 
+        Expression<Func<T, TKey >> exp, ISortedRequest<TSort> req) 
+        where TSort : Enum
+    {
+        return req.ShowAscending ? query.OrderBy(exp) : query.OrderByDescending(exp);
     }
 }
