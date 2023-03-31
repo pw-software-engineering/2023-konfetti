@@ -66,7 +66,7 @@ public class TestBase : IAsyncDisposable
             PhoneNumber = "123456789",
             TaxId = "000000000",
             TaxIdType = TaxIdTypeDto.Pesel,
-            VerificationStatus = VerificationStatusDto.VerifiedPositively,
+            VerificationStatus = VerificationStatusDto.Unverified,
         };
         OrganizerClient.POSTAsync<RegisterOrganizerEndpoint, RegisterOrganizerRequest>(new RegisterOrganizerRequest
         {

@@ -16,6 +16,6 @@ public static class OrganizerDtoMapper
         PhoneNumber = o.PhoneNumber,
         TaxIdType = (TaxIdTypeDto)o.TaxIdType,
         TaxId = o.TaxId,
-        VerificationStatus = VerificationStatusDto.VerifiedPositively, // TODO: fix it
+        VerificationStatus = (VerificationStatusDto)o.VerificationStatus,
     };
 }

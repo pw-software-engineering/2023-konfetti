@@ -13,7 +13,7 @@ public class Organizer : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
     public TaxIdType TaxIdType { get; private init; }
     public string DisplayName { get; private init; } = null!;
     public string PhoneNumber { get; private init; } = null!;
-    
+    public VerificationStatus VerificationStatus { get; private set; }
     public DateTime DateModified { get; set; }
 
     public Organizer(string email, string companyName, string address, string taxId, TaxIdType taxIdType,
@@ -27,6 +27,7 @@ public class Organizer : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
         TaxIdType = taxIdType;
         DisplayName = displayName;
         PhoneNumber = phoneNumber;
+        VerificationStatus = VerificationStatus.Unverified;
     }
 
     public Organizer() { }
@@ -34,6 +35,13 @@ public class Organizer : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
     public Account GetAccount(string passwordHash)
     {
         return new Account(Id, Email, passwordHash, AccountRoles.Organizer);
+    }
+
+    public void Decide(bool isAccepted)
+    {
+        if(VerificationStatus != VerificationStatus.Unverified)
+            return;
+        VerificationStatus = isAccepted ? VerificationStatus.VerifiedPositively : VerificationStatus.VerifiedNegatively;
     }
 }
 
@@ -44,4 +52,11 @@ public enum TaxIdType
     Krs = 2,
     Pesel = 3,
     Vatin = 4
+}
+
+public enum VerificationStatus
+{
+    Unverified = 0,
+    VerifiedPositively = 1,
+    VerifiedNegatively = 2
 }

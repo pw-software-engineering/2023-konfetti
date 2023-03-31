@@ -13,7 +13,7 @@ namespace TicketManager.Core.Services.DataAccess;
 public class CoreDbContext : DbContext
 {
     public DbSet<User> Users => Set<User>();
-    public DbSet<Organizer> Organizers => Set<Organizer>();
+    public virtual DbSet<Organizer> Organizers => Set<Organizer>();
     public virtual DbSet<Account> Accounts => Set<Account>();
     public DbSet<Event> Events => Set<Event>();
     
