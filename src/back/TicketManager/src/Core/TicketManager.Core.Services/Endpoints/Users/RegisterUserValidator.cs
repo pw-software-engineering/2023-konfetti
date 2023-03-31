@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.Endpoints.Accounts;
+using TicketManager.Core.Services.Extensions;
 using TicketManager.Core.Services.Services.Mockables;
-using TicketManager.Core.Services.ValidationExtensions;
 
 namespace TicketManager.Core.Services.Endpoints.Users;
 

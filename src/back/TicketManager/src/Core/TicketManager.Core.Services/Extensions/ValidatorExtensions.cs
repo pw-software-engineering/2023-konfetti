@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace TicketManager.Core.Services.ValidationExtensions;
+namespace TicketManager.Core.Services.Extensions;
 
 public static class ValidatorExtensions
 {
