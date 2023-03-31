@@ -1,6 +1,6 @@
 using FastEndpoints;
 
-namespace TicketManager.Core.Services.Extensions.JsonConverters;
+namespace TicketManager.Core.Services.Extensions.Parsers;
 
 public class DtoListParser<T> where T: struct, Enum
 {

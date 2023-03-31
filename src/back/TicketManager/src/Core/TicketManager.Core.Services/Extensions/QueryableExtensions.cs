@@ -9,7 +9,7 @@ public static class QueryableExtensions
 {
     private const int MaxPageSize = 100;
     
-    public async static Task<PaginatedResponse<TDto>> ToPaginatedResponseAsync<TDto, TReq>(this IQueryable<TDto> query, TReq req, CancellationToken ct)
+    public static async Task<PaginatedResponse<TDto>> ToPaginatedResponseAsync<TDto, TReq>(this IQueryable<TDto> query, TReq req, CancellationToken ct)
         where TDto : class
         where TReq : IPaginatedRequest
     {

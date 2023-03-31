@@ -30,17 +30,17 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
         var query = coreDbContext.Organizers.AsQueryable();
 
         if (req.CompanyNameFilter is not null)
-            query = query.Where(o => o.CompanyName.StartsWith(req.CompanyNameFilter));
+            query = query.Where(o => o.CompanyName.ContainsCaseInsensitive(req.CompanyNameFilter));
         if (req.AddressFilter is not null)
-            query = query.Where(o => o.Address.StartsWith(req.AddressFilter));
+            query = query.Where(o => o.Address.ContainsCaseInsensitive(req.AddressFilter));
         if (req.TaxIdFilter is not null)
-            query = query.Where(o => o.TaxId.StartsWith(req.TaxIdFilter));
+            query = query.Where(o => o.TaxId.ContainsCaseInsensitive(req.TaxIdFilter));
         if (req.TaxIdTypesFilter is not null)
             query = query.Where(o => req.TaxIdTypesFilter.Contains((TaxIdTypeDto)o.TaxIdType));
         if (req.DisplayNameFilter is not null)
-            query = query.Where(o => o.DisplayName.StartsWith(req.DisplayNameFilter));
+            query = query.Where(o => o.DisplayName.ContainsCaseInsensitive(req.DisplayNameFilter));
         if (req.EmailFilter is not null)
-            query = query.Where(o => o.Email.StartsWith(req.EmailFilter));
+            query = query.Where(o => o.Email.ContainsCaseInsensitive(req.EmailFilter));
         if (req.VerificationStatusesFilter is not null)
             query = query.Where(o =>
                 req.VerificationStatusesFilter.Contains((VerificationStatusDto)o.VerificationStatus));
@@ -53,10 +53,11 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
             OrganizerListSortByDto.DisplayName => (o) => o.DisplayName,
             _ => (o) => o.Id.ToString()
         };
-
-        query = query.ToOrderedQueryable(sortExpression, req);
         
-        var result = await query.Select(OrganizerDtoMapper.ToDtoMapper).ToPaginatedResponseAsync(req, ct);
+        var result = await query
+            .ToOrderedQueryable(sortExpression, req)
+            .Select(OrganizerDtoMapper.ToDtoMapper)
+            .ToPaginatedResponseAsync(req, ct);
         await SendAsync(result, cancellation: ct);
     }
 }
