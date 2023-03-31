@@ -27,23 +27,14 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
 
     public override async Task HandleAsync(OrganizerListRequest req, CancellationToken ct)
     {
-        var query = coreDbContext.Organizers.AsQueryable();
-
-        if (req.CompanyNameFilter is not null)
-            query = query.Where(o => o.CompanyName.ContainsCaseInsensitive(req.CompanyNameFilter));
-        if (req.AddressFilter is not null)
-            query = query.Where(o => o.Address.ContainsCaseInsensitive(req.AddressFilter));
-        if (req.TaxIdFilter is not null)
-            query = query.Where(o => o.TaxId.ContainsCaseInsensitive(req.TaxIdFilter));
-        if (req.TaxIdTypesFilter is not null)
-            query = query.Where(o => req.TaxIdTypesFilter.Contains((TaxIdTypeDto)o.TaxIdType));
-        if (req.DisplayNameFilter is not null)
-            query = query.Where(o => o.DisplayName.ContainsCaseInsensitive(req.DisplayNameFilter));
-        if (req.EmailFilter is not null)
-            query = query.Where(o => o.Email.ContainsCaseInsensitive(req.EmailFilter));
-        if (req.VerificationStatusesFilter is not null)
-            query = query.Where(o =>
-                req.VerificationStatusesFilter.Contains((VerificationStatusDto)o.VerificationStatus));
+        var query = coreDbContext.Organizers.AsQueryable()
+            .FilterStringField((o => o.CompanyName), req.CompanyNameFilter)
+            .FilterStringField((o => o.Address), req.AddressFilter)
+            .FilterStringField((o => o.TaxId), req.TaxIdFilter)
+            .FilterStringField((o => o.DisplayName), req.DisplayNameFilter)
+            .FilterStringField((o => o.Email), req.EmailFilter)
+            .FilterListField((o => o.TaxIdType), req.TaxIdTypesFilter)
+            .FilterListField((o => o.VerificationStatus), req.VerificationStatusesFilter);
 
         Expression<Func<Organizer, string>> sortExpression = req.SortBy switch
         {
