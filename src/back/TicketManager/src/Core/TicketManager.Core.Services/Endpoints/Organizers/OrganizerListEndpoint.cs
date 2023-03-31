@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FastEndpoints;
 using TicketManager.Core.Contracts.Common;
 using TicketManager.Core.Contracts.Organizers;
@@ -44,18 +45,18 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
             query = query.Where(o =>
                 req.VerificationStatusesFilter.Contains((VerificationStatusDto)o.VerificationStatus));
 
-        Func<Organizer, string> sortFunc = req.SortBy switch
+        Expression<Func<Organizer, string>> sortExpression = req.SortBy switch
         {
-            OrganizerListSortByDto.Address => (Organizer o) => o.Address,
-            OrganizerListSortByDto.Email => (Organizer o) => o.Email,
-            OrganizerListSortByDto.CompanyName => (Organizer o) => o.CompanyName,
-            OrganizerListSortByDto.DisplayName => (Organizer o) => o.DisplayName,
-            _ => (Organizer o) => o.Id.ToString()
+            OrganizerListSortByDto.Address => (o) => o.Address,
+            OrganizerListSortByDto.Email => (o) => o.Email,
+            OrganizerListSortByDto.CompanyName => (o) => o.CompanyName,
+            OrganizerListSortByDto.DisplayName => (o) => o.DisplayName,
+            _ => (o) => o.Id.ToString()
         };
-
+        
         query = req.ShowAscending
-            ? query.AsEnumerable().OrderBy(sortFunc).AsQueryable()
-            : query.AsEnumerable().OrderByDescending(sortFunc).AsQueryable();
+            ? query.OrderBy(sortExpression)
+            : query.OrderByDescending(sortExpression);
         
         var result = await query.Select(OrganizerDtoMapper.ToDtoMapper).ToPaginatedResponseAsync(req, ct);
         await SendAsync(result, cancellation: ct);
