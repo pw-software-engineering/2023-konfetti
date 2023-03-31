@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Services.Services.Mockables;
-using TicketManager.Core.Services.ValidationExtensions;
+using TicketManager.Core.Services.Extensions;
 
 namespace TicketManager.Core.Services.Endpoints.Organizers;
 
