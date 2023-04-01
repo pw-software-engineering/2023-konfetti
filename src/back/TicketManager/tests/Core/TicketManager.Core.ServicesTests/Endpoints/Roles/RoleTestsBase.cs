@@ -17,14 +17,6 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles;
 
 public class RoleTestsBase
 {
-    public CoreDbContext DbContext { get; set; }
-    public Repository<Event, Guid> Events { get; set; }
-    public Repository<Organizer, Guid> Organizers { get; set; }
-    public Repository<User, Guid> Users { get; set; }
-    public Repository<Account, Guid> Accounts { get; set; }
-    public PasswordManager PasswordManager { get; set; }
-    public TokenCreator TokenCreator { get; set; }
-
     private Dictionary<Type, object> singletons { get; set; }
 
     public RoleTestsBase()
@@ -32,32 +24,26 @@ public class RoleTestsBase
         singletons = new Dictionary<Type, object>();
         
         var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
-        DbContext = dbContextMock.Object;
-        singletons.Add(typeof(CoreDbContext), DbContext);
+        var dbContext = dbContextMock.Object;
+        singletons.Add(typeof(CoreDbContext), dbContext);
         
-        var eventsMock = new Mock<Repository<Event, Guid>>(DbContext);
-        Events = eventsMock.Object;
-        singletons.Add(typeof(Repository<Event, Guid>), Events);
+        var eventsMock = new Mock<Repository<Event, Guid>>(dbContext);
+        singletons.Add(typeof(Repository<Event, Guid>), eventsMock.Object);
 
-        var organizersMock = new Mock<Repository<Organizer, Guid>>(DbContext);
-        Organizers = organizersMock.Object;
-        singletons.Add(typeof(Repository<Organizer, Guid>), Organizers);
+        var organizersMock = new Mock<Repository<Organizer, Guid>>(dbContext);
+        singletons.Add(typeof(Repository<Organizer, Guid>), organizersMock.Object);
 
-        var usersMock = new Mock<Repository<User, Guid>>(DbContext);
-        Users = usersMock.Object;
-        singletons.Add(typeof(Repository<User, Guid>), Users);
+        var usersMock = new Mock<Repository<User, Guid>>(dbContext);
+        singletons.Add(typeof(Repository<User, Guid>), usersMock.Object);
 
-        var accountMock = new Mock<Repository<Account, Guid>>(DbContext);
-        Accounts = accountMock.Object;
-        singletons.Add(typeof(Repository<Account, Guid>), Accounts);
+        var accountMock = new Mock<Repository<Account, Guid>>(dbContext);
+        singletons.Add(typeof(Repository<Account, Guid>), accountMock.Object);
 
         var passwordManagerMock = new Mock<PasswordManager>();
-        PasswordManager = passwordManagerMock.Object;
-        singletons.Add(typeof(PasswordManager), PasswordManager);
+        singletons.Add(typeof(PasswordManager), passwordManagerMock.Object);
         
         var tokenCreatorMock = new Mock<TokenCreator>(new TokenConfiguration(""));
-        TokenCreator = tokenCreatorMock.Object;
-        singletons.Add(typeof(TokenCreator), TokenCreator);
+        singletons.Add(typeof(TokenCreator), tokenCreatorMock.Object);
     }
 
     public RoleTestInstance<T> GetRoleTestInstance<T>() where T : BaseEndpoint
