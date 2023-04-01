@@ -32,4 +32,11 @@ public class OrganizerRoleTests
         var testInstance = testsBase.GetRoleTestInstance<OrganizerDecideEndpoint>();
         testInstance.AsAdmin().Check();
     }
+
+    [Fact]
+    public void WhenOrganizerListChecked_ItShouldAllowOnlyAdmin()
+    {
+        var testInstance = testsBase.GetRoleTestInstance<OrganizerListEndpoint>();
+        testInstance.AsAdmin().Check();
+    }
 }
