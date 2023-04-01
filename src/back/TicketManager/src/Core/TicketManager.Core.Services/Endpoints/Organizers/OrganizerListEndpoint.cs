@@ -28,13 +28,13 @@ public class OrganizerListEndpoint: Endpoint<OrganizerListRequest, PaginatedResp
     public override async Task HandleAsync(OrganizerListRequest req, CancellationToken ct)
     {
         var query = coreDbContext.Organizers.AsQueryable()
-            .FilterStringField((o => o.CompanyName), req.CompanyNameFilter)
-            .FilterStringField((o => o.Address), req.AddressFilter)
-            .FilterStringField((o => o.TaxId), req.TaxIdFilter)
-            .FilterStringField((o => o.DisplayName), req.DisplayNameFilter)
-            .FilterStringField((o => o.Email), req.EmailFilter)
-            .FilterListField((o => o.TaxIdType), req.TaxIdTypesFilter)
-            .FilterListField((o => o.VerificationStatus), req.VerificationStatusesFilter);
+            .FilterStringField(o => o.CompanyName, req.CompanyNameFilter)
+            .FilterStringField(o => o.Address, req.AddressFilter)
+            .FilterStringField(o => o.TaxId, req.TaxIdFilter)
+            .FilterStringField(o => o.DisplayName, req.DisplayNameFilter)
+            .FilterStringField(o => o.Email, req.EmailFilter)
+            .FilterListField(o => o.TaxIdType, req.TaxIdTypesFilter)
+            .FilterListField(o => o.VerificationStatus, req.VerificationStatusesFilter);
 
         Expression<Func<Organizer, string>> sortExpression = req.SortBy switch
         {

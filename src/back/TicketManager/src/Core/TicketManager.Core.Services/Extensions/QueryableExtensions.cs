@@ -30,7 +30,7 @@ public static class QueryableExtensions
         };
     }
 
-    public static IQueryable<T> ToOrderedQueryable<T, TKey, TSort>(this IQueryable<T> query,
+    public static IOrderedQueryable<T> ToOrderedQueryable<T, TKey, TSort>(this IQueryable<T> query,
         Expression<Func<T, TKey>> exp, ISortedRequest<TSort> req)
         where TSort : Enum
     {
