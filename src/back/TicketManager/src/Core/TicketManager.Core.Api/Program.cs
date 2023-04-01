@@ -4,6 +4,7 @@ using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
@@ -13,6 +14,7 @@ using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Extensions.JsonConverters;
+using TicketManager.Core.Services.Extensions.Parsers;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
@@ -64,6 +66,8 @@ public class Program
         {
             c.Serializer.Options.Converters.Add(new DateOnlyConverter());
             c.Serializer.Options.Converters.Add(new DateTimeConverter());
+            c.Binding.ValueParserFor<List<TaxIdTypeDto>>(DtoListParser<TaxIdTypeDto>.Parse);
+            c.Binding.ValueParserFor<List<VerificationStatusDto>>(DtoListParser<VerificationStatusDto>.Parse);
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
             {
                 Errors = failures.Select(f => new ValidationError
