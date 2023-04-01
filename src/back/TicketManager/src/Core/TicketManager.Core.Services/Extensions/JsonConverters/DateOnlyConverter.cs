@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TicketManager.Core.Services.JsonConverters;
+namespace TicketManager.Core.Services.Extensions.JsonConverters;
 
 public class DateOnlyConverter : JsonConverter<DateOnly>
 {
