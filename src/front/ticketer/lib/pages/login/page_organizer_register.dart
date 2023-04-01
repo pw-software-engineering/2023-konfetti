@@ -216,17 +216,17 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
 
       var response = await Auth().registerOrganizer(organizer);
       if (response.value != 200) {
-        await showDilogAfterUnsuccesfullRegistration(
+        await showDialogAfterUnsuccesfullRegistration(
             response.getResponseString());
       } else {
-        await showDilogAfterRegistration();
+        await showDialogAfterRegistration();
       }
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
-  Future<void> showDilogAfterRegistration() async {
+  Future<void> showDialogAfterRegistration() async {
     await showDialog(
       context: context,
       builder: (context) {
@@ -247,7 +247,7 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
     );
   }
 
-  Future<void> showDilogAfterUnsuccesfullRegistration(String errorMess) async {
+  Future<void> showDialogAfterUnsuccesfullRegistration(String errorMess) async {
     await showDialog(
       context: context,
       builder: (context) {
