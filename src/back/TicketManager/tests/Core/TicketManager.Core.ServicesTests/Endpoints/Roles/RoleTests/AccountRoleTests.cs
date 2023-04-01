@@ -7,6 +7,7 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 public class AccountRoleTests
 {
     private readonly RoleTestsBase testsBase;
+    
     public AccountRoleTests()
     {
         testsBase = new RoleTestsBase();
@@ -16,6 +17,6 @@ public class AccountRoleTests
     public void WhenAccountLoginChecked_ItShouldAllowAnonymous()
     {
         var testInstance = testsBase.GetRoleTestInstance<AccountLoginEndpoint>();
-        testInstance.AsAnonymous();
+        testInstance.CheckAnonymous();
     }
 }

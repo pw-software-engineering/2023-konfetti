@@ -17,33 +17,33 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles;
 
 public class RoleTestsBase
 {
-    private Dictionary<Type, object> singletons { get; set; }
+    private readonly Dictionary<Type, object> dependencies;
 
     public RoleTestsBase()
     {
-        singletons = new Dictionary<Type, object>();
+        dependencies = new Dictionary<Type, object>();
         
         var dbContextMock = new Mock<CoreDbContext>(new DbContextOptionsBuilder<CoreDbContext>().Options);
         var dbContext = dbContextMock.Object;
-        singletons.Add(typeof(CoreDbContext), dbContext);
+        dependencies.Add(typeof(CoreDbContext), dbContext);
         
         var eventsMock = new Mock<Repository<Event, Guid>>(dbContext);
-        singletons.Add(typeof(Repository<Event, Guid>), eventsMock.Object);
+        dependencies.Add(typeof(Repository<Event, Guid>), eventsMock.Object);
 
         var organizersMock = new Mock<Repository<Organizer, Guid>>(dbContext);
-        singletons.Add(typeof(Repository<Organizer, Guid>), organizersMock.Object);
+        dependencies.Add(typeof(Repository<Organizer, Guid>), organizersMock.Object);
 
         var usersMock = new Mock<Repository<User, Guid>>(dbContext);
-        singletons.Add(typeof(Repository<User, Guid>), usersMock.Object);
+        dependencies.Add(typeof(Repository<User, Guid>), usersMock.Object);
 
         var accountMock = new Mock<Repository<Account, Guid>>(dbContext);
-        singletons.Add(typeof(Repository<Account, Guid>), accountMock.Object);
+        dependencies.Add(typeof(Repository<Account, Guid>), accountMock.Object);
 
         var passwordManagerMock = new Mock<PasswordManager>();
-        singletons.Add(typeof(PasswordManager), passwordManagerMock.Object);
+        dependencies.Add(typeof(PasswordManager), passwordManagerMock.Object);
         
         var tokenCreatorMock = new Mock<TokenCreator>(new TokenConfiguration(""));
-        singletons.Add(typeof(TokenCreator), tokenCreatorMock.Object);
+        dependencies.Add(typeof(TokenCreator), tokenCreatorMock.Object);
     }
 
     public RoleTestInstance<T> GetRoleTestInstance<T>() where T : BaseEndpoint
@@ -54,7 +54,7 @@ public class RoleTestsBase
 
         foreach (var par in parameterInfo)
         {
-            parameters.Add(singletons[par.ParameterType]);
+            parameters.Add(dependencies[par.ParameterType]);
         }
 
         return new RoleTestInstance<T>(parameters.ToArray());

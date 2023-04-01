@@ -9,6 +9,7 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 public class RoleTestInstance<T> where T : BaseEndpoint
 {
     private List<string>? roles;
+    
     public RoleTestInstance(params object[] dependencies)
     {
         var endpoint = Factory.Create<T>(dependencies);
@@ -48,7 +49,7 @@ public class RoleTestInstance<T> where T : BaseEndpoint
         return this;
     }
 
-    public void AsAnonymous()
+    public void CheckAnonymous()
     {
         roles.Should().BeNull();
     }
