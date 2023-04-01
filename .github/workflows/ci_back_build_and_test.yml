@@ -37,8 +37,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test Domain Tests
-      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-restore
+      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build
     - name: Test Services Tests
-      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-restore
+      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build
     - name: Test Integration Tests
-      run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.IntegrationTests.csproj --no-restore
+      run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.IntegrationTests.csproj --no-build
