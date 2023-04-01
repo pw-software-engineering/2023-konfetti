@@ -10,8 +10,12 @@ import 'package:tuple/tuple.dart';
 
 class EventCommunication {
   static const String _createEndPoint = "/event/create";
-  Future<Tuple2<Response, ResponseCode>> create(Event body) async =>
-      await BackendCommunication().postCallAuthorized(
-          _createEndPoint, Token(Auth().getCurrentAccount!.token),
-          data: jsonEncode(body));
+  Future<Tuple2<Response, ResponseCode>> create(Event body) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().postCallAuthorized(
+        _createEndPoint, Token(Auth().getCurrentAccount!.token),
+        data: jsonEncode(body));
+  }
 }
