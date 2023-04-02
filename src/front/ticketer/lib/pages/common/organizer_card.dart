@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
 
 class OrganizerCard extends StatefulWidget {
-  const OrganizerCard({Key? key}) : super(key: key);
+  final Organizer organizer;
+
+  const OrganizerCard({Key? key, required this.organizer}) : super(key: key);
 
   @override
   State<OrganizerCard> createState() => _OrganizerCardState();
 }
 
 class _OrganizerCardState extends State<OrganizerCard> {
+  late Organizer organizer;
 
+  @override
+  void initState() {
+    organizer = widget.organizer;
+    super.initState();
+  }
 
   Container _organizerContainer() {
     return Container(
@@ -18,11 +27,12 @@ class _OrganizerCardState extends State<OrganizerCard> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _getOrganizerInfo("Company name", "Januszex PL"),
-            _getOrganizerInfo("Address", "ul. Kwiatowa 7, 43-400 Poznań"),
-            _getOrganizerInfo("Display name", "Twoje imprezy u Janusza"),
-            _getOrganizerInfo("Tax info", "KRS: 0412941203942"),
-            _getOrganizerInfo("Phone", "+48 601 421 449")
+            _getOrganizerInfo("Company name", organizer.companyName),
+            _getOrganizerInfo("Address", organizer.address),
+            _getOrganizerInfo("Display name", organizer.displayName),
+            _getOrganizerInfo("Tax info", "${organizer.taxIdType.name}: ${organizer.taxId}"),
+            _getOrganizerInfo("Email", organizer.email),
+            _getOrganizerInfo("Phone", organizer.phoneNumber)
           ],
         ),
       ),

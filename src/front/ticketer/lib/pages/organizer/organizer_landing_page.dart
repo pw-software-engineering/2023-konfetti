@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/common/organizer_card.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
@@ -37,7 +39,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
-          const OrganizerCard(),
+          OrganizerCard(organizer: Organizer("Januszex.pl", "Warszawa", TaxType.KRS, "12345",
+              "Januszex", "jan.nowak@pw.edu.pl", "A1b2c3d4", "+48600900600")),
           _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),

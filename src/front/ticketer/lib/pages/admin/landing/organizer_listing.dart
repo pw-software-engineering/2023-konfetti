@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/pages/common/organizer_card.dart';
 
 class OrganizerListing extends StatefulWidget {
@@ -10,7 +13,12 @@ class OrganizerListing extends StatefulWidget {
 }
 
 class _OrganizerListingPageState  extends State<OrganizerListing>  {
-
+  
+  List<Organizer> data = [];
+  bool end = false;
+  int currentPageNumber = 0;
+  static const int pageSize = 1;
+  
   Widget _getContent() {
     return SingleChildScrollView(
       child: Column(
@@ -18,12 +26,45 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getHeader(),
-          _getOrganizerListItem(),
-          _getOrganizerListItem(),
-          _getOrganizerListItem(),
+          _getFlatList()
         ],
       ),
     );
+  }
+
+  ListView _getFlatList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        if (index < data.length) {
+          return _getOrganizerListItem(data[index]);
+        } else if (index == data.length && end) {
+          return const Center(child: Text('End of list'));
+        } else {
+          _getMoreData();
+          return const SizedBox(
+            height: 80,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+      itemCount: data.length + 1,
+    );
+  }
+
+  void _getMoreData() async {
+    final response = await OrganizerCommunication().listToVerify(currentPageNumber, pageSize);
+    if (!mounted) return;
+
+    if (response.item2 != ResponseCode.allGood) {
+      if (response.item1.data.items.isEmpty) {
+        setState(() => end = true);
+        return;
+      }
+    } else {
+      setState(() => data = [...data, ...response.item1.data.items]);
+      currentPageNumber += 1;
+    }
   }
 
   Container _getHeader() {
@@ -36,12 +77,12 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
     );
   }
 
-  Widget _getOrganizerListItem() {
+  Widget _getOrganizerListItem(Organizer organizer) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const OrganizerCard(),
+        OrganizerCard(organizer: organizer),
         _rejectButton(),
         _verifyButton()
       ],
