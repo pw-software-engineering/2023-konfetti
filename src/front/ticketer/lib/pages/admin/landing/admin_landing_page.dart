@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/pages/admin/admin_drawer.dart';
+import 'package:ticketer/pages/admin/landing/organizer_listing.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 
 class AdminLandingPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
+          const OrganizerListing()
         ],
       ),
     );
@@ -54,8 +56,6 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
       drawer: const AdminNavigationDrawer(),
       body: Center(
         child: Container(
-          constraints: const BoxConstraints(minWidth: 200, maxWidth: 500),
-          padding: const EdgeInsets.all(20),
           child: _getContent(),
         ),
       ),

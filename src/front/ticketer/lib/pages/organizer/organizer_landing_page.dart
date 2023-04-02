@@ -4,6 +4,7 @@ import 'package:ticketer/backend_communication/model/event.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
+import 'package:ticketer/pages/common/organizer_card.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
 
 class OrganizerLandingPage extends StatefulWidget {
@@ -36,23 +37,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
-          Container(
-            padding: const EdgeInsets.all(12.0),
-            margin: const EdgeInsets.only(top: 20, bottom: 20),
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.blueGrey)),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _getOrganizerInfo("Company name", "Januszex PL"),
-                  _getOrganizerInfo("Address", "ul. Kwiatowa 7, 43-400 Poznań"),
-                  _getOrganizerInfo("Display name", "Twoje imprezy u Janusza"),
-                  _getOrganizerInfo("Tax info", "KRS: 0412941203942"),
-                  _getOrganizerInfo("Phone", "+48 601 421 449")
-                ],
-              ),
-            ),
-          ),
+          const OrganizerCard(),
           _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),
@@ -412,29 +397,6 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
           ],
         );
       },
-    );
-  }
-
-  Widget _getOrganizerInfo(String property, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          flex: 2,
-          child: Text(
-            property,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700, color: Colors.blue, fontSize: 16),
-          ),
-        ),
-        Flexible(
-          flex: 5,
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ),
-      ],
     );
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
-import 'package:ticketer/pages/admin/admin_landing_page.dart';
+import 'package:ticketer/pages/admin/landing/admin_landing_page.dart';
 import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 import 'package:ticketer/pages/user/user_landing_page.dart';
 

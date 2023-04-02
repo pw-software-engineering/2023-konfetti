@@ -4,22 +4,21 @@ import 'package:ticketer/pages/admin/landing/admin_landing_page.dart';
 
 Widget _homeWidget() {
   return const MaterialApp(
-    home: AdminLandingPage()
+      home: AdminLandingPage()
   );
 }
 
 void main() {
   testWidgets(
-    'Should render sidebar for admin',
+    'Should render organiser list',
         (WidgetTester tester) async {
       // given
       await tester.pumpWidget(_homeWidget());
-      final ScaffoldState state = tester.firstState(find.byType(Scaffold));
-      state.openDrawer();
-      await tester.pumpAndSettle();
+      int n = 3; // TODO: [TM-29] mock organizer fetching
+
       // when then
-      expect(find.textContaining("Logged on as admin"), findsOneWidget);
-      expect(find.textContaining("Sign out"), findsOneWidget);
+      expect(find.textContaining("Approve"), findsNWidgets(n));
+      expect(find.textContaining("Reject"), findsNWidgets(n));
     },
   );
 }
