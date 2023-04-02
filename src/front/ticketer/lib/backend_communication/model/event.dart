@@ -15,6 +15,16 @@ class Event {
     this.sectors,
   );
 
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      json['name'],
+      json['description'],
+      json['location'],
+      json['date'],
+      json['sectors'].map((s) => Sector.fromJson(s)).toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,
