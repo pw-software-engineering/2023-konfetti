@@ -17,42 +17,60 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _organizerListItem(),
-          _organizerListItem(),
-          _organizerListItem(),
+          _getHeader(),
+          _getOrganizerListItem(),
+          _getOrganizerListItem(),
+          _getOrganizerListItem(),
         ],
       ),
     );
   }
 
-  Widget _organizerListItem() {
+  Container _getHeader() {
+    return Container(
+      margin: const EdgeInsets.only(top: 30.0),
+      child: const Text(
+        "Organizer accounts waiting for approval",
+        style: TextStyle(fontSize: 20, color: Colors.blue),
+      ),
+    );
+  }
+
+  Widget _getOrganizerListItem() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const OrganizerCard(),
-        _verifyButton(),
-        _rejectButton()
+        _rejectButton(),
+        _verifyButton()
       ],
     );
   }
 
   Widget _verifyButton() {
     return Container(
-      margin: const EdgeInsets.only(top: 15.0),
+      margin: const EdgeInsets.all(15.0),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          fixedSize: const Size(90, 30),
+        ),
         onPressed: () => {},
-        child: Text("Verify"),
+        child: const Text("Approve"),
       ),
     );
   }
 
   Widget _rejectButton() {
     return Container(
-      margin: const EdgeInsets.only(top: 15.0),
+      margin: const EdgeInsets.all(15.0),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.redAccent,
+          fixedSize: const Size(90, 30),
+        ),
         onPressed: () => {},
-        child: Text("Reject"),
+        child: const Text("Reject"),
       ),
     );
   }
