@@ -17,7 +17,7 @@ void main() {
       int n = 3; // TODO: [TM-29] mock organizer fetching
 
       // when then
-      expect(find.textContaining("Verify"), findsNWidgets(n));
+      expect(find.textContaining("Approve"), findsNWidgets(n));
       expect(find.textContaining("Reject"), findsNWidgets(n));
     },
   );
