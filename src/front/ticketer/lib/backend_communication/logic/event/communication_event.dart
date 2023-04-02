@@ -10,6 +10,8 @@ import 'package:tuple/tuple.dart';
 
 class EventCommunication {
   static const String _createEndPoint = "/event/create";
+  static const String _listEndPoint = "/event/list";
+
   Future<Tuple2<Response, ResponseCode>> create(Event body) async {
     if (Auth().getCurrentAccount == null) {
       throw Exception("Non authorized API call");
@@ -17,5 +19,12 @@ class EventCommunication {
     return await BackendCommunication().postCallAuthorized(
         _createEndPoint, Token(Auth().getCurrentAccount!.token),
         data: jsonEncode(body));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> list(int pageNo, int pageSize) async {
+    Map<String, dynamic> params = {"PageNumber": pageNo, "PageSize": pageSize};
+    return await BackendCommunication().getCallAuthorized(
+        _listEndPoint, Token(Auth().getCurrentAccount!.token),
+        params: params);
   }
 }

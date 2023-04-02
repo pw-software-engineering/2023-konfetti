@@ -11,6 +11,15 @@ class Sector {
     this.numberOfColumns,
   );
 
+  factory Sector.fromJson(Map<String, dynamic> json) {
+    return Sector(
+      json['name'],
+      json['priceInSmallestUnit'],
+      json['numberOfRows'],
+      json['numberOfColumns'],
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'priceInSmallestUnit': price,
