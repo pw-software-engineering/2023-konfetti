@@ -16,12 +16,16 @@ class Event {
   );
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    List<Sector> sectors = List.empty(growable: true);
+    for (var s in json['sectors']) {
+      sectors.add(Sector.fromJson(s));
+    }
     return Event(
       json['name'],
       json['description'],
       json['location'],
       json['date'],
-      json['sectors'].map((s) => Sector.fromJson(s)).toList(),
+      sectors,
     );
   }
 
