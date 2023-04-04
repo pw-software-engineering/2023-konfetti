@@ -25,8 +25,8 @@ public class TestBase : IAsyncDisposable
     protected readonly HttpClient OrganizerClient;
     protected readonly HttpClient AdminClient;
 
-    protected UserDto DefaultUser;
-    protected OrganizerDto DefaultOrganizer;
+    protected UserDto DefaultUser = null!;
+    protected OrganizerDto DefaultOrganizer = null!;
 
     public TestBase()
     {
