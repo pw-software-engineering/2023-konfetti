@@ -93,8 +93,10 @@ class _EventTileState extends State<EventTile> {
           flex: 2,
           child: Text(
             property,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700, color: Colors.blue, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).primaryColor,
+                fontSize: 16),
           ),
         ),
         Flexible(
@@ -110,10 +112,8 @@ class _EventTileState extends State<EventTile> {
 
   Widget _getContent() {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [_eventContainer()],
+      child: Center(
+        child: _eventContainer(),
       ),
     );
   }

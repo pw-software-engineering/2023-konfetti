@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:ticketer/pages/user/user_landing_page.dart';
-
-Widget _homeWidget() {
-  return const MaterialApp(home: UserLandingPage());
-}
-
 // TODO: To be fixed in TM-77
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:ticketer/pages/user/user_landing_page.dart';
+
+// Widget _homeWidget() {
+//   return const MaterialApp(home: UserLandingPage());
+// }
 
 // void main() {
 //   testWidgets(
