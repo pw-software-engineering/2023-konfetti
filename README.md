@@ -104,6 +104,8 @@ For now known issue is that using docker leaves dangling images. Those are image
 docker image prune
 ```
 
+Some essential variables are stored in file `variables.env` which has development environment variables used by main app. For production purposes those values should be changed approprietly
+
 ### Test status
 
 On master
