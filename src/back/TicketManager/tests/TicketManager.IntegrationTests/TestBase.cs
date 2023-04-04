@@ -89,7 +89,7 @@ public class TestBase : IAsyncDisposable
         using var scope = app.Services.CreateScope();
         
         var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
-        var repository = new Repository<Organizer, Guid>(dbContext:dbContext);
+        var repository = new Repository<Organizer, Guid>(dbContext);
         
         var dbOrganizer = dbContext.Organizers.AsTracking().First(o => o.Email == DefaultOrganizer.Email);
         dbOrganizer.Decide(true);
