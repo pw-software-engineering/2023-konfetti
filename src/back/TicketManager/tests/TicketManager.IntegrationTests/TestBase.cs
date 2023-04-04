@@ -1,7 +1,9 @@
 using FastEndpoints;
+using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Accounts;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Users;
+using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.Endpoints.Accounts;
 using TicketManager.Core.Services.Endpoints.Organizers;
 using TicketManager.Core.Services.Endpoints.Users;
@@ -79,6 +81,16 @@ public class TestBase : IAsyncDisposable
             TaxId = DefaultOrganizer.TaxId,
             TaxIdType = TaxIdTypeDto.Pesel,
         }).Wait();
+        // Authorize organizer to be able to login
+        using var scope = app.Services.CreateScope();
+        
+        var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
+        var dbOrganizer = dbContext.Organizers.First(o => o.Email == DefaultOrganizer.Email);
+        dbOrganizer.Decide(true);
+        dbContext.Update(dbOrganizer);
+        dbContext.SaveChangesAsync().Wait();
+        
+
         var organizerLoginTask = OrganizerClient.POSTAsync<AccountLoginEndpoint, AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest
         {
             Email = DefaultOrganizer.Email,
