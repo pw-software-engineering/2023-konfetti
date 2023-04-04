@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
@@ -18,65 +16,20 @@ class UserLandingPage extends StatefulWidget {
 
 class _UserLandingPageState extends State<UserLandingPage> {
   int _pageNo = 0;
-  final int _pageSize = 5;
+  final int _pageSize = 3;
   bool _hasNextPage = true;
-  bool _isFirstLoadRunning = false;
-  bool _isLoadMoreRunning = false;
-  List<Event> _events = [];
-  late ScrollController _controller;
+  final List<Event> _events = [];
 
-  void _firstLoad() async {
+  Future<void> _fetchMoreData() async {
+    final res = await BackendCommunication().event.list(_pageNo, _pageSize);
     setState(() {
-      _isFirstLoadRunning = true;
+      int before = _events.length;
+      for (var ev in res.item1.data["items"]) {
+        _events.add(Event.fromJson(ev));
+      }
+      int after = _events.length;
+      _hasNextPage = before != after;
     });
-    try {
-      final res = await BackendCommunication().event.list(_pageNo, _pageSize);
-      setState(() {
-        _events = [];
-        for (var ev in res.item1.data["items"]) {
-          _events.add(Event.fromJson(ev));
-        }
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-
-    setState(() {
-      _isFirstLoadRunning = false;
-    });
-  }
-
-  void _loadMore() async {
-    print("Load more running");
-    if (_hasNextPage == true &&
-        _isFirstLoadRunning == false &&
-        _isLoadMoreRunning == false &&
-        _controller.position.extentAfter < 300) {
-      setState(() {
-        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
-        _pageNo += 1; // Increase _page by 1
-      });
-      try {
-        final res = await BackendCommunication().event.list(_pageNo, _pageSize);
-
-        final List fetchedEvents = res.item1.data["items"];
-        if (fetchedEvents.isNotEmpty) {
-          setState(() {
-            for (var ev in res.item1.data["items"]) {
-              _events.add(Event.fromJson(ev));
-            }
-          });
-        } else {
-          setState(() {
-            _hasNextPage = false;
-          });
-        }
-      } catch (e) {}
-
-      setState(() {
-        _isLoadMoreRunning = false;
-      });
-    }
   }
 
   Widget _getContent() {
@@ -118,61 +71,35 @@ class _UserLandingPageState extends State<UserLandingPage> {
   }
 
   Widget _getEventsList() {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(
-        dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.stylus,
-          PointerDeviceKind.unknown,
-        },
-      ),
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            controller: _controller,
-            itemCount: _events.length,
-            itemBuilder: (_, index) => EventTile(event: _events[index]),
-          ),
-
-          // when the _loadMore function is running
-          if (_isLoadMoreRunning == true)
-            const Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 40),
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-
-          // When nothing else to load
-          if (_hasNextPage == false)
-            Container(
-              padding: const EdgeInsets.only(top: 30, bottom: 40),
-              color: Colors.amber,
-              child: const Center(
-                child: Text('You have fetched all of the content'),
-              ),
-            ),
-        ],
-      ),
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (_, index) {
+            if (index < _events.length) {
+              return EventTile(event: _events[index]);
+            } else {
+              try {
+                _fetchMoreData();
+                setState(() {
+                  _pageNo++;
+                });
+              } catch (e) {
+                log(e.toString());
+              }
+              return const SizedBox(
+                width: 50,
+                height: 50,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+          itemCount: _hasNextPage ? _events.length + 1 : _events.length,
+        ),
+      ],
     );
-  }
-
-  @override
-  void initState() {
-    _firstLoad();
-    _controller = ScrollController();
-    _controller.addListener(_loadMore);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.removeListener(_loadMore);
-    super.dispose();
   }
 
   @override

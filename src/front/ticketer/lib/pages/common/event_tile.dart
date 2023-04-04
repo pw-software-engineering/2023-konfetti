@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 
@@ -11,25 +13,79 @@ class EventTile extends StatefulWidget {
 }
 
 class _EventTileState extends State<EventTile> {
-  late Event event;
+  late Event _event;
 
-  Container _eventContainer() {
-    return Container(
-      padding: const EdgeInsets.all(9.0),
-      decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey)),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _getEventInfo("Event name", event.name),
-            _getEventInfo("Date & time", event.date),
-            _getEventInfo("Location", event.location),
-          ],
+  Widget _eventContainer() {
+    return InkWell(
+      onTap: () => _showEventDetails(),
+      child: Container(
+        padding: const EdgeInsets.all(9.0),
+        decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _getEventInfo("Event name", _event.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              _getEventInfo("Date & time", _event.date),
+              _getEventInfo("Location", _event.location),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _getEventInfo(String property, String value) {
+  Future<void> _showEventDetails() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(_event.name),
+          scrollable: true,
+          content: SingleChildScrollView(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 4,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _event.description,
+                    textAlign: TextAlign.justify,
+                  ),
+                  const Text(
+                    "\nSectors: ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: _event.sectors
+                          .map((s) => Text(s.toString()))
+                          .toList(),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _getEventInfo(String property, String value, {TextStyle? style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -45,7 +101,7 @@ class _EventTileState extends State<EventTile> {
           flex: 5,
           child: Text(
             value,
-            style: const TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, fontWeight: style?.fontWeight),
           ),
         ),
       ],
@@ -64,7 +120,7 @@ class _EventTileState extends State<EventTile> {
 
   @override
   void initState() {
-    event = widget.event;
+    _event = widget.event;
     super.initState();
   }
 
