@@ -1,7 +1,12 @@
 using FastEndpoints;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Accounts;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Users;
+using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Endpoints.Accounts;
 using TicketManager.Core.Services.Endpoints.Organizers;
 using TicketManager.Core.Services.Endpoints.Users;
@@ -66,7 +71,7 @@ public class TestBase : IAsyncDisposable
             PhoneNumber = "123456789",
             TaxId = "000000000",
             TaxIdType = TaxIdTypeDto.Pesel,
-            VerificationStatus = VerificationStatusDto.Unverified,
+            VerificationStatus = VerificationStatusDto.VerifiedPositively,
         };
         OrganizerClient.POSTAsync<RegisterOrganizerEndpoint, RegisterOrganizerRequest>(new RegisterOrganizerRequest
         {
@@ -79,6 +84,17 @@ public class TestBase : IAsyncDisposable
             TaxId = DefaultOrganizer.TaxId,
             TaxIdType = TaxIdTypeDto.Pesel,
         }).Wait();
+        // Authorize organizer to be able to login
+        
+        using var scope = app.Services.CreateScope();
+        
+        var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
+        var repository = new Repository<Organizer, Guid>(dbContext);
+        
+        var dbOrganizer = dbContext.Organizers.AsTracking().First(o => o.Email == DefaultOrganizer.Email);
+        dbOrganizer.Decide(true);
+        repository.UpdateAsync(dbOrganizer, default).Wait();
+
         var organizerLoginTask = OrganizerClient.POSTAsync<AccountLoginEndpoint, AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest
         {
             Email = DefaultOrganizer.Email,
