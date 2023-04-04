@@ -4,12 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Accounts;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Users;
+using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Endpoints.Accounts;
 using TicketManager.Core.Services.Endpoints.Organizers;
 using TicketManager.Core.Services.Endpoints.Users;
+using TicketManager.Core.Services.Services.PasswordManagers;
+using TicketManager.IntegrationTests.Extensions;
 using Xunit;
 
 namespace TicketManager.IntegrationTests;
@@ -21,6 +24,7 @@ public class TestBase : IAsyncDisposable
     protected readonly HttpClient AnonymousClient;
     protected readonly HttpClient UserClient;
     protected readonly HttpClient OrganizerClient;
+    protected readonly HttpClient AdminClient;
 
     protected readonly UserDto DefaultUser;
     protected readonly OrganizerDto DefaultOrganizer;
@@ -60,6 +64,25 @@ public class TestBase : IAsyncDisposable
         var userIdTask = UserClient.GETAsync<UserViewEndpoint, UserViewRequest, UserDto>(new());
         userIdTask.Wait();
         DefaultUser.Id = userIdTask.Result.Result!.Id;
+
+        AdminClient = app.CreateClient();
+        
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
+
+        var accounts = new Repository<Account, Guid>(dbContext);
+        var adminAccount = dbContext.Accounts.AsTracking().First(a => a.Role == AccountRoles.Admin);
+        adminAccount.SetPassword(new PasswordManager().GetHash(password));
+        accounts.UpdateAsync(adminAccount, default).Wait();
+
+        var adminLoginTask = AdminClient.PostSuccessAsync<AccountLoginEndpoint, AccountLoginRequest, AccountLoginResponse>(new()
+        {
+            Email = "admin@email.com",
+            Password = password,
+        });
+        adminLoginTask.Wait();
+        token = adminLoginTask.Result.AccessToken;
+        AdminClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         
         OrganizerClient = app.CreateClient();
         DefaultOrganizer = new()
@@ -85,10 +108,6 @@ public class TestBase : IAsyncDisposable
             TaxIdType = TaxIdTypeDto.Pesel,
         }).Wait();
         // Authorize organizer to be able to login
-        
-        using var scope = app.Services.CreateScope();
-        
-        var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
         var repository = new Repository<Organizer, Guid>(dbContext);
         
         var dbOrganizer = dbContext.Organizers.AsTracking().First(o => o.Email == DefaultOrganizer.Email);
