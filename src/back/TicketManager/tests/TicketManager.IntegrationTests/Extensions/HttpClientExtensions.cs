@@ -34,4 +34,13 @@ public static class HttpClientExtensions
         response.Response.StatusCode.Should().Be(HttpStatusCode.OK);
         return response.Result!;
     }
+    
+    public async static Task PostFailureAsync<TEndpoint, TRequest>(this HttpClient client, TRequest request)
+        where TEndpoint : IEndpoint
+        where TRequest : class
+    {
+        var response = await client.POSTAsync<TEndpoint, TRequest>(request);
+
+        response.StatusCode.Should().NotBe(HttpStatusCode.OK);
+    }
 }
