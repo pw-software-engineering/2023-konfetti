@@ -7,7 +7,7 @@ using TicketManager.Core.Services.DataAccess.DtoMappers;
 
 namespace TicketManager.Core.Services.Endpoints.Organizers;
 
-public class OrganizerViewEndpoint : Endpoint<OrganizerViewRequest>
+public class OrganizerViewEndpoint : Endpoint<OrganizerViewRequest, OrganizerDto>
 {
     private readonly CoreDbContext dbContext;
 

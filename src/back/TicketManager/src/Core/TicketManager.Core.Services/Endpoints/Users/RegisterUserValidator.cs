@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Users;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.Endpoints.Accounts;
+using TicketManager.Core.Services.Extensions;
 using TicketManager.Core.Services.Services.Mockables;
-using TicketManager.Core.Services.ValidationExtensions;
 
 namespace TicketManager.Core.Services.Endpoints.Users;
 
@@ -34,7 +34,8 @@ public class RegisterUserValidator : Validator<RegisterUserRequest>
         RuleFor(req => req.Password)
             .NotNull()
             .WithCode(RegisterUserRequest.ErrorCodes.PasswordIsNull)
-            .SetValidator(new PasswordValidator(RegisterUserRequest.ErrorCodes.PasswordIsTooShort,
+            .SetValidator(new PasswordValidator(
+                RegisterUserRequest.ErrorCodes.PasswordIsTooShort,
                 RegisterUserRequest.ErrorCodes.PasswordIsTooLong,
                 RegisterUserRequest.ErrorCodes.PasswordIsInvalid));
 
@@ -51,11 +52,11 @@ public class RegisterUserValidator : Validator<RegisterUserRequest>
             .WithCode(RegisterUserRequest.ErrorCodes.LastNameIsTooLong);
     }
 
-    private Task<bool> IsEmailAvailable(string email, CancellationToken cancellationToken)
+    private async Task<bool> IsEmailAvailable(string email, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         
-        return dbResolver.Resolve(scope)
+        return await dbResolver.Resolve(scope)
             .Accounts
             .AllAsync(a => a.Email != email, cancellationToken);
     }

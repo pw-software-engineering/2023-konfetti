@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ticketer/model/credentials.dart';
-import 'package:ticketer/model/organizer.dart';
-import 'package:ticketer/model/tax_type.dart';
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:ticketer/pages/login/page_login.dart';
+
+import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/backend_communication/model/credentials.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
   Credentials credentials;
@@ -217,53 +213,58 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
           credentials.email,
           credentials.password,
           _phone.text);
-      sendOrganizerRegistrationRequest(organizer);
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Thank you"),
-            content: const Text("Administrators have received your form. "
-                "We will try to verify your data as soon as possible."),
-            actions: [
-              ElevatedButton(
-                onPressed: () => {
-                  Navigator.pop(context),
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => const LoginPage())))
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      var response = await Auth().registerOrganizer(organizer);
+      if (response.value != 200) {
+        await showDialogAfterUnsuccesfullRegistration(
+            response.getResponseString());
+      } else {
+        await showDialogAfterRegistration();
+      }
+      if (!mounted) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
-  void sendOrganizerRegistrationRequest(Organizer organizer) async {
-    String? url = dotenv.env['BACKEND_URL'];
-    Response response;
-    try {
-      response = await post(
-        Uri.http(url!, '/organizer/register'),
-        headers: <String, String>{
-          "Access-Control-Allow-Origin": "*",
-          'Content-Type': 'application/json',
-          'Accept': '*/*'
-        },
-        body: jsonEncode(organizer),
-      );
-    } catch (e) {
-      log(e.toString());
-      return;
-    }
+  Future<void> showDialogAfterRegistration() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Thank you"),
+          content: const Text("Administrators have received your form. "
+              "We will try to verify your data as soon as possible."),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    // sanity check
-    log('${response.statusCode} : ${response.body}');
+  Future<void> showDialogAfterUnsuccesfullRegistration(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

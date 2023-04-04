@@ -2,8 +2,8 @@ using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Accounts;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Services.DataAccess;
-using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
 
@@ -14,6 +14,7 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
     private readonly CoreDbContext coreDbContext;
     private readonly PasswordManager passwordManager;
     private readonly TokenCreator tokenCreator;
+    
     public AccountLoginEndpoint(CoreDbContext coreDbContext, PasswordManager passwordManager, TokenCreator tokenCreator)
     {
         this.coreDbContext = coreDbContext;
@@ -35,6 +36,16 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
             .FirstOrDefaultAsync(ct);
         if (account is not null && passwordManager.DoPasswordsMatch(account.PasswordHash, req.Password))
         {
+            if (account.Role == AccountRoles.Organizer)
+            {
+                var organizer = await coreDbContext.Organizers.Where(a => a.Id == account.Id).FirstOrDefaultAsync(ct);
+
+                if (!organizer?.IsVerified() ?? false)
+                {
+                    await SendUnauthorizedAsync(ct);
+                    return;
+                }
+            }
             var response = new AccountLoginResponse
             {
                 AccessToken = tokenCreator.GetToken(account)

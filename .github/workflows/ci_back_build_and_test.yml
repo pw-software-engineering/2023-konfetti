@@ -33,10 +33,12 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore src/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj
+      run: dotnet restore
     - name: Build
-      run: dotnet build src/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj --no-restore
+      run: dotnet build --no-restore
     - name: Test Domain Tests
-      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build --verbosity normal
+      run: dotnet test tests/Core/TicketManager.Core.DomainTests/TicketManager.Core.DomainTests.csproj --no-build
     - name: Test Services Tests
-      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build --verbosity normal
+      run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build
+    - name: Test Integration Tests
+      run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.IntegrationTests.csproj --no-build

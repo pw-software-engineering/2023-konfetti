@@ -1,16 +1,20 @@
+using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
-using TicketManager.Core.Services.JsonConverters;
+using TicketManager.Core.Services.Extensions.JsonConverters;
+using TicketManager.Core.Services.Extensions.Parsers;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
@@ -26,11 +30,10 @@ public class Program
         builder.Services.AddDbContext<CoreDbContext>(
             opts => opts
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .UseInMemoryDatabase("Database")
+                .UseNpgsql(builder.Configuration["DatabaseConnectionString"])
         );
 
-        var signingKey = "UWaNHq1sR+3HEYyrcqO1MLa4zgtR9mYHW/wRYNsBzKRlqBMUD8U3sLUS0+j2RsN2tfNV4rQhhxfcmNmDldk94EOtDiAxg8By6YUod0fXIgWGykeb7VYg5s/NzS1UTTe8Fj7ddB522HwR3iCz97sF3H2oUW0MFYtJr9eF61MG+ZHbaw4FWeqGwqc9W0is/Q4ceLzBR3ndS+gsT/5sdMVpAt+oVa0Z08WG0BCRJrFyJhcxOkC2UGGGQVxcGUHS/ICP5zgWcOp3/iDswC6MBkl3W1T4BFmGyrBhjArGWaCwo2ae0/Z0rvSkeERgF4+AMFNRIjAYEcERFUhG1kgwL1/vAw=="; // TODO: Move to variable
-
+        var signingKey = builder.Configuration["SigningKey"]; 
         
         builder.Services.AddSingleton<PasswordManager>();
         builder.Services.AddSingleton<MockableCoreDbResolver>();
@@ -40,6 +43,7 @@ public class Program
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
+        builder.Services.AddScoped<Repository<Event, Guid>>();
         
         builder.Services.AddFastEndpoints();
         
@@ -60,6 +64,9 @@ public class Program
         app.UseFastEndpoints(c =>
         {
             c.Serializer.Options.Converters.Add(new DateOnlyConverter());
+            c.Serializer.Options.Converters.Add(new DateTimeConverter());
+            c.Binding.ValueParserFor<List<TaxIdTypeDto>>(DtoListParser<TaxIdTypeDto>.Parse);
+            c.Binding.ValueParserFor<List<VerificationStatusDto>>(DtoListParser<VerificationStatusDto>.Parse);
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
             {
                 Errors = failures.Select(f => new ValidationError
@@ -71,6 +78,17 @@ public class Program
             };
         });
         app.UseSwaggerGen();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            var context = services.GetRequiredService<CoreDbContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
 
         app.Run();
     }
