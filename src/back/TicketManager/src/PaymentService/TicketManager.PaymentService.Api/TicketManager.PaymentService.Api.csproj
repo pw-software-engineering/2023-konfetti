@@ -10,4 +10,9 @@
       <ProjectReference Include="..\TicketManager.PaymentService.Services\TicketManager.PaymentService.Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints" Version="5.8.0" />
+      <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
+    </ItemGroup>
+
 </Project>
