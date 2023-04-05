@@ -8,6 +8,8 @@ services:
       - "8080:80"
     networks:
       - db
+    env_file:
+      - variables.env
     depends_on:
       - api-postgres
   api-postgres:

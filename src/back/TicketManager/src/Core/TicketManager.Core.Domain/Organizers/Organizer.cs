@@ -43,6 +43,12 @@ public class Organizer : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
             return;
         VerificationStatus = isAccepted ? VerificationStatus.VerifiedPositively : VerificationStatus.VerifiedNegatively;
     }
+
+    public bool IsVerified()
+    {
+        return VerificationStatus == VerificationStatus.VerifiedPositively;
+    }
+    
 }
 
 public enum TaxIdType

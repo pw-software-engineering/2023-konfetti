@@ -56,6 +56,37 @@ class BackendCommunication {
     _isInitialized = true;
   }
 
+  Future<Tuple2<Response, ResponseCode>> getCallAuthorized(
+      String path, Token token,
+      {Map<String, dynamic>? params}) async {
+    if (!isInitialized) throw Exception("Not initilized");
+    Response response;
+    var options = dio.options;
+
+    try {
+      if (!token.isValid) {
+        throw ArgumentError("Token is not valid");
+      }
+      dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
+      dio.options.contentType = Headers.formUrlEncodedContentType;
+      response = await dio.get(path, queryParameters: params);
+    } on DioError catch (e) {
+      log(e.toString());
+      if (!token.isValid) {
+        response = Response(requestOptions: RequestOptions(), statusCode: 401);
+      } else if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
+    } finally {
+      dio.options = options;
+    }
+
+    return Tuple2<Response, ResponseCode>(
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
+  }
+
   Future<Tuple2<Response, ResponseCode>> postCall(String path,
       {Object? data}) async {
     if (!isInitialized) throw Exception("Not initilized");
