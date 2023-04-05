@@ -19,7 +19,7 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
   int _pageNo = 0;
   final int _pageSize = 3;
   bool _hasNextPage = true;
-  List<Organizer> _organizers = [];
+  final List<Organizer> _organizers = [];
   
   Widget _getContent() {
     return SingleChildScrollView(
@@ -42,16 +42,7 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
           itemBuilder: (_, index) {
             if (index < _organizers.length) {
               return _getOrganizerListItem(_organizers[index]);
-            } else if(_organizers.isEmpty) {
-              return Container(
-                  margin: const EdgeInsets.only(top: 15.0),
-                  child: const Center(
-                      child: Text(
-                        "No new applications to show!",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                  ))
-              );
-            } else {
+            } else if (_hasNextPage) {
               try {
                 _fetchMoreData();
                 setState(() {
@@ -68,8 +59,18 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
                 ),
               );
             }
+            else {
+              return Container(
+                  margin: const EdgeInsets.only(top: 15.0),
+                  child: const Center(
+                      child: Text(
+                        "No new applications to show!",
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      ))
+              );
+            }
           },
-          itemCount: _hasNextPage ? _organizers.length + 1 : _organizers.length,
+          itemCount: _hasNextPage ? _organizers.length + 1 : (_organizers.isEmpty ? 1: _organizers.length),
         ),
       ],
     );
@@ -83,7 +84,7 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
         _organizers.add(Organizer.fromJson(org));
       }
       int after = _organizers.length;
-      _hasNextPage = before != after;
+      _hasNextPage = after != 0 && before != after;
     });
   }
 

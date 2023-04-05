@@ -35,7 +35,7 @@ class OrganizerCommunication {
       "PageSize": pageSize,
       "ShowAscending": true,
       "SortBy": 0,
-      "VerificationStatusesFilter": OrganizerVerificationStatus.Waiting
+      "VerificationStatusesFilter": OrganizerVerificationStatus.Waiting.index
     };
     return await BackendCommunication().getCallAuthorized(
       _listEndPoint, Token(Auth().getCurrentAccount!.token),  params: params);
