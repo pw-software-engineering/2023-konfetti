@@ -39,8 +39,7 @@ final moreOrgResponseBody = utf8.encode(jsonEncode({
 }));
 
 void main() {
-  setUp(() {
-  });
+  // TODO: To be fixed in TM-77
 /*
   testWidgets(
     'Should render info when no organizers',
@@ -62,6 +61,8 @@ void main() {
             // given
             await tester.pumpWidget(_homeWidget());
             await tester.pumpAndSettle();
+            // Here should be mock to respond with moreOrgResponseBody on the first call and
+            // after that should respond with noOrgResponseBody.
             // when then
             expect(find.textContaining("Accept"), findsNWidgets(2));
         },
