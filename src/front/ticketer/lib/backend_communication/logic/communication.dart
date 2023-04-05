@@ -119,36 +119,8 @@ class BackendCommunication {
         throw ArgumentError("Token is not valid");
       }
       dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
+      dio.options.contentType = Headers.jsonContentType;
       response = await dio.post(path, data: data);
-    } on DioError catch (e) {
-      log(e.toString());
-      if (!token.isValid) {
-        response = Response(requestOptions: RequestOptions(), statusCode: 401);
-      } else if (e.response != null) {
-        response = e.response!;
-      } else {
-        response = Response(requestOptions: RequestOptions());
-      }
-    } finally {
-      dio.options = options;
-    }
-
-    return Tuple2<Response, ResponseCode>(
-        response, ResponseCode.getByCode(response.statusCode ?? -1));
-  }
-
-  Future<Tuple2<Response, ResponseCode>> getCallAuthorized(
-      String path, Token token) async {
-    if (!isInitialized) throw Exception("Not initilized");
-    Response response;
-    var options = dio.options;
-
-    try {
-      if (!token.isValid) {
-        throw ArgumentError("Token is not valid");
-      }
-      dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
-      response = await dio.get(path);
     } on DioError catch (e) {
       log(e.toString());
       if (!token.isValid) {

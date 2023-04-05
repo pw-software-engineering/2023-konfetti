@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
@@ -13,11 +15,11 @@ class OrganizerListing extends StatefulWidget {
 }
 
 class _OrganizerListingPageState  extends State<OrganizerListing>  {
-  
-  List<Organizer> data = [];
-  bool end = false;
-  int currentPageNumber = 0;
-  static const int pageSize = 1;
+
+  int _pageNo = 0;
+  final int _pageSize = 3;
+  bool _hasNextPage = true;
+  List<Organizer> _organizers = [];
   
   Widget _getContent() {
     return SingleChildScrollView(
@@ -26,45 +28,63 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getHeader(),
-          _getFlatList()
+          _getOrganizersList()
         ],
       ),
     );
   }
 
-  ListView _getFlatList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        if (index < data.length) {
-          return _getOrganizerListItem(data[index]);
-        } else if (index == data.length && end) {
-          return const Center(child: Text('End of list'));
-        } else {
-          _getMoreData();
-          return const SizedBox(
-            height: 80,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
-      itemCount: data.length + 1,
+  Widget _getOrganizersList() {
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (_, index) {
+            if (index < _organizers.length) {
+              return _getOrganizerListItem(_organizers[index]);
+            } else if(_organizers.isEmpty) {
+              return Container(
+                  margin: const EdgeInsets.only(top: 15.0),
+                  child: const Center(
+                      child: Text(
+                        "No new applications to show!",
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                  ))
+              );
+            } else {
+              try {
+                _fetchMoreData();
+                setState(() {
+                  _pageNo++;
+                });
+              } catch (e) {
+                log(e.toString());
+              }
+              return const SizedBox(
+                width: 50,
+                height: 50,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+          itemCount: _hasNextPage ? _organizers.length + 1 : _organizers.length,
+        ),
+      ],
     );
   }
 
-  void _getMoreData() async {
-    final response = await OrganizerCommunication().listToVerify(currentPageNumber, pageSize);
-    if (!mounted) return;
-
-    if (response.item2 != ResponseCode.allGood) {
-      if (response.item1.data.items.isEmpty) {
-        setState(() => end = true);
-        return;
+  Future<void> _fetchMoreData() async {
+    final res = await OrganizerCommunication().listToVerify(_pageNo, _pageSize);
+    setState(() {
+      int before = _organizers.length;
+      for (var org in res.item1.data["items"]) {
+        _organizers.add(Organizer.fromJson(org));
       }
-    } else {
-      setState(() => data = [...data, ...response.item1.data.items]);
-      currentPageNumber += 1;
-    }
+      int after = _organizers.length;
+      _hasNextPage = before != after;
+    });
   }
 
   Container _getHeader() {
@@ -83,26 +103,26 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         OrganizerCard(organizer: organizer),
-        _rejectButton(),
-        _verifyButton()
+        _rejectButton(organizer),
+        _verifyButton(organizer)
       ],
     );
   }
 
-  Widget _verifyButton() {
+  Widget _verifyButton(Organizer organizer) {
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           fixedSize: const Size(90, 30),
         ),
-        onPressed: () => {},
+        onPressed: () => decideOrganizer(organizer, true),
         child: const Text("Approve"),
       ),
     );
   }
 
-  Widget _rejectButton() {
+  Widget _rejectButton(Organizer organizer) {
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: ElevatedButton(
@@ -110,10 +130,19 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
           backgroundColor: Colors.redAccent,
           fixedSize: const Size(90, 30),
         ),
-        onPressed: () => {},
+        onPressed: () => decideOrganizer(organizer, false),
         child: const Text("Reject"),
       ),
     );
+  }
+
+  void decideOrganizer(Organizer organizer, bool isAccepted) async {
+    var response = await OrganizerCommunication().decide(organizer, isAccepted);
+    if (response.item2 == ResponseCode.allGood) {
+      setState(() {
+        _organizers.remove(organizer);
+      });
+    }
   }
 
   @override

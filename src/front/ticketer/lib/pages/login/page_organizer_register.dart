@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
-import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer_account.dart';
 import 'package:ticketer/backend_communication/model/tax_type.dart';
 
 class OrganizerRegisterPage extends StatefulWidget {
@@ -204,7 +204,7 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
 
   Future<void> submitOrganizerData() async {
     if (_formKey.currentState!.validate()) {
-      Organizer organizer = Organizer(
+      OrganizerAccount organizer = OrganizerAccount(
           _companyName.text,
           '${_addressStreet.text}/${_addressZip.text}/${_addressCity.text}',
           taxType,

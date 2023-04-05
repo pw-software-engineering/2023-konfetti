@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
-import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer_account.dart';
 import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
 
@@ -10,7 +10,7 @@ void main() async {
     test('Without initialization BackendCommunication() should throw exception',
         () {
       assert(BackendCommunication().isInitialized == false);
-      var organizer = Organizer(
+      var organizer = OrganizerAccount(
           "companyName",
           "address",
           TaxType.NIP,

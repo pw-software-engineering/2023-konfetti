@@ -39,8 +39,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
-          OrganizerCard(organizer: Organizer("Januszex.pl", "Warszawa", TaxType.KRS, "12345",
-              "Januszex", "jan.nowak@pw.edu.pl", "A1b2c3d4", "+48600900600")),
+          OrganizerCard(organizer: Organizer("123","Januszex.pl", "Warszawa", TaxType.KRS, "12345",
+              "Januszex", "jan.nowak@pw.edu.pl", "+48600900600")),
           _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),
