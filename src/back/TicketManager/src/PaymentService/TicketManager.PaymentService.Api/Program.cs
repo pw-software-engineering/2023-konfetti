@@ -1,6 +1,8 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using Microsoft.EntityFrameworkCore;
 using TicketManager.PaymentService.Contracts.Validation;
+using TicketManager.PaymentService.Services.DataAccess;
 
 namespace TicketManager.PaymentService.Api;
 
@@ -9,6 +11,12 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddDbContext<PaymentDbContext>(
+            opts => opts
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .UseInMemoryDatabase("payment-db")
+        );
         
         builder.Services.AddFastEndpoints();
         
