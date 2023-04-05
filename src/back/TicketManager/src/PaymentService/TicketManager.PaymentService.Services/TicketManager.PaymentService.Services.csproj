@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TicketManager.PaymentService.Contracts\TicketManager.PaymentService.Contracts.csproj" />
+      <ProjectReference Include="..\TicketManager.PaymentService.Domain\TicketManager.PaymentService.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

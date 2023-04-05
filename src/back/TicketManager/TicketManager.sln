@@ -22,6 +22,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.Core.Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.IntegrationTests", "tests\TicketManager.IntegrationTests\TicketManager.IntegrationTests.csproj", "{E578E63E-54B4-4BB4-94FD-84776AD034A1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentService", "PaymentService", "{D8B350EA-3E9E-413D-9DA9-9A49910D2343}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.Contracts", "src\PaymentService\TicketManager.PaymentService.Contracts\TicketManager.PaymentService.Contracts.csproj", "{E42D5975-AA10-4479-A4AE-6F2584CBDC8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.Domain", "src\PaymentService\TicketManager.PaymentService.Domain\TicketManager.PaymentService.Domain.csproj", "{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.Services", "src\PaymentService\TicketManager.PaymentService.Services\TicketManager.PaymentService.Services.csproj", "{326474E7-B361-4E63-A208-A879979E1DB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.Api", "src\PaymentService\TicketManager.PaymentService.Api\TicketManager.PaymentService.Api.csproj", "{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +66,22 @@ Global
 		{E578E63E-54B4-4BB4-94FD-84776AD034A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E578E63E-54B4-4BB4-94FD-84776AD034A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E578E63E-54B4-4BB4-94FD-84776AD034A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42D5975-AA10-4479-A4AE-6F2584CBDC8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42D5975-AA10-4479-A4AE-6F2584CBDC8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42D5975-AA10-4479-A4AE-6F2584CBDC8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42D5975-AA10-4479-A4AE-6F2584CBDC8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{326474E7-B361-4E63-A208-A879979E1DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{326474E7-B361-4E63-A208-A879979E1DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{326474E7-B361-4E63-A208-A879979E1DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{326474E7-B361-4E63-A208-A879979E1DB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C43ECA36-71F6-44DA-BA78-8954912424FB} = {1AEF80AF-AF0C-4F54-B9EA-9729BB689371}
@@ -67,5 +93,10 @@ Global
 		{D79368C1-7486-44CA-A267-FD1107398018} = {72105F30-6316-4B66-8D6C-BB645BB13431}
 		{AD44C1C8-B39B-4940-8B62-C433095BD871} = {72105F30-6316-4B66-8D6C-BB645BB13431}
 		{E578E63E-54B4-4BB4-94FD-84776AD034A1} = {148FA83E-BB3F-41AC-84D0-7F0A9C7EB026}
+		{D8B350EA-3E9E-413D-9DA9-9A49910D2343} = {1AEF80AF-AF0C-4F54-B9EA-9729BB689371}
+		{E42D5975-AA10-4479-A4AE-6F2584CBDC8C} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
+		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
+		{326474E7-B361-4E63-A208-A879979E1DB0} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
+		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
 	EndGlobalSection
 EndGlobal
