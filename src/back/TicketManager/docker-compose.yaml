@@ -3,7 +3,8 @@ services:
   server:
     container_name: backend
     image: backend
-    build: .
+    build:
+      dockerfile: Dockerfile.core
     ports:
       - "8080:80"
     networks:
