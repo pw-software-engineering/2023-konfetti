@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+COPY ./src/PaymentService/*.Api/*.csproj /restore/TicketManager.PaymentService.Api/
+COPY ./src/PaymentService/*.Contracts/*.csproj /restore/TicketManager.PaymentService.Contracts/
+COPY ./src/PaymentService/*.Domain/*.csproj /restore/TicketManager.PaymentService.Domain/
+COPY ./src/PaymentService/*.Services/*.csproj /restore/TicketManager.PaymentService.Services/
+RUN dotnet restore "/restore/TicketManager.PaymentService.Api/TicketManager.PaymentService.Api.csproj"
+WORKDIR /src
+COPY ./src/. .
+RUN cp -r /restore/* PaymentService/
+RUN dotnet publish "PaymentService/TicketManager.PaymentService.Api/TicketManager.PaymentService.Api.csproj" -c Release -o /app/publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "TicketManager.PaymentService.Api.dll"]
