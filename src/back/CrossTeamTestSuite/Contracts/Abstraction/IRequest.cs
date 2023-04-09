@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace CrossTeamTestSuite.Contracts.Abstraction;
 
-public interface IRequest<TResponse>
+public interface IRequest<TResponse> : IRequest
     where TResponse : class
 {
     [JsonIgnore]
