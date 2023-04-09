@@ -1,4 +1,4 @@
-namespace CrossTeamTestSuite.Contracts.Accounts;
+namespace CrossTeamTestSuite.Endpoints.Contracts.Accounts;
 
 public class AccountLoginResponse
 {

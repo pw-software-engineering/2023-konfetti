@@ -1,6 +1,6 @@
-using CrossTeamTestSuite.Contracts.Abstraction;
+using CrossTeamTestSuite.Endpoints.Contracts.Abstraction;
 
-namespace CrossTeamTestSuite.Contracts.Accounts;
+namespace CrossTeamTestSuite.Endpoints.Contracts.Accounts;
 
 public class AccountLoginRequest : IRequest<AccountLoginResponse>
 {

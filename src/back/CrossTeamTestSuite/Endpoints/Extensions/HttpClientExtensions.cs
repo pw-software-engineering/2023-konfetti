@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
-using CrossTeamTestSuite.Contracts.Abstraction;
+using CrossTeamTestSuite.Endpoints.Contracts.Abstraction;
 
-namespace CrossTeamTestSuite.Extensions;
+namespace CrossTeamTestSuite.Endpoints.Extensions;
 
 public static class HttpClientExtensions
 {
