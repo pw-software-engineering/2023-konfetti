@@ -6,7 +6,8 @@ using TicketManager.Core.Services.DataAccess;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
 
-public class TicketBuyEndpoint: Endpoint<TicketBuyRequest>
+// TODO: Currently this endpoint doesn't follow specification - it returns paymentId
+public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
 
@@ -23,12 +24,16 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
+        // This code really doesn't matter for now, it can wait for further tasks.
         var @event = await coreDbContext
             .Events
             .Where(e => e.Id == req.EventId)
             .FirstOrDefaultAsync(ct);
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
-
-        await SendOkAsync(ct);
+        
+        // TODO: lock seats
+        // TODO: create payment
+        
+        await SendAsync(new TicketPaymentDto{PaymentId = Guid.Empty}, cancellation: ct);
     }
 }
