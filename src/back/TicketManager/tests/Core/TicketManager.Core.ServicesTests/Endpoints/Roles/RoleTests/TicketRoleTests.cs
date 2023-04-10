@@ -5,13 +5,8 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 
 public class TicketRoleTests
 {
-    private readonly RoleTestsBase testsBase;
-    
-    public TicketRoleTests()
-    {
-        testsBase = new RoleTestsBase();
-    }
-    
+    private readonly RoleTestsBase testsBase = new();
+
     [Fact]
     public void WhenTicketBuyChecked_ItShouldAllowOnlyUser()
     {

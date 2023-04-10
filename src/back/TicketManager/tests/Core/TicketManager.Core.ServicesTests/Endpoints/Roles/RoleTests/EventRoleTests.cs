@@ -5,12 +5,7 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 
 public class EventRoleTests
 {
-    private readonly RoleTestsBase testsBase;
-    
-    public EventRoleTests()
-    {
-        testsBase = new RoleTestsBase();
-    }
+    private readonly RoleTestsBase testsBase = new();
 
     [Fact]
     public void WhenCreateEventChecked_ItShouldAllowOnlyOrganizer()
