@@ -10,5 +10,6 @@ public class TicketBuyRequest
     {
         public static int EventDoesNotExist = 1;
         public static int SectorNameDoesNotExist = 2;
+        public static int NumberOfSeatsIsNotPositive = 3;
     }
 }

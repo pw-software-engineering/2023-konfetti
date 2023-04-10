@@ -26,7 +26,10 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
             .MustAsync(IsSectorNameValidAsync)
             .WithCode(TicketBuyRequest.ErrorCodes.SectorNameDoesNotExist)
             .WithMessage("Sector Name does not exist in this event");
-
+        RuleFor(req => req.NumberOfSeats)
+            .GreaterThan(0)
+            .WithCode(TicketBuyRequest.ErrorCodes.NumberOfSeatsIsNotPositive)
+            .WithMessage("Number of seats must be positive");
     }
     
     private async Task<bool> IsIdPresentAsync(Guid id, CancellationToken cancellationToken)
