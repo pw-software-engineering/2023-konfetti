@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CrossTeamTestSuite.Endpoints.Contracts.Abstraction;
 using CrossTeamTestSuite.Endpoints.Converters.GetQueryParamsConverters;
 using FluentAssertions;
@@ -9,7 +10,9 @@ public class GetQueryParamsConverterTests
 {
     private class EmptyRequest : IRequest
     {
+        [JsonIgnore]
         public string Path => "/path";
+        [JsonIgnore]
         public RequestType Type => RequestType.Get;
     }
     
