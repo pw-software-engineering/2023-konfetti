@@ -33,7 +33,7 @@ public class GetQueryParamConverter<TRequest>
                     .GetMethods()
                     .First(m => m.Name == "Convert")
                     .GetParameters()
-                    .Any(mp => mp.GetType() == p.GetType()));
+                    .Any(mp => mp.ParameterType == p.PropertyType));
 
             if (valueConverter is null)
             {
@@ -41,7 +41,7 @@ public class GetQueryParamConverter<TRequest>
             }
 
             var convertMethod = valueConverter.GetType().GetMethods().First(m => m.Name == "Convert");
-            var conversionResult = convertMethod.Invoke(valueConverter, new[] { p.GetValue(request) });
+            var conversionResult = convertMethod.Invoke(valueConverter, new[] { p.Name, p.GetValue(request) });
             sb.Append(conversionResult);
         }
 
