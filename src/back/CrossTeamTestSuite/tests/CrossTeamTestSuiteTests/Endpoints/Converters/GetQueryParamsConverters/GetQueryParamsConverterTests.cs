@@ -26,6 +26,7 @@ public class GetQueryParamsConverterTests
         public int PageSize => 1;
         public int PageNumber => 12;
         public string StrValue => "str";
+        public string StrValueWithSpace => "str str";
     }
     
     [Fact]
@@ -43,7 +44,7 @@ public class GetQueryParamsConverterTests
     [Fact]
     public void WhenRequestWithManyFieldsIsProvided_ItShouldReturnCorrectQueryParams()
     {
-        var expected = "?PageSize=1PageNumber=12StrValue=str";
+        var expected = "?PageSize=1&PageNumber=12&StrValue=str&StrValueWithSpace=str%20str";
         var converter = new GetQueryParamConverter<Request>();
         var request = new Request();
 
