@@ -27,7 +27,7 @@ public class EventRoleTests
     }
     
     [Fact]
-    public void WhenListEventForOrganizerChecked_ItShouldAllowOnylOrganizer()
+    public void WhenListEventForOrganizerChecked_ItShouldAllowOnlyOrganizer()
     {
         var testInstance = testsBase.GetRoleTestInstance<ListEventsForOrganizerEndpoint>();
         testInstance.AsOrganizer().Check();
