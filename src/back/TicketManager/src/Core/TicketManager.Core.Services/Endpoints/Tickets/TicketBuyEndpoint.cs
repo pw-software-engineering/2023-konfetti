@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Tickets;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.Services.HttpClients;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
 
@@ -10,10 +11,12 @@ namespace TicketManager.Core.Services.Endpoints.Tickets;
 public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
-
-    public TicketBuyEndpoint(CoreDbContext coreDbContext)
+    private readonly PaymentClient paymentClient;
+    
+    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient)
     {
         this.coreDbContext = coreDbContext;
+        this.paymentClient = paymentClient;
     }
 
     public override void Configure()
@@ -32,7 +35,8 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
         
         // TODO: lock seats
-        // TODO: create payment
+        // TODO: create payment - uncomment this line and test it
+        // var paymentId = await paymentClient.PostPaymentCreation(ct);
         
         await SendAsync(new TicketPaymentDto{PaymentId = Guid.Empty}, cancellation: ct);
     }
