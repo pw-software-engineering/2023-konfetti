@@ -9,7 +9,7 @@ public class TicketBuyRequest
     public static class ErrorCodes
     {
         public static int EventDoesNotExist = 1;
-        public static int SectorNameDoesNotExist = 2;
+        public static int SectorDoesNotExist = 2;
         public static int NumberOfSeatsIsNotPositive = 3;
     }
 }

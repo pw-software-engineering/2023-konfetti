@@ -21,11 +21,13 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
         RuleFor(req => req.EventId)
             .MustAsync(IsIdPresentAsync)
             .WithCode(TicketBuyRequest.ErrorCodes.EventDoesNotExist)
+            
             .WithMessage("Event with this Id does not exist");
-        RuleFor(req => new Tuple<Guid, string>(req.EventId, req.SectorName))
+        RuleFor(req => req)
             .MustAsync(IsSectorNameValidAsync)
-            .WithCode(TicketBuyRequest.ErrorCodes.SectorNameDoesNotExist)
+            .WithCode(TicketBuyRequest.ErrorCodes.SectorDoesNotExist)
             .WithMessage("Sector Name does not exist in this event");
+        
         RuleFor(req => req.NumberOfSeats)
             .GreaterThan(0)
             .WithCode(TicketBuyRequest.ErrorCodes.NumberOfSeatsIsNotPositive)
@@ -41,13 +43,14 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
             .AnyAsync(e => e.Id == id, cancellationToken);
     }
 
-    private async Task<bool> IsSectorNameValidAsync(Tuple<Guid, string> req, CancellationToken cancellationToken)
+    private async Task<bool> IsSectorNameValidAsync(TicketBuyRequest req, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
-        
+
         return await dbResolver.Resolve(scope)
             .Events
-            .AnyAsync(e => e.Id == req.Item1 && 
-                e.Sectors.Any(s => s.Name == req.Item2), cancellationToken);
+            .Where(e => e.Id == req.EventId)
+            .SelectMany(e => e.Sectors)
+            .AnyAsync(s => s.Name == req.SectorName, cancellationToken);
     }
 }
