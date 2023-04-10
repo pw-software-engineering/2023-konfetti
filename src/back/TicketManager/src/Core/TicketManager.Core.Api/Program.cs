@@ -15,6 +15,7 @@ using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Extensions.Parsers;
+using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
@@ -39,7 +40,12 @@ public class Program
         builder.Services.AddSingleton<MockableCoreDbResolver>();
         builder.Services.AddSingleton<TokenCreator>();
         builder.Services.AddSingleton<TokenConfiguration>(new TokenConfiguration(signingKey));
-            
+        builder.Services.AddSingleton(new PaymentClientConfiguration(
+            builder.Configuration["PaymentClientBaseUrl"],
+            builder.Configuration["PaymentClientApiKey"]));
+
+        builder.Services.AddHttpClient<PaymentClient>().ConfigureHttpClient(PaymentClient.Configure);
+        
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
