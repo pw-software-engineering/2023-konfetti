@@ -2,7 +2,7 @@ using CrossTeamTestSuite.Endpoints.Converters.ValueConverters;
 using FluentAssertions;
 using Xunit;
 
-namespace CrossTeamTestSuiteTests.Endpoints.ValueConverters;
+namespace CrossTeamTestSuiteTests.Endpoints.Converters.ValueConverters;
 
 public class IntValueConverterTests
 {
