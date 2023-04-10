@@ -4,6 +4,7 @@ services:
     container_name: backend
     image: backend
     build:
+      context: .
       dockerfile: Dockerfile.core
     ports:
       - "8080:80"
@@ -29,6 +30,7 @@ services:
     container_name: payment-service
     image: payment-service
     build:
+      context: .
       dockerfile: Dockerfile.payment
     ports:
       - "8081:80"
