@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.10.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -23,12 +24,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\PaymentService\TicketManager.PaymentService.Domain\TicketManager.PaymentService.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="FluentAssertions">
-        <HintPath>..\..\..\..\..\..\..\..\.nuget\packages\fluentassertions\6.10.0\lib\net6.0\FluentAssertions.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>
