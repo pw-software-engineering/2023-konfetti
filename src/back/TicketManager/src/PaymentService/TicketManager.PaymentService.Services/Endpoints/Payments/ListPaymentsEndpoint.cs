@@ -6,7 +6,7 @@ using TicketManager.PaymentService.Services.DataAccess.DtoMappers;
 
 namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 
-public class ListPaymentsEndpoint: EndpointWithoutRequest<ListPaymentsResponse>
+public class ListPaymentsEndpoint: EndpointWithoutRequest<List<PaymentDto>>
 {
     private readonly PaymentDbContext dbContext;
 
@@ -23,15 +23,10 @@ public class ListPaymentsEndpoint: EndpointWithoutRequest<ListPaymentsResponse>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var payments = await dbContext
+        var result = await dbContext
             .Payments
             .Select(PaymentDtoMapper.ToDtoMapper)
             .ToListAsync(ct);
-
-        var result = new ListPaymentsResponse()
-        {
-            Payments = payments
-        };
         
         await SendOkAsync(result, ct);
     }

@@ -7,11 +7,11 @@ namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 
 public class CreatePaymentEndpoint : EndpointWithoutRequest<PaymentTokenResponse>
 {
-    private readonly Repository<Payment, Guid> _payments;
+    private readonly Repository<Payment, Guid> payments;
 
     public CreatePaymentEndpoint(Repository<Payment, Guid> payments)
     {
-        _payments = payments;
+        this.payments = payments;
     }
 
     public override void Configure()
@@ -24,8 +24,8 @@ public class CreatePaymentEndpoint : EndpointWithoutRequest<PaymentTokenResponse
     {
         var payment = new Payment();
 
-        await _payments.AddAsync(payment, ct);
+        await payments.AddAsync(payment, ct);
 
-        await SendAsync(new PaymentTokenResponse() { Token = payment.Id }, cancellation: ct);
+        await SendOkAsync(new PaymentTokenResponse() { Token = payment.Id }, cancellation: ct);
     }
 }
