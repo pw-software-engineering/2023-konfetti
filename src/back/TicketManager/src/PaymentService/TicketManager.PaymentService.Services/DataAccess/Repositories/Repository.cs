@@ -1,8 +1,7 @@
-using TicketManager.PaymentService.Services.DataAccess.Repositories;
-
-namespace TicketManager.PaymentService.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.PaymentService.Domain.Common;
+
+namespace TicketManager.PaymentService.Services.DataAccess.Repositories;
 
 public class Repository<TEntity, TId>
     where TEntity : class, IAggregateRoot<TId>

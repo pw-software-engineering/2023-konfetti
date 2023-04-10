@@ -13,7 +13,7 @@ namespace TicketManager.PaymentService.ServicesTests.Endpoints.Payments;
 public class ListPaymentsEndpointTests
 {
     [Fact]
-    public async Task WhenItIsCalled_ItShouldAddPayment()
+    public async Task WhenItIsCalled_ItShouldListAllPayments()
     {
         
         List<Payment> payments = new List<Payment> {new(), new(), new()};

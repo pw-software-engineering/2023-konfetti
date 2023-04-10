@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using TicketManager.PaymentService.Domain.Payments;
 using TicketManager.PaymentService.Services.DataAccess;
+using TicketManager.PaymentService.Services.DataAccess.Repositories;
 using TicketManager.PaymentService.Services.Endpoints.Payments;
 using Xunit;
 

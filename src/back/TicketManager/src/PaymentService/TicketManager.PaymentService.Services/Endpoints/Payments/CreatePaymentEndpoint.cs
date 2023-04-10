@@ -1,7 +1,7 @@
 using FastEndpoints;
 using TicketManager.PaymentService.Contracts.Payments;
 using TicketManager.PaymentService.Domain.Payments;
-using TicketManager.PaymentService.Services.DataAccess;
+using TicketManager.PaymentService.Services.DataAccess.Repositories;
 
 namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 

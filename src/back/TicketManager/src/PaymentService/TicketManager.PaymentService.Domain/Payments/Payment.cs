@@ -6,7 +6,7 @@ public class Payment: IAggregateRoot<Guid>, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
     public PaymentStatus PaymentStatus { get; private set; }
-    public DateTime DateCreated { get; private set; }
+    public DateTime DateCreated { get; private init; }
     public DateTime DateModified { get; set; }
 
     public Payment()
@@ -20,9 +20,8 @@ public class Payment: IAggregateRoot<Guid>, IOptimisticConcurrent
 
 public enum PaymentStatus
 {
-    Created,
-    Confirmed,
-    Cancelled,
-    Expired
+    Created = 0,
+    Confirmed = 1,
+    Cancelled = 2,
+    Expired = 3
 }
-

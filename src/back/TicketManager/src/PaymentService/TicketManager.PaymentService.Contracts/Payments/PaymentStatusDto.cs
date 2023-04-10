@@ -2,8 +2,8 @@ namespace TicketManager.PaymentService.Contracts.Payments;
 
 public enum PaymentStatusDto
 {
-    Created,
-    Confirmed,
-    Cancelled,
-    Expired
+    Created = 0,
+    Confirmed = 1,
+    Cancelled = 2,
+    Expired = 3
 }
