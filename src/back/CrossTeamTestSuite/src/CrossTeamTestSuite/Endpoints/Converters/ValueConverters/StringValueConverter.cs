@@ -4,8 +4,8 @@ namespace CrossTeamTestSuite.Endpoints.Converters.ValueConverters;
 
 public class StringValueConverter : IValueConverter<string>
 {
-    public string Convert(string Name, string value)
+    public string Convert(string name, string value)
     {
-        return $"{Name}={HttpUtility.UrlPathEncode(value)}";
+        return $"{name}={HttpUtility.UrlPathEncode(value)}";
     }
 }
