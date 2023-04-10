@@ -43,6 +43,10 @@ public class GetQueryParamConverter<TRequest>
 
             var convertMethod = valueConverter.GetType().GetMethods().First(m => m.Name == "Convert");
             var conversionResult = convertMethod.Invoke(valueConverter, new[] { p.Name, p.GetValue(request) });
+            if (sb.Length > 0)
+            {
+                sb.Append('&');
+            }
             sb.Append(conversionResult);
         }
 
