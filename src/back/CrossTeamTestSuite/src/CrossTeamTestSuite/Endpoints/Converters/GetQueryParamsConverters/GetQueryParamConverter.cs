@@ -16,7 +16,7 @@ public class GetQueryParamConverter<TRequest>
         valueConverters = new()
         {
             new StringValueConverter(),
-            new IntValueConverter(),
+            new SimpleValueConverter<int>(),
             new ListValueConverter<int>(),
         };
     }

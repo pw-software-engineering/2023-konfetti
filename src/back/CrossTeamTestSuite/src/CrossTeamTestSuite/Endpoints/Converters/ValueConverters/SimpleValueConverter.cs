@@ -1,8 +1,8 @@
 namespace CrossTeamTestSuite.Endpoints.Converters.ValueConverters;
 
-public class IntValueConverter : IValueConverter<int>
+public class SimpleValueConverter<T> : IValueConverter<T>
 {
-    public string Convert(string name, int value)
+    public string Convert(string name, T value)
     {
         return $"{name}={value}";
     }
