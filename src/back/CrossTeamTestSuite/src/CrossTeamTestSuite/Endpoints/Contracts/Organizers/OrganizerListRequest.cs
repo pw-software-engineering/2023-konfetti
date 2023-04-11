@@ -1,9 +1,16 @@
+using System.Text.Json.Serialization;
+using CrossTeamTestSuite.Endpoints.Contracts.Abstraction;
 using CrossTeamTestSuite.Endpoints.Contracts.Common;
 
 namespace CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 
-public class OrganizerListRequest : IPaginatedRequest, ISortedRequest<OrganizerListSortByDto>
+public class OrganizerListRequest : IPaginatedRequest, ISortedRequest<OrganizerListSortByDto>, IRequest<PaginatedResponse<OrganizerDto>>
 {
+    [JsonIgnore] 
+    public string Path => "/organizer/list";
+    [JsonIgnore] 
+    public RequestType Type => RequestType.Get;
+    
     public int PageNumber { get; set; }
     public int PageSize { get; set; }
     public bool ShowAscending { get; set; }
