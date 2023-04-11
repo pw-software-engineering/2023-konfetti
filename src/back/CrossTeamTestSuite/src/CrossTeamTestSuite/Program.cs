@@ -25,6 +25,7 @@ class Program
         Console.WriteLine($"Admin email is {adminEmail}");
         Console.WriteLine($"Admin password is {adminPassword}");
 
+        Console.ForegroundColor = ConsoleColor.White;
         var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(address);
         var adminLogin = await httpClient.CallEndpointAsync<AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest()
