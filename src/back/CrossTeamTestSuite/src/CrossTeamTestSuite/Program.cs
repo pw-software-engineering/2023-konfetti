@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using CrossTeamTestSuite.Endpoints.Contracts.Accounts;
+using CrossTeamTestSuite.Endpoints.Contracts.Common;
+using CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 using CrossTeamTestSuite.Endpoints.Extensions;
 
 namespace CrossTeamTestSuite;
@@ -25,12 +27,21 @@ class Program
 
         var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(address);
-        var response = await httpClient.CallEndpointAsync<AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest()
+        var adminLogin = await httpClient.CallEndpointAsync<AccountLoginRequest, AccountLoginResponse>(new AccountLoginRequest()
         {
             Email = adminEmail,
             Password = adminPassword,
         });
-        var json = JsonSerializer.Serialize(response);
+        var json = JsonSerializer.Serialize(adminLogin);
+        Console.WriteLine(json);
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {adminLogin!.AccessToken}");
+        
+        var organizers = await httpClient.CallEndpointAsync<OrganizerListRequest, PaginatedResponse<OrganizerDto>>(new OrganizerListRequest()
+        {
+            PageNumber = 0,
+            PageSize = 10,
+        });
+        json = JsonSerializer.Serialize(organizers);
         Console.WriteLine(json);
     }
 }
