@@ -19,7 +19,7 @@ public class PaymentClient
     {
         var configuration = serviceProvider.GetService(typeof(PaymentClientConfiguration)) as PaymentClientConfiguration;
         client.BaseAddress = new Uri(configuration!.BaseUrl);
-        // client.DefaultRequestHeaders.Add(ApiKeyHeaderName, configuration.ApiKey);
+        client.DefaultRequestHeaders.Add(ApiKeyHeaderName, configuration.ApiKey);
     }
 
     public async Task<Guid?> PostPaymentCreation(CancellationToken ct)
