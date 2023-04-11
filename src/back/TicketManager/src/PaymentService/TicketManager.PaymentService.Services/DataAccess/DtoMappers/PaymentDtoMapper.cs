@@ -8,7 +8,7 @@ public class PaymentDtoMapper
 {
     public readonly static Expression<Func<Payment, PaymentDto>> ToDtoMapper = o => new PaymentDto()
     {
-        Token = o.Id,
+        Id = o.Id,
         PaymentStatus = (PaymentStatusDto)o.PaymentStatus,
         DateCreated = o.DateCreated
     };    

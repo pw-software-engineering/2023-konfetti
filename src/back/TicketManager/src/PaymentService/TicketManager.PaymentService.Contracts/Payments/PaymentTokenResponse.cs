@@ -2,5 +2,5 @@ namespace TicketManager.PaymentService.Contracts.Payments;
 
 public class PaymentTokenResponse
 {
-    public Guid Token { get; set; }
+    public Guid Id { get; set; }
 }

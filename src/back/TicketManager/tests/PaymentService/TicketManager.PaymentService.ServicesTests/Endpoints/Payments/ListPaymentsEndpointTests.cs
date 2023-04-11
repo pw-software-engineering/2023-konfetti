@@ -33,7 +33,7 @@ public class ListPaymentsEndpointTests
     {
         return new PaymentDto()
         {
-            Token = payment.Id,
+            Id = payment.Id,
             PaymentStatus = (PaymentStatusDto)payment.PaymentStatus,
             DateCreated = payment.DateCreated
         };
