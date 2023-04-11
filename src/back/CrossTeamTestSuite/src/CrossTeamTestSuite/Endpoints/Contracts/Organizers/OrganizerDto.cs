@@ -3,12 +3,12 @@ namespace CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 public class OrganizerDto
 {
     public Guid Id { get; set; }
-    public string CompanyName { get; set; }
-    public string Address { get; set; }
+    public string CompanyName { get; set; } = null!;
+    public string Address { get; set; } = null!;
     public TaxIdTypeDto TaxIdType { get; set; }
-    public string TaxId { get; set; }
-    public string DisplayName { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
+    public string TaxId { get; set; } = null!;
+    public string DisplayName { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string PhoneNumber { get; set; } = null!;
     public VerificationStatusDto VerificationStatus { get; set; }
 }
