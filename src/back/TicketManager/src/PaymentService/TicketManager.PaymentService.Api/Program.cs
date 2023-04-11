@@ -2,7 +2,9 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.PaymentService.Contracts.Validation;
+using TicketManager.PaymentService.Domain.Payments;
 using TicketManager.PaymentService.Services.DataAccess;
+using TicketManager.PaymentService.Services.DataAccess.Repositories;
 
 namespace TicketManager.PaymentService.Api;
 
@@ -17,6 +19,8 @@ public class Program
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .UseInMemoryDatabase("payment-db")
         );
+        
+        builder.Services.AddScoped<Repository<Payment, Guid>>();
         
         builder.Services.AddFastEndpoints();
         
