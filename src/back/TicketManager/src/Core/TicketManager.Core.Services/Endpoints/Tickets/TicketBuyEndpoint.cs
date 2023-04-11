@@ -36,8 +36,14 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         
         // TODO: lock seats
         // TODO: create payment - uncomment this line and test it
-        // var paymentId = await paymentClient.PostPaymentCreation(ct);
+        var paymentId = await paymentClient.PostPaymentCreation(ct);
+
+        if (paymentId is null)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
         
-        await SendAsync(new TicketPaymentDto{PaymentId = Guid.Empty}, cancellation: ct);
+        await SendAsync(new TicketPaymentDto{PaymentId = (Guid)paymentId}, cancellation: ct);
     }
 }

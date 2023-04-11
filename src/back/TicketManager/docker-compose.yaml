@@ -10,6 +10,7 @@ services:
       - "8080:80"
     networks:
       - db
+      - pay
     env_file:
       - variables.env
     depends_on:
@@ -34,7 +35,12 @@ services:
       dockerfile: Dockerfile.payment
     ports:
       - "8081:80"
+    networks:
+      - pay
 networks:
   db:
     name: db
+    driver: bridge
+  pay:
+    name: pay
     driver: bridge

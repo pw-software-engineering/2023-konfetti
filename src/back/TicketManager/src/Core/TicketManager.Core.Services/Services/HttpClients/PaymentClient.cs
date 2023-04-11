@@ -19,12 +19,12 @@ public class PaymentClient
     {
         var configuration = serviceProvider.GetService(typeof(PaymentClientConfiguration)) as PaymentClientConfiguration;
         client.BaseAddress = new Uri(configuration!.BaseUrl);
-        client.DefaultRequestHeaders.Add(ApiKeyHeaderName, configuration.ApiKey);
+        // client.DefaultRequestHeaders.Add(ApiKeyHeaderName, configuration.ApiKey);
     }
 
     public async Task<Guid?> PostPaymentCreation(CancellationToken ct)
     {
-        var response = await client.PostAsync("/payment/create", emptyContent, ct);
+        var response = await client.PostAsync("payment/create", emptyContent, ct);
         var content = await response.Content.ReadFromJsonAsync<PaymentTokenDto>(cancellationToken: ct);
         return content!.Id;
     }

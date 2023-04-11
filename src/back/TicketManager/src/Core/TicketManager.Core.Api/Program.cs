@@ -75,11 +75,26 @@ public class Program
             c.Binding.ValueParserFor<List<VerificationStatusDto>>(DtoListParser<VerificationStatusDto>.Parse);
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
             {
-                Errors = failures.Select(f => new ValidationError
-                {
-                    ErrorCode = int.Parse(f.ErrorCode),
-                    ErrorMessage = f.ErrorMessage,
-                })
+                Errors = failures.Select(f =>
+                    {
+                        try
+                        {
+                            return new ValidationError
+                            {
+                                ErrorCode = int.Parse(f.ErrorCode),
+                                ErrorMessage = f.ErrorMessage,
+                            };
+                        }
+                        catch (Exception e)
+                        {
+                            return new ValidationError
+                            {
+                                ErrorCode = -1,
+                                ErrorMessage = "Unexpected error has happened",
+                            };
+                        }
+                        
+                    })
                 .ToList(),
             };
         });
