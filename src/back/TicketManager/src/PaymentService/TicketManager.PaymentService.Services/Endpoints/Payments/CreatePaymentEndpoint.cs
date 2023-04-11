@@ -26,6 +26,6 @@ public class CreatePaymentEndpoint : EndpointWithoutRequest<PaymentTokenResponse
 
         await payments.AddAsync(payment, ct);
 
-        await SendOkAsync(new PaymentTokenResponse() { Id = payment.Id });
+        await SendOkAsync(new PaymentTokenResponse() { Id = payment.Id }, ct);
     }
 }
