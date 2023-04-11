@@ -35,7 +35,8 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
         
         // TODO: lock seats
-        // TODO: create payment - uncomment this line and test it
+        
+        
         var paymentId = await paymentClient.PostPaymentCreation(ct);
 
         if (paymentId is null)
