@@ -20,7 +20,7 @@ namespace TicketManager.Core.Services.Migrations
                     SectorName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     ReservedSeats = table.Column<int>(type: "integer", nullable: false),
                     DateModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false)
+                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false, defaultValue: new byte[0])
                 },
                 constraints: table =>
                 {
