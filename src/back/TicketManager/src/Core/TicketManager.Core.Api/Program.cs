@@ -85,7 +85,7 @@ public class Program
                                 ErrorMessage = f.ErrorMessage,
                             };
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             return new ValidationError
                             {

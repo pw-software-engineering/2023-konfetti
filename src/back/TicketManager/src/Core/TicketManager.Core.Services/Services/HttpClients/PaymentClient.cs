@@ -22,7 +22,7 @@ public class PaymentClient
         client.DefaultRequestHeaders.Add(ApiKeyHeaderName, configuration.ApiKey);
     }
 
-    public async Task<Guid?> PostPaymentCreation(CancellationToken ct)
+    public async Task<Guid?> PostPaymentCreationAsync(CancellationToken ct)
     {
         var response = await client.PostAsync("payment/create", emptyContent, ct);
         var content = await response.Content.ReadFromJsonAsync<PaymentTokenDto>(cancellationToken: ct);
