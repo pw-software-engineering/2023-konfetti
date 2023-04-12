@@ -32,6 +32,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.Api", "src\PaymentService\TicketManager.PaymentService.Api\TicketManager.PaymentService.Api.csproj", "{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentService", "PaymentService", "{9169755B-A385-445E-8DD0-8E51AD82FBCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.DomainTests", "tests\PaymentService\TicketManager.PaymentService.DomainTests\TicketManager.PaymentService.DomainTests.csproj", "{C7781D7C-F60A-4870-8741-B672B7A36874}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.PaymentService.ServicesTests", "tests\PaymentService\TicketManager.PaymentService.ServicesTests\TicketManager.PaymentService.ServicesTests.csproj", "{51593D64-4437-4B4F-AF13-9A4EA761130C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +88,14 @@ Global
 		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7781D7C-F60A-4870-8741-B672B7A36874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7781D7C-F60A-4870-8741-B672B7A36874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7781D7C-F60A-4870-8741-B672B7A36874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7781D7C-F60A-4870-8741-B672B7A36874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51593D64-4437-4B4F-AF13-9A4EA761130C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51593D64-4437-4B4F-AF13-9A4EA761130C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51593D64-4437-4B4F-AF13-9A4EA761130C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51593D64-4437-4B4F-AF13-9A4EA761130C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C43ECA36-71F6-44DA-BA78-8954912424FB} = {1AEF80AF-AF0C-4F54-B9EA-9729BB689371}
@@ -98,5 +112,8 @@ Global
 		{1C7FF980-40C2-4E1E-8B7B-24F47A70BCF2} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
 		{326474E7-B361-4E63-A208-A879979E1DB0} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
 		{6BD4ACEE-19F4-4B67-A66E-B3A2CB58623C} = {D8B350EA-3E9E-413D-9DA9-9A49910D2343}
+		{9169755B-A385-445E-8DD0-8E51AD82FBCC} = {148FA83E-BB3F-41AC-84D0-7F0A9C7EB026}
+		{C7781D7C-F60A-4870-8741-B672B7A36874} = {9169755B-A385-445E-8DD0-8E51AD82FBCC}
+		{51593D64-4437-4B4F-AF13-9A4EA761130C} = {9169755B-A385-445E-8DD0-8E51AD82FBCC}
 	EndGlobalSection
 EndGlobal
