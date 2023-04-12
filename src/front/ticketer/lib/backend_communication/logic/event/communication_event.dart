@@ -11,6 +11,7 @@ import 'package:tuple/tuple.dart';
 class EventCommunication {
   static const String _createEndPoint = "/event/create";
   static const String _listEndPoint = "/event/list";
+  static const String _organizerListEndPoint = "/event/organizer/my/list";
 
   Future<Tuple2<Response, ResponseCode>> create(Event body) async {
     if (Auth().getCurrentAccount == null) {
@@ -25,6 +26,14 @@ class EventCommunication {
     Map<String, dynamic> params = {"PageNumber": pageNo, "PageSize": pageSize};
     return await BackendCommunication().getCallAuthorized(
         _listEndPoint, Token(Auth().getCurrentAccount!.token),
+        params: params);
+  }
+
+  Future<Tuple2<Response, ResponseCode>> organizerMyList(
+      int pageNo, int pageSize) async {
+    Map<String, dynamic> params = {"PageNumber": pageNo, "PageSize": pageSize};
+    return await BackendCommunication().getCallAuthorized(
+        _organizerListEndPoint, Token(Auth().getCurrentAccount!.token),
         params: params);
   }
 }
