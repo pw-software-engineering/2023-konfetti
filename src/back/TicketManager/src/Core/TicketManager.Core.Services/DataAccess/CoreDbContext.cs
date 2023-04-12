@@ -35,7 +35,7 @@ public class CoreDbContext : DbContext
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
-        //ConfigureSeatReservations(modelBuilder);
+        ConfigureSeatReservations(modelBuilder);
     }
 
 
