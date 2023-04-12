@@ -35,7 +35,7 @@ public class CoreDbContext : DbContext
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
-        ConfigureSeatReservations(modelBuilder);
+        //ConfigureSeatReservations(modelBuilder);
     }
 
 
@@ -95,6 +95,7 @@ public class CoreDbContext : DbContext
                 cfg.WithOwner().HasForeignKey(e => e.EventId);
 
                 cfg.Ignore(e => e.Id);
+                cfg.Ignore(e => e.NumberOfSeats);
                 
                 cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
 
@@ -110,7 +111,9 @@ public class CoreDbContext : DbContext
         modelBuilder.Entity<SeatReservation>(cfg =>
         {
             cfg.HasKey(sr => sr.Id);
-            cfg.HasIndex(sr => sr.EventId);
+            cfg.Property(sr => sr.SectorName).HasMaxLength(StringLengths.ShortString);
+            
+            cfg.IsOptimisticConcurrent();
         });
     }
 }
