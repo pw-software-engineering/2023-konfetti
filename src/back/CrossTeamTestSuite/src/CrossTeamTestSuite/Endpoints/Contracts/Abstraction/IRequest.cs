@@ -6,9 +6,9 @@ public interface IRequest<TResponse> : IRequest
     where TResponse : class
 {
     [JsonIgnore]
-    public string Path { get; }
+    public new string Path { get; }
     [JsonIgnore]
-    public RequestType Type { get; }
+    public new RequestType Type { get; }
 }
 
 public interface IRequest

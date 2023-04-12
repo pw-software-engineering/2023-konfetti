@@ -9,7 +9,7 @@ public class AccountLoginRequest : IRequest<AccountLoginResponse>
     public string Path => "/account/login";
     [JsonIgnore]
     public RequestType Type => RequestType.Post;
-    
-    public string Email { get; set; }
-    public string Password { get; set; }
+
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
 }
