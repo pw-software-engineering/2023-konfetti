@@ -1,8 +1,12 @@
+using System.Net;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
+using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Contracts.Tickets;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Services.HttpClients;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
@@ -12,11 +16,13 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
     private readonly PaymentClient paymentClient;
-    
-    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient)
+    private readonly Repository<SeatReservation, Guid> seatReservationRepository;
+
+    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<SeatReservation, Guid> seatReservationRepository)
     {
         this.coreDbContext = coreDbContext;
         this.paymentClient = paymentClient;
+        this.seatReservationRepository = seatReservationRepository;
     }
 
     public override void Configure()
@@ -35,7 +41,20 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
         
         // TODO: lock seats
-        
+        var freeSeats = sector!.NumberOfSeats - await coreDbContext
+            .SeatReservations
+            .Where(sr => sr.EventSector.EventId == req.EventId && sr.EventSector.SectorName == req.SectorName)
+            .SumAsync(sr => sr.ReservedSeats, ct);
+
+        if (freeSeats < req.NumberOfSeats)
+        {
+            // We can't return null paymentId, because specification doesn't allow it.
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
+
+        // assume that seats are not reserved by somebody else
+        await seatReservationRepository.AddAsync(new SeatReservation(req.EventId, req.SectorName, req.NumberOfSeats), ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 

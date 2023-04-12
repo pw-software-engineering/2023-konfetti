@@ -5,6 +5,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Common;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Services.PasswordManagers;
 
@@ -16,7 +17,8 @@ public class CoreDbContext : DbContext
     public virtual DbSet<Organizer> Organizers => Set<Organizer>();
     public virtual DbSet<Account> Accounts => Set<Account>();
     public DbSet<Event> Events => Set<Event>();
-    
+    public DbSet<SeatReservation> SeatReservations => Set<SeatReservation>();
+
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
     
@@ -33,7 +35,9 @@ public class CoreDbContext : DbContext
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
+        ConfigureSeatReservations(modelBuilder);
     }
+
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
     {
@@ -98,6 +102,15 @@ public class CoreDbContext : DbContext
             });
 
             cfg.IsOptimisticConcurrent();
+        });
+    }
+    
+    private void ConfigureSeatReservations(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SeatReservation>(cfg =>
+        {
+            cfg.HasKey(sr => sr.Id);
+            cfg.HasIndex(sr => sr.EventSector);
         });
     }
 }

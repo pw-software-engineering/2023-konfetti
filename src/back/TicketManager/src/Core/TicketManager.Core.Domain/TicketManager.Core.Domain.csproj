@@ -7,7 +7,4 @@
         <WarningsAsErrors>Nullable</WarningsAsErrors>
     </PropertyGroup>
 
-    <ItemGroup>
-    </ItemGroup>
-
 </Project>

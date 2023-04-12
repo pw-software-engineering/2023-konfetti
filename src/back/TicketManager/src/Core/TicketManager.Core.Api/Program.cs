@@ -9,6 +9,7 @@ using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
@@ -50,6 +51,7 @@ public class Program
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
         builder.Services.AddScoped<Repository<Event, Guid>>();
+        builder.Services.AddScoped<Repository<SeatReservation, Guid>>();
         
         builder.Services.AddFastEndpoints();
         

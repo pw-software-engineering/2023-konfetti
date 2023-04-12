@@ -160,6 +160,25 @@ namespace TicketManager.Core.Services.Migrations
                     b.ToTable("Organizers");
                 });
 
+            modelBuilder.Entity("TicketManager.Core.Domain.Tickets.SeatReservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<ValueTuple<Guid, string>>("EventSector")
+                        .HasColumnType("record");
+
+                    b.Property<int>("ReservedSeats")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventSector");
+
+                    b.ToTable("SeatReservations");
+                });
+
             modelBuilder.Entity("TicketManager.Core.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
