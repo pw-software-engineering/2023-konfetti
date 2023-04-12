@@ -2,7 +2,9 @@ using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Tickets;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Services.HttpClients;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
@@ -12,11 +14,13 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
     private readonly PaymentClient paymentClient;
-    
-    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient)
+    private readonly Repository<SectorReservation, Guid> sectorReservationRepository;
+
+    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<SectorReservation, Guid> sectorReservationRepository)
     {
         this.coreDbContext = coreDbContext;
         this.paymentClient = paymentClient;
+        this.sectorReservationRepository = sectorReservationRepository;
     }
 
     public override void Configure()
@@ -27,15 +31,32 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        // This code really doesn't matter for now, it can wait for further tasks.
         var @event = await coreDbContext
             .Events
             .Where(e => e.Id == req.EventId)
             .FirstOrDefaultAsync(ct);
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
+
+        var sectorReservation = await coreDbContext.SectorReservations
+            .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
+            .FirstOrDefaultAsync(ct);
+
+        if (sectorReservation is null)
+        {
+            sectorReservation = new SectorReservation(req.EventId, req.SectorName);
+        }
         
-        // TODO: lock seats
+        var freeSeats = sector!.NumberOfSeats - sectorReservation.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
         
+        if (freeSeats < req.NumberOfSeats)
+        {
+            // We can't return null paymentId, because specification doesn't allow it.
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
+        
+        sectorReservation.AddSeatReservation(req.NumberOfSeats);
+        await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 

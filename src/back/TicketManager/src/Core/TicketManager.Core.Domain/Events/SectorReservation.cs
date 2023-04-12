@@ -10,9 +10,9 @@ public class SectorReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
     public List<SeatReservation> SeatReservations { get; } = new();
     public DateTime DateModified { get; set; }
     
-    public SectorReservation(Guid id, Guid eventId, string sectorName)
+    public SectorReservation(Guid eventId, string sectorName)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         EventId = eventId;
         SectorName = sectorName;
     }

@@ -16,7 +16,8 @@ public class CoreDbContext : DbContext
     public virtual DbSet<Organizer> Organizers => Set<Organizer>();
     public virtual DbSet<Account> Accounts => Set<Account>();
     public DbSet<Event> Events => Set<Event>();
-    
+    public DbSet<SectorReservation> SectorReservations => Set<SectorReservation>();
+
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
     
@@ -33,6 +34,7 @@ public class CoreDbContext : DbContext
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
+        ConfigureSectorReservations(modelBuilder);
     }
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
@@ -91,10 +93,27 @@ public class CoreDbContext : DbContext
                 cfg.WithOwner().HasForeignKey(e => e.EventId);
 
                 cfg.Ignore(e => e.Id);
+                cfg.Ignore(e => e.NumberOfSeats);
                 
                 cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
 
                 cfg.HasIndex(e => e.EventId).IsUnique(false);
+            });
+
+            cfg.IsOptimisticConcurrent();
+        });
+    }
+    
+    private void ConfigureSectorReservations(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SectorReservation>(cfg =>
+        {
+            cfg.HasKey(sr => sr.Id);
+            cfg.HasIndex(sr => sr.EventId).IsUnique(false);
+            cfg.Property(sr => sr.SectorName).HasMaxLength(StringLengths.ShortString);
+            cfg.OwnsMany(sr => sr.SeatReservations, cfg =>
+            {
+                cfg.HasKey(sr => sr.Id);
             });
 
             cfg.IsOptimisticConcurrent();
@@ -110,7 +129,8 @@ public static class ModelBuilderExtensions
         cfg.Property<byte[]>("RowVersion")
             .HasColumnName("RowVersion")
             .IsRowVersion()
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValue(Array.Empty<byte>());
         cfg.Property(e => e.DateModified).IsConcurrencyToken();
     }
 }
