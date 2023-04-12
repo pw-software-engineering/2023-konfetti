@@ -110,11 +110,7 @@ public class CoreDbContext : DbContext
         modelBuilder.Entity<SeatReservation>(cfg =>
         {
             cfg.HasKey(sr => sr.Id);
-            cfg.HasIndex(sr => sr.EventSector);
-            cfg.Property(sr => sr.EventSector.EventId).HasColumnName("EventId");
-            cfg.Property(sr => sr.EventSector.SectorName).HasColumnName("SectorName");
-
-            cfg.IsOptimisticConcurrent();
+            cfg.HasIndex(sr => sr.EventId);
         });
     }
 }

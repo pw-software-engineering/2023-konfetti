@@ -43,7 +43,7 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         // TODO: lock seats
         var freeSeats = sector!.NumberOfSeats - await coreDbContext
             .SeatReservations
-            .Where(sr => sr.EventSector.EventId == req.EventId && sr.EventSector.SectorName == req.SectorName)
+            .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
             .SumAsync(sr => sr.ReservedSeats, ct);
 
         if (freeSeats < req.NumberOfSeats)
