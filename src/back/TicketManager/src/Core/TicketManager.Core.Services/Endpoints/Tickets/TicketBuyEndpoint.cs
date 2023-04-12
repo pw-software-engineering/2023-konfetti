@@ -11,7 +11,6 @@ using TicketManager.Core.Services.Services.HttpClients;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
 
-// TODO: Currently this endpoint doesn't follow specification - it returns paymentId
 public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
@@ -33,7 +32,6 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        // This code really doesn't matter for now, it can wait for further tasks.
         var @event = await coreDbContext
             .Events
             .Where(e => e.Id == req.EventId)

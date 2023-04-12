@@ -7,6 +7,7 @@ using TicketManager.Core.Services.DataAccess.Repositories;
 using Moq;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.Services.HttpClients;
@@ -39,6 +40,9 @@ public class RoleTestsBase
 
         var accountMock = new Mock<Repository<Account, Guid>>(dbContext);
         dependencies.Add(typeof(Repository<Account, Guid>), accountMock.Object);
+        
+        var seatReservationsMock = new Mock<Repository<SeatReservation, Guid>>(dbContext);
+        dependencies.Add(typeof(Repository<SeatReservation, Guid>), seatReservationsMock.Object);
 
         var passwordManagerMock = new Mock<PasswordManager>();
         dependencies.Add(typeof(PasswordManager), passwordManagerMock.Object);
