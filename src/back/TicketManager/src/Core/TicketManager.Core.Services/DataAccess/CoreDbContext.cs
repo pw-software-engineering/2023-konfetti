@@ -111,6 +111,10 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(sr => sr.Id);
             cfg.HasIndex(sr => sr.EventSector);
+            cfg.Property(sr => sr.EventSector.EventId).HasColumnName("EventId");
+            cfg.Property(sr => sr.EventSector.SectorName).HasColumnName("SectorName");
+
+            cfg.IsOptimisticConcurrent();
         });
     }
 }
