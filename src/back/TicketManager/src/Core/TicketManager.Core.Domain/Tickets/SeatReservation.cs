@@ -16,7 +16,6 @@ public class SeatReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
         EventId = eventId;
         SectorName = sectorName;
         ReservedSeats = numberOfSeats;
-        DateModified = DateTime.UtcNow;
     }
 
     public SeatReservation() { }
