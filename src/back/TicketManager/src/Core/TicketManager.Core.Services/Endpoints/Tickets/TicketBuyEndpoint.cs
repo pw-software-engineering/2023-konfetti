@@ -40,7 +40,6 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             .FirstOrDefaultAsync(ct);
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
         
-        // TODO: lock seats
         var freeSeats = sector!.NumberOfSeats - await coreDbContext
             .SeatReservations
             .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
@@ -53,7 +52,7 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             return;
         }
 
-        // assume that seats are not reserved by somebody else
+        // assume that seats are not being reserved by somebody else
         await seatReservationRepository.AddAsync(new SeatReservation(req.EventId, req.SectorName, req.NumberOfSeats), ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
