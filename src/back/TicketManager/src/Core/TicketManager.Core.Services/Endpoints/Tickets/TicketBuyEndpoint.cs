@@ -40,10 +40,11 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         var sectorReservation = await coreDbContext.SectorReservations
             .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
             .FirstOrDefaultAsync(ct);
-
+        bool updateRepository = true;
         if (sectorReservation is null)
         {
             sectorReservation = new SectorReservation(req.EventId, req.SectorName);
+            updateRepository = false;
         }
         
         var freeSeats = sector!.NumberOfSeats - sectorReservation.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
@@ -56,7 +57,14 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         }
         
         sectorReservation.AddSeatReservation(req.NumberOfSeats);
-        await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
+        if (updateRepository)
+        {
+            await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
+        }
+        else
+        {
+            await sectorReservationRepository.AddAsync(sectorReservation, ct);
+        }
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 
