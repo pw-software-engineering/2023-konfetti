@@ -126,7 +126,8 @@ public static class ModelBuilderExtensions
         cfg.Property<byte[]>("RowVersion")
             .HasColumnName("RowVersion")
             .IsRowVersion()
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValue(Array.Empty<byte>());
         cfg.Property(e => e.DateModified).IsConcurrencyToken();
     }
 }
