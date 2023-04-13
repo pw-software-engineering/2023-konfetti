@@ -21,6 +21,6 @@ public class SectorReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
 
     public void AddSeatReservation(int numberOfSeats)
     {
-        SeatReservations.Add(new SeatReservation(numberOfSeats));
+        SeatReservations.Add(new SeatReservation(Id, numberOfSeats));
     }
 }

@@ -114,6 +114,7 @@ public class CoreDbContext : DbContext
             cfg.OwnsMany(sr => sr.SeatReservations, cfg =>
             {
                 cfg.HasKey(sr => sr.Id);
+                cfg.WithOwner().HasForeignKey(sr => sr.SectorReservationId);
                 cfg.Property(sr => sr.ReservedSeatNumber);
                 cfg.Property(sr => sr.CreationDate);
             });
