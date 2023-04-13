@@ -1,11 +1,11 @@
 namespace TicketManager.Core.Domain.Events;
 
-public class SeatReservation
+public record SeatReservation
 {
-    public Guid Id { get; set; }
-    public Guid SectorReservationId { get; set; }
-    public int ReservedSeatNumber { get; set; }
-    public DateTime CreationDate { get; set; }
+    public Guid Id { get; private init; }
+    public Guid SectorReservationId { get; private set; }
+    public int ReservedSeatNumber { get; private set; }
+    public DateTime CreationDate { get; private set; }
     
     public SeatReservation(Guid sectorReservationId, int reservedSeatNumber)
     {
@@ -14,6 +14,4 @@ public class SeatReservation
         ReservedSeatNumber = reservedSeatNumber;
         CreationDate = DateTime.UtcNow;
     }
-    
-    public SeatReservation() { }
 }

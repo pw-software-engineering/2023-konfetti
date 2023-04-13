@@ -4,9 +4,9 @@ namespace TicketManager.Core.Domain.Events;
 
 public class SectorReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
 {
-    public Guid Id { get; set; }
-    public Guid EventId { get; set; }
-    public string SectorName { get; set; } = null!;
+    public Guid Id { get; private init; }
+    public Guid EventId { get; private set; }
+    public string SectorName { get; private set; } = null!;
     private readonly List<SeatReservation> seatReservations = new();
     public IReadOnlyList<SeatReservation> SeatReservations => seatReservations;
     public DateTime DateModified { get; set; }

@@ -66,7 +66,8 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
         sectorReservation.AddSeatReservation(req.NumberOfSeats);
         if (updateRepository)
         {
-            await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
+            await coreDbContext.SaveChangesAsync(ct);
+            // await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
         }
         else
         {
