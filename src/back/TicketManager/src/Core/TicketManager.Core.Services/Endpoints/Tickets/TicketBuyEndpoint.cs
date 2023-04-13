@@ -37,10 +37,17 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             .FirstOrDefaultAsync(ct);
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
 
-        var sectorReservation = await coreDbContext.SectorReservations
-            .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
+        // var sectorReservation = await coreDbContext.SectorReservations
+        //     .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
+        //     .FirstOrDefaultAsync(ct);
+        //
+        var sectorReservationId = await coreDbContext.SectorReservations
+            .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName).Select(sr => sr.Id)
             .FirstOrDefaultAsync(ct);
+        
         bool updateRepository = true;
+        var sectorReservation = await sectorReservationRepository.FindAsync(sectorReservationId, ct);
+
         if (sectorReservation is null)
         {
             sectorReservation = new SectorReservation(req.EventId, req.SectorName);
