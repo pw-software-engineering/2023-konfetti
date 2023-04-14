@@ -1,3 +1,4 @@
+using System.Globalization;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Tickets;
@@ -9,7 +10,6 @@ using TicketManager.Core.Services.Services.HttpClients;
 
 namespace TicketManager.Core.Services.Endpoints.Tickets;
 
-// TODO: Currently this endpoint doesn't follow specification - it returns paymentId
 public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
@@ -37,10 +37,6 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             .FirstOrDefaultAsync(ct);
         var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
 
-        // var sectorReservation = await coreDbContext.SectorReservations
-        //     .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName)
-        //     .FirstOrDefaultAsync(ct);
-        //
         var sectorReservationId = await coreDbContext.SectorReservations
             .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName).Select(sr => sr.Id)
             .FirstOrDefaultAsync(ct);
@@ -62,12 +58,12 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-        
-        sectorReservation.AddSeatReservation(req.NumberOfSeats);
+
+        var newSeatReservation = sectorReservation.AddSeatReservation(req.NumberOfSeats);
         if (updateRepository)
         {
+            await coreDbContext.AddAsync(newSeatReservation, ct);
             await coreDbContext.SaveChangesAsync(ct);
-            // await sectorReservationRepository.UpdateAsync(sectorReservation, ct);
         }
         else
         {

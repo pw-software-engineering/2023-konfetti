@@ -4,10 +4,10 @@ namespace TicketManager.Core.Domain.Events;
 
 public class SectorReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
 {
+    private readonly List<SeatReservation> seatReservations = new();
     public Guid Id { get; private init; }
     public Guid EventId { get; private set; }
     public string SectorName { get; private set; } = null!;
-    private readonly List<SeatReservation> seatReservations = new();
     public IReadOnlyList<SeatReservation> SeatReservations => seatReservations;
     public DateTime DateModified { get; set; }
     
@@ -20,8 +20,10 @@ public class SectorReservation: IAggregateRoot<Guid>, IOptimisticConcurrent
 
     public SectorReservation() { }
 
-    public void AddSeatReservation(int numberOfSeats)
+    public SeatReservation AddSeatReservation(int numberOfSeats)
     {
-        seatReservations.Add(new SeatReservation(Id, numberOfSeats));
+        var seatReservation = new SeatReservation(Guid.NewGuid(), Id, numberOfSeats, DateTime.UtcNow);
+        seatReservations.Add(seatReservation);
+        return seatReservation;
     }
 }
