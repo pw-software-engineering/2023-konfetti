@@ -5,7 +5,7 @@ public class Test
     private readonly Func<Task> testExecutor;
 
     public bool Succeeded { get; private set; }
-    public string Logs { get; private set; }
+    public string Logs { get; private set; } = "";
 
     public Test(Func<Task> testExecutor)
     {
