@@ -1,15 +1,22 @@
 namespace CrossTeamTestSuite.TestsInfrastructure;
 
-public abstract class Test
+public class Test
 {
+    private readonly Func<Task> testExecutor;
+
     public bool Succeeded { get; private set; }
     public string Logs { get; private set; }
+
+    public Test(Func<Task> testExecutor)
+    {
+        this.testExecutor = testExecutor;
+    }
     
     public async Task RunAsync()
     {
         try
         {
-            await ExecuteAsync();
+            await testExecutor();
             Succeeded = true;
         }
         catch (Exception e)
@@ -18,6 +25,4 @@ public abstract class Test
             Succeeded = false;
         }
     }
-
-    public abstract Task ExecuteAsync();
 }
