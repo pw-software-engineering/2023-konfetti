@@ -16,4 +16,9 @@ public class TestPipeline
         tests.AddRange(multiTest.GetTests());
         return this;
     }
+
+    public TestExecutor GetExecutor()
+    {
+        return new TestExecutor(tests);
+    }
 }
