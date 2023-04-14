@@ -9,7 +9,7 @@ on:
       - 'dev'
       - 'master'
     paths:
-      - 'src/front/ticketer/*'
+      - 'src/front/ticketer/**'
   workflow_dispatch:
 
 jobs:
