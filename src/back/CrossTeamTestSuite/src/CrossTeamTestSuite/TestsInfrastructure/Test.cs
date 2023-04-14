@@ -6,10 +6,12 @@ public class Test
 
     public bool Succeeded { get; private set; }
     public string Logs { get; private set; } = "";
+    public string Name { get; private init; }
 
-    public Test(Func<Task> testExecutor)
+    public Test(Func<Task> testExecutor, string name = "Test")
     {
         this.testExecutor = testExecutor;
+        Name = name;
     }
     
     public async Task RunAsync()
