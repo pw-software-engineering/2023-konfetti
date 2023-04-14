@@ -49,6 +49,7 @@ class Program
 
         await new TestPipeline()
             .AddMultiTest(new SumTest())
+            .AddTest(new MultiplyTest())
             .GetExecutor()
             .ExecuteAsync();
     }
