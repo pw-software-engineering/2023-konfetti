@@ -16,11 +16,24 @@ public class TestExecutor
         foreach (var (test, i) in tests.WithIndex())
         {
             await test.RunAsync();
-            Console.WriteLine($"{i + 1}.\t{test.Name} finished {(test.Succeeded ? "Succesfully" : "Unsuccesfully")}");
+            WriteTestResult(test, i + 1);
             if (!test.Succeeded)
             {
                 Console.WriteLine(test.Logs);
             }
+        }
+    }
+
+    private void WriteTestResult(Test test, int testNumber)
+    {
+        Console.Write($"{testNumber}.\t{test.Name} finished ");
+        if (test.Succeeded)
+        {
+            ConsoleExtensions.WriteLineWithColor("successfully", ConsoleColor.Green);
+        }
+        else
+        {
+            ConsoleExtensions.WriteLineWithColor("unsuccessfully", ConsoleColor.Red);
         }
     }
 }
