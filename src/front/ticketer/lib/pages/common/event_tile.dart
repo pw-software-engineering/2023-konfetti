@@ -20,7 +20,11 @@ class _EventTileState extends State<EventTile> {
       onTap: () => _showEventDetails(),
       child: Container(
         padding: const EdgeInsets.all(9.0),
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).hintColor,
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -53,11 +57,11 @@ class _EventTileState extends State<EventTile> {
                     _event.description,
                     textAlign: TextAlign.justify,
                   ),
-                  const Text(
+                  Text(
                     "\nSectors: ",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: Colors.blueAccent,
+                      color: Theme.of(context).primaryColorDark,
                     ),
                   ),
                   SingleChildScrollView(
