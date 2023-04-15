@@ -1,3 +1,5 @@
+using CrossTeamTestSuite.Extensions;
+
 namespace CrossTeamTestSuite.TestsInfrastructure;
 
 public class TestExecutor
@@ -11,10 +13,10 @@ public class TestExecutor
 
     public async Task ExecuteAsync()
     {
-        foreach (var test in tests)
+        foreach (var (test, i) in tests.WithIndex())
         {
             await test.RunAsync();
-            Console.WriteLine($"{test.Name} finished {(test.Succeeded ? "Succesfully" : "Unsuccesfully")}");
+            Console.WriteLine($"{i + 1}.\t{test.Name} finished {(test.Succeeded ? "Succesfully" : "Unsuccesfully")}");
             if (!test.Succeeded)
             {
                 Console.WriteLine(test.Logs);
