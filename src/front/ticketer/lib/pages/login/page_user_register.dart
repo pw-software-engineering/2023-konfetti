@@ -102,12 +102,12 @@ class _UserDataState extends State<UserRegisterPage> {
   }
 
   Text _titleBanner() {
-    return const Text(
+    return Text(
       "Join us as a user",
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w600,
-        color: Colors.blueAccent,
+        color: Theme.of(context).primaryColorDark,
       ),
     );
   }
@@ -192,10 +192,9 @@ Future<DateTime?> _selectDate(BuildContext context, DateTime initial) async {
   return await showDatePicker(
       context: context,
       initialDate: initial,
-      firstDate: DateTime.now()
-          .subtract(const Duration(days: maxAge * daysInAYear)),
-      lastDate: DateTime.now()
-  );
+      firstDate:
+          DateTime.now().subtract(const Duration(days: maxAge * daysInAYear)),
+      lastDate: DateTime.now());
 }
 
 class DataDialog extends StatefulWidget {

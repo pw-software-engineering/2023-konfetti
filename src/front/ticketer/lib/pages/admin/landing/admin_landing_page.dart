@@ -16,19 +16,15 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _getUserIcon(),
-          _getGreeting(),
-          const OrganizerListing()
-        ],
+        children: [_getUserIcon(), _getGreeting(), const OrganizerListing()],
       ),
     );
   }
 
   Text _getGreeting() {
-    return const Text(
+    return Text(
       "Hello admin",
-      style: TextStyle(fontSize: 26, color: Colors.blue),
+      style: TextStyle(fontSize: 26, color: Theme.of(context).primaryColor),
     );
   }
 
@@ -36,9 +32,9 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
     return Container(
       height: 60,
       width: 60,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
       ),
       alignment: Alignment.center,
       child: const Icon(
