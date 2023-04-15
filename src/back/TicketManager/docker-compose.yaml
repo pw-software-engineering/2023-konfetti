@@ -37,6 +37,8 @@ services:
       - "8081:80"
     networks:
       - pay
+    env_file:
+      - variables.env
 networks:
   db:
     name: db
