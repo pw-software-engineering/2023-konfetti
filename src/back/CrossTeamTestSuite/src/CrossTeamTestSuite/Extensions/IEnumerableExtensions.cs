@@ -1,6 +1,6 @@
 namespace CrossTeamTestSuite.Extensions;
 
-public static class IEnumerableExtenions
+public static class IEnumerableExtensions
 {
     public static IEnumerable<(T Item, int Index)> WithIndex<T>(this IEnumerable<T> items)
     {
