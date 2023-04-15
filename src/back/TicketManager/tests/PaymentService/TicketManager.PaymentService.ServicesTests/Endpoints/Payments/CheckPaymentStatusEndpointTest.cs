@@ -17,7 +17,7 @@ public class CheckPaymentStatusEndpointTest
     [Fact]
     public async Task WhenItIsCalled_ItShouldAddPayment()
     {
-        List<Payment> payments = new List<Payment> {new(), new(), new()};
+        var payments = new List<Payment> {new(), new(), new()};
         
         
         var dbContextMock = new Mock<PaymentDbContext>(new DbContextOptionsBuilder<PaymentDbContext>().Options);

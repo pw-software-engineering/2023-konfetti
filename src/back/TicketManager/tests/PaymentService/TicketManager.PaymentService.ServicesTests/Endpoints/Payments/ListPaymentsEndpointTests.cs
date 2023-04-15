@@ -19,8 +19,8 @@ public class ListPaymentsEndpointTests
     public async Task WhenItIsCalled_ItShouldListAllPayments()
     {
         
-        List<Payment> payments = new List<Payment> {new(), new(), new()};
-        List<PaymentDto> paymentDtos = payments.Select(ToDtoConverters.PaymentToDto).ToList();
+        var payments = new List<Payment> {new(), new(), new()};
+        var paymentDtos = payments.Select(ToDtoConverters.PaymentToDto).ToList();
         
         var dbContextMock = new Mock<PaymentDbContext>(new DbContextOptionsBuilder<PaymentDbContext>().Options);
         dbContextMock.Setup(d => d.Payments).ReturnsDbSet(payments);

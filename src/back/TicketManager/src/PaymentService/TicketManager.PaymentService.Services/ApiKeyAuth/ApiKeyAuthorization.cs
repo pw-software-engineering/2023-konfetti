@@ -16,13 +16,10 @@ public class ApiKeyAuthorization<TRequest> : IPreProcessor<TRequest>
     }
     public Task PreProcessAsync(TRequest req, HttpContext context, List<ValidationFailure> failures, CancellationToken ct)
     {
-        if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out
-                var extractedApiKey)) {
-            context.Response.StatusCode = 401;
-            return context.Response.SendForbiddenAsync(ct);
-        }
+        var headerPresent = context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey);
         var apiKey = configuration.ApiKey;
-        if (!apiKey.Equals(extractedApiKey)) {
+        
+        if (!headerPresent || !apiKey.Equals(extractedApiKey)) {
             return context.Response.SendForbiddenAsync(ct);
         }
 
