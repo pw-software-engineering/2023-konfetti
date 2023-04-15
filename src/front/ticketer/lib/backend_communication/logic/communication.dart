@@ -32,7 +32,7 @@ class BackendCommunication {
   final EventCommunication _eventCommunication = EventCommunication();
   EventCommunication get event => _eventCommunication;
 
-  final dio = Dio();
+  late final Dio dio;
   static const Map<String, dynamic> headers = <String, String>{
     "Access-Control-Allow-Origin": "*",
     'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ class BackendCommunication {
   };
 
   // Initialize communication object
-  init() async {
+  init({Dio? altDio}) async {
     if (_isInitialized) return;
     String? url = dotenv.env['BACKEND_URL'];
 
@@ -49,10 +49,15 @@ class BackendCommunication {
     }
 
     // Configure request sending
-    dio.options.baseUrl = url;
-    dio.options.headers = headers;
-    dio.options.receiveDataWhenStatusError = true;
-    dio.interceptors.add(CustomInterceptors());
+    if (altDio == null) {
+      dio = Dio();
+      dio.options.baseUrl = url;
+      dio.options.headers = headers;
+      dio.options.receiveDataWhenStatusError = true;
+      dio.interceptors.add(CustomInterceptors());
+    } else {
+      dio = altDio;
+    }
     _isInitialized = true;
   }
 
