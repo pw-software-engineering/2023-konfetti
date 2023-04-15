@@ -6,12 +6,12 @@ using TicketManager.PaymentService.Services.Configuration;
 
 namespace TicketManager.PaymentService.Services.ApiKeyAuth;
 
-public class ApiKeyAuthorization<TRequest> : IPreProcessor<TRequest>
+public class ApiKeyAuthorizer<TRequest> : IPreProcessor<TRequest>
 {
     private const string ApiKeyHeaderName = "pay_api_key";
     private PaymentServiceConfiguration configuration; 
     
-    public ApiKeyAuthorization(PaymentServiceConfiguration configuration) {
+    public ApiKeyAuthorizer(PaymentServiceConfiguration configuration) {
         this.configuration = configuration;
     }
     public Task PreProcessAsync(TRequest req, HttpContext context, List<ValidationFailure> failures, CancellationToken ct)
@@ -20,7 +20,7 @@ public class ApiKeyAuthorization<TRequest> : IPreProcessor<TRequest>
         var apiKey = configuration.ApiKey;
         
         if (!headerPresent || !apiKey.Equals(extractedApiKey)) {
-            return context.Response.SendForbiddenAsync(ct);
+            return context.Response.SendUnauthorizedAsync(ct);
         }
 
         return Task.CompletedTask;

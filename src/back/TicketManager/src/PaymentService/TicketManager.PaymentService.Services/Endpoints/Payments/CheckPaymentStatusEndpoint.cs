@@ -21,7 +21,7 @@ public class CheckPaymentStatusEndpoint: Endpoint<CheckPaymentStatusRequest, Che
     public override void Configure()
     {
         Get("/payment/status");
-        PreProcessors(new ApiKeyAuthorization<CheckPaymentStatusRequest>(configuration));
+        PreProcessors(new ApiKeyAuthorizer<CheckPaymentStatusRequest>(configuration));
         AllowAnonymous();
     }
 

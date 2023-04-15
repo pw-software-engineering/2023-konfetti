@@ -21,7 +21,7 @@ public class CreatePaymentEndpoint : EndpointWithoutRequest<PaymentTokenResponse
     public override void Configure()
     {
         Post("/payment/create");
-        PreProcessors(new ApiKeyAuthorization<EmptyRequest>(configuration));
+        PreProcessors(new ApiKeyAuthorizer<EmptyRequest>(configuration));
         AllowAnonymous();
     }
 

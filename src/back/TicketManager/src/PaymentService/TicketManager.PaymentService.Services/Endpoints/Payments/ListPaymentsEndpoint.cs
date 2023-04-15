@@ -22,7 +22,7 @@ public class ListPaymentsEndpoint: EndpointWithoutRequest<List<PaymentDto>>
     public override void Configure()
     {
         Get("/payment/list");
-        PreProcessors(new ApiKeyAuthorization<EmptyRequest>(configuration));
+        PreProcessors(new ApiKeyAuthorizer<EmptyRequest>(configuration));
         AllowAnonymous();
     }
 
