@@ -52,7 +52,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -96,45 +95,11 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
 
                     b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("TicketManager.Core.Domain.Events.SectorReservation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateModified")
-                        .IsConcurrencyToken()
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uuid");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
-                        .HasColumnName("RowVersion");
-
-                    b.Property<string>("SectorName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("SectorReservations");
                 });
 
             modelBuilder.Entity("TicketManager.Core.Domain.Organizer.Organizer", b =>
@@ -177,7 +142,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.Property<string>("TaxId")
@@ -229,7 +193,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -268,36 +231,6 @@ namespace TicketManager.Core.Services.Migrations
                         });
 
                     b.Navigation("Sectors");
-                });
-
-            modelBuilder.Entity("TicketManager.Core.Domain.Events.SectorReservation", b =>
-                {
-                    b.OwnsMany("TicketManager.Core.Domain.Events.SeatReservation", "SeatReservations", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<int>("ReservedSeatNumber")
-                                .HasColumnType("integer");
-
-                            b1.Property<Guid>("SectorReservationId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("SectorReservationId");
-
-                            b1.ToTable("SeatReservation");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SectorReservationId");
-                        });
-
-                    b.Navigation("SeatReservations");
                 });
 #pragma warning restore 612, 618
         }
