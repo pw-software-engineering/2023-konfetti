@@ -28,7 +28,22 @@ public class ListEventsForOrganizerEndpoint: Endpoint<ListEventForOrganizerReque
         var result = await dbContext
             .Events
             .Where(e => e.OrganizerId == req.OrganizerId)
-            .Select(EventDtoMapper.ToDtoMapper)
+            .GroupJoin(dbContext.Sectors, e => e.Id, s => s.EventId, (e, s) => new { Event = e, Sectors = s })
+            .Select(e => new EventDto
+            {
+                Id = e.Event.Id,
+                Name = e.Event.Name,
+                Description = e.Event.Description,
+                Location = e.Event.Location,
+                Date = e.Event.Date,
+                Sectors = e.Sectors.Select(s => new SectorDto
+                {
+                    Name = s.Name,
+                    PriceInSmallestUnit = s.PriceInSmallestUnit,
+                    NumberOfColumns = s.NumberOfColumns,
+                    NumberOfRows = s.NumberOfRows,
+                }).ToList()
+            })
             .ToPaginatedResponseAsync(req, ct);
 
         await SendOkAsync(result, ct);
