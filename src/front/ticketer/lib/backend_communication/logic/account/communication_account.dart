@@ -10,5 +10,5 @@ class AccountCommunication {
   static const String _loginEndPoint = "/account/login";
   Future<Tuple2<Response, ResponseCode>> login(Credentials body) async =>
       await BackendCommunication()
-          .postCall(_loginEndPoint, data: jsonEncode(body));
+          .postCall(_loginEndPoint, data: body.toJson());
 }

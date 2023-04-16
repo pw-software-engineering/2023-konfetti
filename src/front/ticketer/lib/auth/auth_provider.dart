@@ -6,10 +6,8 @@ import 'package:ticketer/auth/account.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketer/auth/jwt_token.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
-import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
 
-import 'package:dio/dio.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
@@ -20,7 +18,6 @@ class AuthProvider {
   bool get isInitialized => _isInitialized;
   AuthProvider() : _controller = StreamController<Account?>();
   final StreamController<Account?> _controller;
-  final dio = Dio();
   static const String loginEndpoint = '/account/login';
   static const String organizerRegisterEndpoint = '/organizer/register';
   static const String userRegisterEndpoint = '/user/register';
@@ -35,26 +32,22 @@ class AuthProvider {
   Account? get getCurrentAccount => _currentAccount;
 
   // Initialize provider by checking if we have stored any valid token
-  init() async {
+  Future<void> init({bool skipSavedToken = false}) async {
     if (_isInitialized) return;
     if (!BackendCommunication().isInitialized) {
       throw Exception("Backend communication object is not initilized");
     }
-    String? url = dotenv.env['BACKEND_URL'];
+    if (!skipSavedToken) {
+      String? url = dotenv.env['BACKEND_URL'];
 
-    if (url == null) {
-      throw Exception("Missing dotenv file");
+      if (url == null) {
+        throw Exception("Missing dotenv file");
+      }
+
+      String? token = await _fetchTokenFromStorage();
+
+      _authToken(token);
     }
-
-    // Configure request sending
-    dio.options.baseUrl = url;
-    dio.options.headers = headers;
-    dio.options.receiveDataWhenStatusError = true;
-    dio.interceptors.add(CustomInterceptors());
-
-    String? token = await _fetchTokenFromStorage();
-
-    _authToken(token);
 
     _isInitialized = true;
   }
