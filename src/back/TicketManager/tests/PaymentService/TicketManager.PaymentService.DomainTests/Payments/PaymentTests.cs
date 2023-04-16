@@ -24,5 +24,28 @@ public class PaymentTests
 
             payment1.Id.Should().NotBe(payment2.Id);
         }
+
+        [Fact]
+        public void WhenPaymentIsAlreadyDecided_ItIsNotPossibleToChangeStatus()
+        {
+            var payment1 = new Payment();
+            var payment2 = new Payment();
+
+            var result1 = payment1.ConfirmPayment();
+            var result2 = payment2.CancelPayment();
+
+            result1.Should().Be(true);
+            result2.Should().Be(true);
+
+            var result3 = payment1.CancelPayment();
+            var result4 = payment2.ConfirmPayment();
+            var result5 = payment1.CancelPayment();
+            var result6 = payment2.ConfirmPayment();
+
+            result3.Should().Be(false);
+            result4.Should().Be(false);
+            result5.Should().Be(false);
+            result6.Should().Be(false);
+        }
     }
 }
