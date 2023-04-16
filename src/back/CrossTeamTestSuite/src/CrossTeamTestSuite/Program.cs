@@ -3,6 +3,8 @@ using CrossTeamTestSuite.Endpoints.Contracts.Accounts;
 using CrossTeamTestSuite.Endpoints.Contracts.Common;
 using CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 using CrossTeamTestSuite.Endpoints.Extensions;
+using CrossTeamTestSuite.Tests.Examples;
+using CrossTeamTestSuite.TestsInfrastructure;
 
 namespace CrossTeamTestSuite;
 
@@ -44,6 +46,12 @@ class Program
         });
         json = JsonSerializer.Serialize(organizers);
         Console.WriteLine(json);
+
+        await new TestPipeline()
+            .AddMultiTest(new SumTest())
+            .AddTest(new MultiplyTest())
+            .GetExecutor()
+            .ExecuteAsync();
     }
 }
 
