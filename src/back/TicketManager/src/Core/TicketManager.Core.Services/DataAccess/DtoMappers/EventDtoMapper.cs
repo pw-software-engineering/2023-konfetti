@@ -13,15 +13,6 @@ public class EventDtoMapper
         Name = e.Name,
         Description = e.Description,
         Location = e.Location,
-        Date = e.Date,
-        Sectors = e.Sectors
-            .Select(s => new SectorDto
-            {
-                Name = s.Name,
-                PriceInSmallestUnit = s.PriceInSmallestUnit,
-                NumberOfColumns = s.NumberOfColumns,
-                NumberOfRows = s.NumberOfRows,
-            })
-            .ToList(),
+        Date = e.Date
     };
 }

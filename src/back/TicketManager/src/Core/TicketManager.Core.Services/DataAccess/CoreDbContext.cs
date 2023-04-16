@@ -16,7 +16,7 @@ public class CoreDbContext : DbContext
     public virtual DbSet<Organizer> Organizers => Set<Organizer>();
     public virtual DbSet<Account> Accounts => Set<Account>();
     public DbSet<Event> Events => Set<Event>();
-    public DbSet<SectorReservation> SectorReservations => Set<SectorReservation>();
+    public DbSet<Sector> Sectors => Set<Sector>();
 
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
@@ -34,7 +34,7 @@ public class CoreDbContext : DbContext
         ConfigureOrganizers(modelBuilder);
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
-        ConfigureSectorReservations(modelBuilder);
+        ConfigureSectors(modelBuilder);
     }
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
@@ -87,38 +87,23 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
             cfg.Property(e => e.Description).HasMaxLength(StringLengths.VeryLongString);
             cfg.Property(e => e.Location).HasMaxLength(StringLengths.MediumString);
-            cfg.OwnsMany(e => e.Sectors, cfg =>
-            {
-                cfg.HasKey(e => new { e.EventId, e.Name });
-                cfg.WithOwner().HasForeignKey(e => e.EventId);
-
-                cfg.Ignore(e => e.Id);
-                cfg.Ignore(e => e.NumberOfSeats);
-                
-                cfg.Property(e => e.Name).HasMaxLength(StringLengths.ShortString);
-
-                cfg.HasIndex(e => e.EventId).IsUnique(false);
-            });
 
             cfg.IsOptimisticConcurrent();
         });
     }
     
-    private void ConfigureSectorReservations(ModelBuilder modelBuilder)
+    private void ConfigureSectors(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SectorReservation>(cfg =>
+        modelBuilder.Entity<Sector>(cfg =>
         {
-            cfg.HasKey(sr => sr.Id);
-            cfg.HasIndex(sr => sr.EventId).IsUnique(false);
-            cfg.Property(sr => sr.SectorName).HasMaxLength(StringLengths.ShortString);
-            cfg.OwnsMany(sr => sr.SeatReservations, cfg =>
+            cfg.HasKey(s => s.Id);
+            cfg.Property(s => s.Name).HasMaxLength(StringLengths.ShortString);
+            cfg.OwnsMany(s => s.SeatReservations, scfg =>
             {
-                cfg.HasKey(sr => sr.Id);
-                cfg.WithOwner().HasForeignKey(sr => sr.SectorReservationId);
-                cfg.Property(sr => sr.ReservedSeatNumber);
-                cfg.Property(sr => sr.CreationDate);
+                scfg.HasKey(s => s.Id);
+                scfg.WithOwner().HasForeignKey(s => s.SectorId);
             });
-
+            
             cfg.IsOptimisticConcurrent();
         });
     }

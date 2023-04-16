@@ -14,13 +14,13 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
     private readonly PaymentClient paymentClient;
-    private readonly Repository<SectorReservation, Guid> sectorReservationRepository;
+    private readonly Repository<Sector, (Guid, string)> sectorRepository;
 
-    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<SectorReservation, Guid> sectorReservationRepository)
+    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<Sector, (Guid, string)> sectorRepository)
     {
         this.coreDbContext = coreDbContext;
         this.paymentClient = paymentClient;
-        this.sectorReservationRepository = sectorReservationRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     public override void Configure()
@@ -31,26 +31,9 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        var @event = await coreDbContext
-            .Events
-            .Where(e => e.Id == req.EventId)
-            .FirstOrDefaultAsync(ct);
-        var sector = @event!.Sectors.FirstOrDefault(s => s.Name == req.SectorName);
+        var sector = await sectorRepository.FindAndEnsureExistenceAsync((req.EventId, req.SectorName), ct);
 
-        var sectorReservationId = await coreDbContext.SectorReservations
-            .Where(sr => sr.EventId == req.EventId && sr.SectorName == req.SectorName).Select(sr => sr.Id)
-            .FirstOrDefaultAsync(ct);
-        
-        bool updateRepository = true;
-        var sectorReservation = await sectorReservationRepository.FindAsync(sectorReservationId, ct);
-
-        if (sectorReservation is null)
-        {
-            sectorReservation = new SectorReservation(req.EventId, req.SectorName);
-            updateRepository = false;
-        }
-        
-        var freeSeats = sector!.NumberOfSeats - sectorReservation.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
+        var freeSeats = sector.NumberOfSeats - sector.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
         
         if (freeSeats < req.NumberOfSeats)
         {
@@ -59,16 +42,8 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             return;
         }
 
-        var newSeatReservation = sectorReservation.AddSeatReservation(req.NumberOfSeats);
-        if (updateRepository)
-        {
-            await coreDbContext.AddAsync(newSeatReservation, ct);
-            await coreDbContext.SaveChangesAsync(ct);
-        }
-        else
-        {
-            await sectorReservationRepository.AddAsync(sectorReservation, ct);
-        }
+        sector.AddSeatReservation(req.UserId, req.NumberOfSeats);
+        await sectorRepository.UpdateAsync(sector, ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 
