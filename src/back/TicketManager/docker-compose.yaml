@@ -3,15 +3,19 @@ services:
   server:
     container_name: backend
     image: backend
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.core
     ports:
       - "8080:80"
     networks:
       - db
+      - pay
     env_file:
       - variables.env
     depends_on:
       - api-postgres
+      - payment-service
   api-postgres:
     container_name: api-database
     image: "postgres:latest"
@@ -23,7 +27,22 @@ services:
       - db
     volumes:
       - /var/ticket_manager/postgres:/var/lib/postgresql/data
+  payment-service:
+    container_name: payment-service
+    image: payment-service
+    build:
+      context: .
+      dockerfile: Dockerfile.payment
+    ports:
+      - "8081:80"
+    networks:
+      - pay
+    env_file:
+      - variables.env
 networks:
   db:
     name: db
+    driver: bridge
+  pay:
+    name: pay
     driver: bridge

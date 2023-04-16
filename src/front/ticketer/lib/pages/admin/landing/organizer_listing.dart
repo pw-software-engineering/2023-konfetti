@@ -6,11 +6,9 @@ class OrganizerListing extends StatefulWidget {
 
   @override
   State<OrganizerListing> createState() => _OrganizerListingPageState();
-
 }
 
-class _OrganizerListingPageState  extends State<OrganizerListing>  {
-
+class _OrganizerListingPageState extends State<OrganizerListing> {
   Widget _getContent() {
     return SingleChildScrollView(
       child: Column(
@@ -29,9 +27,9 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
   Container _getHeader() {
     return Container(
       margin: const EdgeInsets.only(top: 30.0),
-      child: const Text(
+      child: Text(
         "Organizer accounts waiting for approval",
-        style: TextStyle(fontSize: 20, color: Colors.blue),
+        style: TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
       ),
     );
   }
@@ -40,11 +38,7 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const OrganizerCard(),
-        _rejectButton(),
-        _verifyButton()
-      ],
+      children: [const OrganizerCard(), _rejectButton(), _verifyButton()],
     );
   }
 

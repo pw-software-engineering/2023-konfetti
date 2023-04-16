@@ -174,12 +174,12 @@ class _OrganizerDataState extends State<OrganizerRegisterPage> {
   }
 
   Text _titleBanner() {
-    return const Text(
+    return Text(
       "Join us as an organizer",
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w600,
-        color: Colors.blueAccent,
+        color: Theme.of(context).primaryColorDark,
       ),
     );
   }

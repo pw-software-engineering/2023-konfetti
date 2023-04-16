@@ -5,12 +5,7 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 
 public class UserRoleTests
 {
-    private readonly RoleTestsBase testsBase;
-    
-    public UserRoleTests()
-    {
-        testsBase = new RoleTestsBase();
-    }
+    private readonly RoleTestsBase testsBase = new();
 
     [Fact]
     public void WhenUserRegisterChecked_ItShouldAllowAnonymous()

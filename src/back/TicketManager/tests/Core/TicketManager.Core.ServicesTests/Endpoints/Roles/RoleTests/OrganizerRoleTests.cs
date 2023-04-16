@@ -5,12 +5,7 @@ namespace TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
 
 public class OrganizerRoleTests
 {
-    private readonly RoleTestsBase testsBase;
-    
-    public OrganizerRoleTests()
-    {
-        testsBase = new RoleTestsBase();
-    }
+    private readonly RoleTestsBase testsBase = new();
 
     [Fact]
     public void WhenOrganizerRegisterChecked_ItShouldAllowAnonymous()

@@ -42,8 +42,11 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
           Container(
               padding: const EdgeInsets.all(12.0),
               margin: const EdgeInsets.only(top: 20, bottom: 20),
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).hintColor,
+                ),
+              ),
               child: Column(
                 children: [
                   _getEventCreationForm(),
@@ -55,9 +58,13 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   }
 
   Text _getEventCreationBanner() {
-    return const Text(
+    return Text(
       "Create new event",
-      style: TextStyle(fontSize: 24, color: Colors.blue),
+      style: TextStyle(
+        fontSize: 24,
+        color: Theme.of(context).primaryColor,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 
@@ -273,7 +280,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
               },
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Theme.of(context).primaryColorDark,
               fixedSize: const Size(90, 30),
             ),
             child: const Text('Add'),
@@ -401,9 +408,13 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   }
 
   Text _getGreeting() {
-    return const Text(
+    return Text(
       "Hello organizer",
-      style: TextStyle(fontSize: 26, color: Colors.blue),
+      style: TextStyle(
+        fontSize: 26,
+        color: Theme.of(context).primaryColor,
+        fontWeight: FontWeight.w600,
+      ),
     );
   }
 
@@ -411,9 +422,9 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return Container(
       height: 60,
       width: 60,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
       ),
       alignment: Alignment.center,
       child: const Icon(

@@ -8,13 +8,13 @@ class OrganizerCard extends StatefulWidget {
 }
 
 class _OrganizerCardState extends State<OrganizerCard> {
-
-
   Container _organizerContainer() {
     return Container(
       padding: const EdgeInsets.all(9.0),
-      decoration:
-      BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+      decoration: BoxDecoration(
+          border: Border.all(
+        color: Theme.of(context).hintColor,
+      )),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -37,8 +37,10 @@ class _OrganizerCardState extends State<OrganizerCard> {
           flex: 2,
           child: Text(
             property,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700, color: Colors.blue, fontSize: 16),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).primaryColor,
+                fontSize: 16),
           ),
         ),
         Flexible(
@@ -57,13 +59,10 @@ class _OrganizerCardState extends State<OrganizerCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _organizerContainer()
-        ],
+        children: [_organizerContainer()],
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
