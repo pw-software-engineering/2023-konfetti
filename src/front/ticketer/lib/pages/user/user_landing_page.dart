@@ -47,9 +47,12 @@ class _UserLandingPageState extends State<UserLandingPage> {
   }
 
   Text _getGreeting() {
-    return const Text(
+    return Text(
       "Hello user",
-      style: TextStyle(fontSize: 26, color: Colors.blue),
+      style: TextStyle(
+        fontSize: 26,
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 
@@ -57,9 +60,9 @@ class _UserLandingPageState extends State<UserLandingPage> {
     return Container(
       height: 60,
       width: 60,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
       ),
       alignment: Alignment.center,
       child: const Icon(

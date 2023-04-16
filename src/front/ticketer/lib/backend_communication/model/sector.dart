@@ -14,7 +14,7 @@ class Sector {
   factory Sector.fromJson(Map<String, dynamic> json) {
     return Sector(
       json['name'],
-      json['priceInSmallestUnit'],
+      json['priceInSmallestUnit'] / 100,
       json['numberOfRows'],
       json['numberOfColumns'],
     );
@@ -22,7 +22,7 @@ class Sector {
 
   Map<String, dynamic> toJson() => {
         'name': name,
-        'priceInSmallestUnit': price,
+        'priceInSmallestUnit': (price * 100).round(),
         'numberOfColumns': numberOfColumns,
         'numberOfRows': numberOfRows,
       };
