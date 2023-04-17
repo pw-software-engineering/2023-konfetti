@@ -34,8 +34,6 @@ public class ConfirmPaymentEndpointTest
     [Fact]
     public async Task WhenItIsCalledAndIsSuccessful_ItShouldConfirmPayment()
     {
-        paymentMock.Setup(p => p.ConfirmPayment()).Returns(true);
-        
         await endpoint.HandleAsync(new ConfirmPaymentRequest { Id = payment.Id}, default);
         
         paymentsMock.Verify(e => e.FindAndEnsureExistenceAsync(payment.Id, default), Times.Once);
@@ -48,7 +46,8 @@ public class ConfirmPaymentEndpointTest
     [Fact]
     public async Task WhenItIsCalledAndIsUnsuccessful_ItShouldNotConfirmPayment()
     {
-        paymentMock.Setup(p => p.ConfirmPayment()).Returns(false);
+        paymentMock.Setup(p => p.ConfirmPayment()).Throws(new PaymentAlreadyDecidedOrExpiredException());
+
         
         await endpoint.HandleAsync(new ConfirmPaymentRequest { Id = payment.Id}, default);
         

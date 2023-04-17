@@ -24,28 +24,45 @@ public class PaymentTests
 
             payment1.Id.Should().NotBe(payment2.Id);
         }
+        
+        [Fact]
+        public void WhenPaymentIsConfirmed_ItsStatusChangesToConfirmed()
+        {
+            var payment = new Payment();
+
+            payment.ConfirmPayment();
+
+            payment.PaymentStatus.Should().Be(PaymentStatus.Confirmed);
+        }
+        
+        [Fact]
+        public void WhenPaymentIsCancelled_ItsStatusChangesToCancelled()
+        {
+            var payment = new Payment();
+
+            payment.CancelPayment();
+            
+            payment.PaymentStatus.Should().Be(PaymentStatus.Cancelled);
+        }
 
         [Fact]
-        public void WhenPaymentIsAlreadyDecided_ItIsNotPossibleToChangeStatus()
+        public void WhenPaymentIsAlreadyDecided_DecisionShouldThrowException()
         {
             var payment1 = new Payment();
             var payment2 = new Payment();
 
-            var result1 = payment1.ConfirmPayment();
-            var result2 = payment2.CancelPayment();
+            payment1.ConfirmPayment();
+            payment2.CancelPayment();
 
-            result1.Should().Be(true);
-            result2.Should().Be(true);
+            var func1 = () => payment1.CancelPayment();
+            var func2 = () =>  payment2.ConfirmPayment();
+            var func3 = () =>  payment1.ConfirmPayment();
+            var func4 = () =>  payment2.CancelPayment();
 
-            var result3 = payment1.CancelPayment();
-            var result4 = payment2.ConfirmPayment();
-            var result5 = payment1.CancelPayment();
-            var result6 = payment2.ConfirmPayment();
-
-            result3.Should().Be(false);
-            result4.Should().Be(false);
-            result5.Should().Be(false);
-            result6.Should().Be(false);
+            func1.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
+            func2.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
+            func3.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
+            func4.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
         }
     }
 }

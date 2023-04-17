@@ -26,8 +26,11 @@ public class CancelPaymentEndpoint: Endpoint<CancelPaymentRequest, EmptyResponse
         {
             var payment = await payments.FindAndEnsureExistenceAsync(req.Id, ct);
 
-            var result = payment.CancelPayment();
-            if (!result)
+            try
+            {
+                payment.CancelPayment();
+            } 
+            catch(PaymentAlreadyDecidedOrExpiredException) 
             {
                 await SendErrorsAsync(cancellation: ct);
                 return;
@@ -35,7 +38,7 @@ public class CancelPaymentEndpoint: Endpoint<CancelPaymentRequest, EmptyResponse
 
             await payments.UpdateAsync(payment, ct);
         }
-        catch(EntityDoesNotExistException e)
+        catch(EntityDoesNotExistException)
         {
             await SendErrorsAsync(cancellation: ct);
             return;

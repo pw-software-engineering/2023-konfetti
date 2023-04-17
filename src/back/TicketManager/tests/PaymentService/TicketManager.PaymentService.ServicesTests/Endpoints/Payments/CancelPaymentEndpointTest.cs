@@ -34,7 +34,6 @@ public class CancelPaymentEndpointTest
     [Fact]
     public async Task WhenItIsCalledAndIsSuccessful_ItShouldCancelPayment()
     {
-        paymentMock.Setup(p => p.CancelPayment()).Returns(true);
         
         await endpoint.HandleAsync(new CancelPaymentRequest() { Id = payment.Id}, default);
         
@@ -48,7 +47,7 @@ public class CancelPaymentEndpointTest
     [Fact]
     public async Task WhenItIsCalledAndIsUnsuccessful_ItShouldNotCancelPayment()
     {
-        paymentMock.Setup(p => p.CancelPayment()).Returns(false);
+        paymentMock.Setup(p => p.CancelPayment()).Throws(new PaymentAlreadyDecidedOrExpiredException());
         
         await endpoint.HandleAsync(new CancelPaymentRequest { Id = payment.Id}, default);
         

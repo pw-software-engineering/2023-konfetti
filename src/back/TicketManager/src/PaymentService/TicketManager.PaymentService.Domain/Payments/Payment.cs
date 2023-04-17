@@ -4,45 +4,44 @@ namespace TicketManager.PaymentService.Domain.Payments;
 
 public class Payment: IAggregateRoot<Guid>, IOptimisticConcurrent
 {
+    private readonly TimeSpan  TimeToExpire;
+    
     public Guid Id { get; private init; }
     public PaymentStatus PaymentStatus { get; private set; }
     public DateTime DateCreated { get; private init; }
-    public DateTime DateToExpire { get; private init; }
-    private const int ExpirationTimeInMinutes = 30;
     public DateTime DateModified { get; set; }
+
+    private bool HasExpired => DateCreated + TimeToExpire <= DateTime.UtcNow;
 
     public Payment()
     {
         Id = Guid.NewGuid();
         PaymentStatus = PaymentStatus.Created;
         DateCreated = DateTime.UtcNow;
-        DateToExpire = DateCreated.AddMinutes(ExpirationTimeInMinutes);
+        TimeToExpire = TimeSpan.FromMinutes(30);
     }
 
-    public virtual bool ConfirmPayment()
+    public virtual void ConfirmPayment()
     {
         if (PaymentAlreadyDecidedOrExpired())
         {
-            return false;
+            throw new PaymentAlreadyDecidedOrExpiredException();
         }
         PaymentStatus = PaymentStatus.Confirmed;
-        return true;
     }
     
-    public virtual bool CancelPayment()
+    public virtual void CancelPayment()
     {
         if (PaymentAlreadyDecidedOrExpired())
         {
-            return false;
+            throw new PaymentAlreadyDecidedOrExpiredException();
         }
         PaymentStatus = PaymentStatus.Cancelled;
-        return true;
     }
 
     private bool PaymentAlreadyDecidedOrExpired()
     {
-        var hasExpired = DateTime.UtcNow > DateToExpire;
-        if (PaymentStatus is PaymentStatus.Created && hasExpired)
+        if (PaymentStatus is PaymentStatus.Created && HasExpired)
         {
             PaymentStatus = PaymentStatus.Expired;
         }
