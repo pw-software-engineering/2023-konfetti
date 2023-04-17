@@ -14,9 +14,9 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 {
     private readonly CoreDbContext coreDbContext;
     private readonly PaymentClient paymentClient;
-    private readonly Repository<Sector, (Guid, string)> sectorRepository;
+    private readonly Repository<Sector, Guid> sectorRepository;
 
-    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<Sector, (Guid, string)> sectorRepository)
+    public TicketBuyEndpoint(CoreDbContext coreDbContext, PaymentClient paymentClient, Repository<Sector, Guid> sectorRepository)
     {
         this.coreDbContext = coreDbContext;
         this.paymentClient = paymentClient;
@@ -31,7 +31,10 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        var sector = await sectorRepository.FindAndEnsureExistenceAsync((req.EventId, req.SectorName), ct);
+        var sectorId = await coreDbContext.Sectors.Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
+            .Select(s => s.Id)
+            .FirstOrDefaultAsync(ct);
+        var sector = await sectorRepository.FindAndEnsureExistenceAsync(sectorId, ct);
 
         var freeSeats = sector.NumberOfSeats - sector.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
         

@@ -10,9 +10,9 @@ namespace TicketManager.Core.Services.Endpoints.Events;
 public class CreateEventEndpoint : Endpoint<CreateEventRequest, IdResponse>
 {
     private readonly Repository<Event, Guid> events;
-    private readonly Repository<Sector, (Guid, string)> sectors;
+    private readonly Repository<Sector, Guid> sectors;
 
-    public CreateEventEndpoint(Repository<Event, Guid> events, Repository<Sector, (Guid, string)> sectors)
+    public CreateEventEndpoint(Repository<Event, Guid> events, Repository<Sector, Guid> sectors)
     {
         this.events = events;
         this.sectors = sectors;
