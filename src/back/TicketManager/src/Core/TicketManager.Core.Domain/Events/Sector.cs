@@ -25,9 +25,9 @@ public class Sector:
         NumberOfRows = numberOfRows;
     }
 
-    public void AddSeatReservation(Guid userId, int numberOfSeats)
+    public SeatReservation AddSeatReservation(Guid userId, int numberOfSeats)
     {
-        seatReservations.Add(new SeatReservation(Id, userId, numberOfSeats));
+        return new SeatReservation(Id, userId, numberOfSeats);
     }
 
 }

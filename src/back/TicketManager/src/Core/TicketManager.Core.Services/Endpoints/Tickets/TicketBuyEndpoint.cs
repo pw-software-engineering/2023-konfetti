@@ -45,7 +45,8 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             return;
         }
 
-        sector.AddSeatReservation(req.UserId, req.NumberOfSeats);
+        var seatReservation = sector.AddSeatReservation(req.UserId, req.NumberOfSeats);
+        coreDbContext.Add(seatReservation);
         await sectorRepository.UpdateAsync(sector, ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
