@@ -32,6 +32,7 @@ public class ListEventsForOrganizerEndpoint: Endpoint<ListEventForOrganizerReque
             .Select(e => new EventDto
             {
                 Id = e.Event.Id,
+                OrganizerId = e.Event.OrganizerId,
                 Name = e.Event.Name,
                 Description = e.Event.Description,
                 Location = e.Event.Location,
