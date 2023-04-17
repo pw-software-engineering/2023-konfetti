@@ -49,7 +49,6 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
 
         return await dbResolver.Resolve(scope)
             .Sectors
-            .Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
-            .AnyAsync(cancellationToken);
+            .AnyAsync(s => s.EventId == req.EventId && s.Name == req.SectorName, cancellationToken);
     }
 }
