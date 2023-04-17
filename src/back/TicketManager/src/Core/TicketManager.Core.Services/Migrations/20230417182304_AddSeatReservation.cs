@@ -101,6 +101,8 @@ namespace TicketManager.Core.Services.Migrations
                 name: "IX_SeatReservation_SectorId",
                 table: "SeatReservation",
                 column: "SectorId");
+
+            migrationBuilder.Sql("DELETE FROM \"Events\"");
         }
 
         /// <inheritdoc />
