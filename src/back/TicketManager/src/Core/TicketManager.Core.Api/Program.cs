@@ -50,7 +50,7 @@ public class Program
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
         builder.Services.AddScoped<Repository<Event, Guid>>();
-        builder.Services.AddScoped<Repository<Sector, (Guid, string)>>();
+        builder.Services.AddScoped<Repository<Sector, Guid>>();
         
         builder.Services.AddFastEndpoints();
         
