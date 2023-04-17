@@ -6,6 +6,7 @@ using TicketManager.PaymentService.Domain.Payments;
 using TicketManager.PaymentService.Services.Configuration;
 using TicketManager.PaymentService.Services.DataAccess;
 using TicketManager.PaymentService.Services.DataAccess.Repositories;
+using TicketManager.PaymentService.Services.Services.Mockables;
 
 namespace TicketManager.PaymentService.Api;
 
@@ -21,6 +22,7 @@ public class Program
                 .UseInMemoryDatabase("payment-db")
         );
         
+        builder.Services.AddSingleton<MockablePaymentDbResolver>();
         builder.Services.AddSingleton(new PaymentServiceConfiguration(builder.Configuration["PaymentClientApiKey"]));
         
         builder.Services.AddScoped<Repository<Payment, Guid>>();

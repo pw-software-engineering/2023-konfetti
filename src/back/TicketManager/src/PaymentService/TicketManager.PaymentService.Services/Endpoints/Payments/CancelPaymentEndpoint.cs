@@ -22,27 +22,11 @@ public class CancelPaymentEndpoint: Endpoint<CancelPaymentRequest, EmptyResponse
 
     public override async Task HandleAsync(CancelPaymentRequest req, CancellationToken ct)
     {
-        try
-        {
-            var payment = await payments.FindAndEnsureExistenceAsync(req.Id, ct);
+        var payment = await payments.FindAndEnsureExistenceAsync(req.Id, ct);
 
-            try
-            {
-                payment.CancelPayment();
-            } 
-            catch(PaymentAlreadyDecidedOrExpiredException) 
-            {
-                await SendErrorsAsync(cancellation: ct);
-                return;
-            }
+        payment.CancelPayment();
 
-            await payments.UpdateAsync(payment, ct);
-        }
-        catch(EntityDoesNotExistException)
-        {
-            await SendErrorsAsync(cancellation: ct);
-            return;
-        }
+        await payments.UpdateAsync(payment, ct);
         
         await SendOkAsync(ct);
     }

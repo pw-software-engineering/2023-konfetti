@@ -64,5 +64,17 @@ public class PaymentTests
             func3.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
             func4.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
         }
+        
+        [Fact]
+        public void WhenPaymentHasAlreadyExpired_DecisionShouldThrowException()
+        {
+            var payment = Payment.CreateForTests(PaymentStatus.Created, DateTime.UtcNow.AddDays(-1), TimeSpan.Zero);
+
+            var func1 = () => payment.CancelPayment();
+            var func2 = () =>  payment.ConfirmPayment();
+
+            func1.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
+            func2.Should().Throw<PaymentAlreadyDecidedOrExpiredException>();
+        }
     }
 }
