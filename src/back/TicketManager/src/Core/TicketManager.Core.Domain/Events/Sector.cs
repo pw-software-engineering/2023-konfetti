@@ -5,6 +5,7 @@ namespace TicketManager.Core.Domain.Events;
 public class Sector: 
     IAggregateRoot<Guid>, IOptimisticConcurrent
 {
+    private List<SeatReservation> seatReservations = new();
     public Guid Id { get; private init; }
     public Guid EventId { get; private init; }
     public string Name { get; private set; } = null!;
@@ -12,12 +13,12 @@ public class Sector:
     public int NumberOfColumns { get; private set; }
     public int NumberOfRows { get; private set; }
     public int NumberOfSeats => NumberOfRows * NumberOfColumns;
-    private List<SeatReservation> seatReservations = new();
     public IReadOnlyCollection<SeatReservation> SeatReservations => seatReservations.AsReadOnly();
     public DateTime DateModified { get; set; }
     
     public Sector(Guid eventId, string name, int priceInSmallestUnit, int numberOfColumns, int numberOfRows)
     {
+        Id = Guid.NewGuid();
         EventId = eventId;
         Name = name;
         PriceInSmallestUnit = priceInSmallestUnit;
