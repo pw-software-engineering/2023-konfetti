@@ -102,6 +102,7 @@ public class CoreDbContext : DbContext
             {
                 scfg.HasKey(s => s.Id);
                 scfg.WithOwner().HasForeignKey(s => s.SectorId);
+                scfg.Property(s => s.CreationDate);
             });
             
             cfg.IsOptimisticConcurrent();
