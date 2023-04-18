@@ -26,6 +26,8 @@ public class Sector:
         NumberOfRows = numberOfRows;
     }
 
+    private Sector() { }
+
     public SeatReservation AddSeatReservation(Guid userId, int numberOfSeats)
     {
         return new SeatReservation(Id, userId, numberOfSeats);
