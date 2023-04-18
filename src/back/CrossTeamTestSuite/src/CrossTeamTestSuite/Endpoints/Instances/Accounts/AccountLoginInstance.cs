@@ -1,7 +1,7 @@
 using CrossTeamTestSuite.Endpoints.Contracts.Accounts;
 using CrossTeamTestSuite.Endpoints.Extensions;
 
-namespace CrossTeamTestSuite.Endpoints.Instances.Account;
+namespace CrossTeamTestSuite.Endpoints.Instances.Accounts;
 
 public class AccountLoginInstance: EndpointInstance<AccountLoginRequest, AccountLoginResponse>
 {
