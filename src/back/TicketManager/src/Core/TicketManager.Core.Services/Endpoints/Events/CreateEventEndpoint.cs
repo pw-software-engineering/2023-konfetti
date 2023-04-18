@@ -10,10 +10,12 @@ namespace TicketManager.Core.Services.Endpoints.Events;
 public class CreateEventEndpoint : Endpoint<CreateEventRequest, IdResponse>
 {
     private readonly Repository<Event, Guid> events;
+    private readonly Repository<Sector, Guid> sectors;
 
-    public CreateEventEndpoint(Repository<Event, Guid> events)
+    public CreateEventEndpoint(Repository<Event, Guid> events, Repository<Sector, Guid> sectors)
     {
         this.events = events;
+        this.sectors = sectors;
     }
 
     public override void Configure()
@@ -29,10 +31,17 @@ public class CreateEventEndpoint : Endpoint<CreateEventRequest, IdResponse>
             req.Name,
             req.Description,
             req.Location,
-            req.Date,
-            req.Sectors
-                .Select(s => new Event.SectorData(s.Name, s.PriceInSmallestUnit, s.NumberOfColumns, s.NumberOfRows))
-                .ToList());
+            req.Date);
+
+        foreach (var sector in req.Sectors)
+        {
+            sectors.Add(new Sector(
+                @event.Id, 
+                sector.Name, 
+                sector.PriceInSmallestUnit,
+                sector.NumberOfColumns,
+                sector.NumberOfRows));
+        }
 
         await events.AddAsync(@event, ct);
 

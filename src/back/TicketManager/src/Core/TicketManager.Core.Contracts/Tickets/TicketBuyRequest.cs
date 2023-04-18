@@ -1,7 +1,12 @@
+using FastEndpoints;
+using TicketManager.Core.Contracts.Common;
+
 namespace TicketManager.Core.Contracts.Tickets;
 
 public class TicketBuyRequest
 {
+    [FromClaim(ClaimType = Claims.AccountId)]
+    public Guid UserId { get; set; }
     public Guid EventId { get; set; }
     public string SectorName { get; set; }
     public int NumberOfSeats { get; set; }

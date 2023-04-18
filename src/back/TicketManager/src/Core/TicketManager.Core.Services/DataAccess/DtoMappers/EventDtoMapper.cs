@@ -6,22 +6,20 @@ namespace TicketManager.Core.Services.DataAccess.DtoMappers;
 
 public class EventDtoMapper
 {
-    public readonly static Expression<Func<Event, EventDto>> ToDtoMapper = e => new EventDto
+    public static readonly Func<(Event Event, IEnumerable<Sector> Sectors), EventDto> ToDtoMapper = t => new EventDto
     {
-        Id = e.Id,
-        OrganizerId = e.OrganizerId,
-        Name = e.Name,
-        Description = e.Description,
-        Location = e.Location,
-        Date = e.Date,
-        Sectors = e.Sectors
-            .Select(s => new SectorDto
-            {
-                Name = s.Name,
-                PriceInSmallestUnit = s.PriceInSmallestUnit,
-                NumberOfColumns = s.NumberOfColumns,
-                NumberOfRows = s.NumberOfRows,
-            })
-            .ToList(),
+        Id = t.Event.Id,
+        OrganizerId = t.Event.OrganizerId,
+        Name = t.Event.Name,
+        Description = t.Event.Description,
+        Location = t.Event.Location,
+        Date = t.Event.Date,
+        Sectors = t.Sectors.Select(s => new SectorDto
+        {
+            Name = s.Name,
+            PriceInSmallestUnit = s.PriceInSmallestUnit,
+            NumberOfColumns = s.NumberOfColumns,
+            NumberOfRows = s.NumberOfRows
+        }).ToList()
     };
 }
