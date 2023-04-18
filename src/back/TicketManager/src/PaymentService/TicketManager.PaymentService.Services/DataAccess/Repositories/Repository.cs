@@ -63,7 +63,7 @@ public class Repository<TEntity, TId>
         return await dbContext.Set<TEntity>().AsTracking().FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
-    public async Task<TEntity> FindAndEnsureExistenceAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<TEntity> FindAndEnsureExistenceAsync(TId id, CancellationToken cancellationToken)
     {
         var result = await FindAsync(id, cancellationToken);
 
