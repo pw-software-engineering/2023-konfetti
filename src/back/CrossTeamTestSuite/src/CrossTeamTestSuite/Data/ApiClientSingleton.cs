@@ -1,5 +1,3 @@
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-
 namespace CrossTeamTestSuite.Data;
 
 public class ApiClientSingleton
@@ -16,7 +14,7 @@ public class ApiClientSingleton
     {
         if (httpClient is null)
         {
-            throw new SettingsException("HttpClient is not configured.");
+            throw new Exception("HttpClient is not configured.");
         }
 
         return httpClient;
