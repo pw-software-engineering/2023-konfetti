@@ -26,6 +26,8 @@ public class AdminLoginTest: SingleTest
         };
         var accountLoginInstance = new AccountLoginInstance();
         var response = await accountLoginInstance.HandleEndpointAsync(adminLoginRequest);
+        
+        response.Should().NotBeNull();
         response.AccessToken.Should().NotBeNullOrEmpty();
 
         CommonTokenSingleton.SetToken(CommonTokenType.AdminToken, response.AccessToken);

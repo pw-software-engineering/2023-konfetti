@@ -36,7 +36,7 @@ public abstract class EndpointInstance<TRequest, TResponse>
         Configure();
     }
 
-    public abstract Task<TResponse> HandleEndpointAsync(TRequest request);
+    public abstract Task<TResponse?> HandleEndpointAsync(TRequest request);
 }
 
 public abstract class EndpointInstance<TRequest> where TRequest: IRequest
