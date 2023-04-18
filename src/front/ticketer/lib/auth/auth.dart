@@ -16,8 +16,8 @@ class Auth {
 
   Auth._internal() : _provider = AuthProvider();
 
-  void init() async {
-    await _provider.init();
+  Future<void> init({bool skipSavedToken = false}) async {
+    await _provider.init(skipSavedToken: skipSavedToken);
   }
 
   Future<ResponseCode> logInWithEmailAndPassword({

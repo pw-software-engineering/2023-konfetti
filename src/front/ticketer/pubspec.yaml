@@ -48,6 +48,7 @@ dependencies:
   http_mock_adapter: ^0.4.2
   build_runner: ^2.3.3
   tuple: ^2.0.1
+  dart_jsonwebtoken: ^2.7.1
 
 dev_dependencies:
   flutter_test:
