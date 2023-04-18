@@ -54,7 +54,7 @@ jobs:
     env:
       ACR_URL: 'powoeuwacr.azurecr.io'
       APP_API_NAME: 'konfetti-api'
-      APP_PAYMENT_NAME: 'konfetti-api'
+      APP_PAYMENT_NAME: 'konfetti-payment'
       PATH_TO_API_DOCKER_FILE: 'Dockerfile.core'
       PATH_TO_PAYMENT_DOCKER_FILE: 'Dockerfile.payment'
       PATH_TO_APP_SRC: '.'                      
