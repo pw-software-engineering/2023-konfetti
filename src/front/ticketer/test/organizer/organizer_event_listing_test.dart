@@ -19,6 +19,8 @@ Widget _homeWidget() {
   );
 }
 
+const String loginPath = "/account/login";
+
 void main() {
   final dio = Dio();
   final dioAdapter = DioAdapter(dio: dio, matcher: const UrlRequestMatcher());
@@ -33,7 +35,7 @@ void main() {
   late DateTime iat;
   late DateTime exp;
 
-  String mockedResponse = '''{
+  const Map<String, dynamic> mockedResponse = {
     "items": [
       {
         "id": "string",
@@ -53,14 +55,11 @@ void main() {
       }
     ],
     "totalCount": 1
-    }''';
-
-  // setUpAll(() {
-  //   FlutterSecureStorage.setMockInitialValues({});
-  // });
+  };
 
   setUp(() async {
     await dotenv.load(fileName: "assets/dotenv");
+    FlutterSecureStorage.setMockInitialValues({});
     dio.options.baseUrl = 'http://localhost:8080';
     dio.httpClientAdapter = dioAdapter;
     dio.options.receiveDataWhenStatusError = true;
@@ -79,19 +78,6 @@ void main() {
       "exp": (exp.millisecondsSinceEpoch / 1000).ceil(),
     }).sign(SecretKey('secret passphrase')).toString();
 
-    var postHeaders = BackendCommunication.headers;
-    postHeaders["Content-Type"] = Headers.formUrlEncodedContentType;
-
-    dioAdapter.onPost(
-      "/account/login",
-      (request) {
-        return request.reply(200, {'accessToken': token});
-      },
-      data: correct.toJson(),
-      headers: postHeaders,
-      queryParameters: {},
-    );
-
     dioAdapter.onGet(
       "/event/organizer/my/list",
       (request) {
@@ -102,13 +88,21 @@ void main() {
       queryParameters: {"PageNumber": 0, "PageSize": 3},
     );
 
+    dioAdapter.onPost(
+      loginPath,
+      (request) {
+        return request.reply(200, {'accessToken': token});
+      },
+      data: correct.toJson(),
+      headers: BackendCommunication.headers,
+      queryParameters: {},
+    );
+
     await BackendCommunication().init(altDio: dio);
     await Auth().init(skipSavedToken: true);
   });
-
-  testWidgets(
-    'Should render organizer event list page',
-    (WidgetTester tester) async {
+  group('Organizer event list page tests', () {
+    test('Should return event organizer list of events', () async {
       // given
       // await tester.pumpWidget(_homeWidget());
       assert(BackendCommunication().isInitialized == true);
@@ -116,11 +110,9 @@ void main() {
       await Auth().logInWithEmailAndPassword(
           email: correct.email, password: correct.password);
 
-      FlutterSecureStorage.setMockInitialValues({});
-
       var res = await BackendCommunication().event.organizerMyList(0, 3);
-      var resJson = jsonDecode(res.item1.data);
+      var resJson = res.item1.data;
       expect(resJson["totalCount"], 1);
-    },
-  );
+    });
+  });
 }
