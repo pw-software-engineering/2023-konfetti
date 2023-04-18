@@ -59,6 +59,7 @@ jobs:
       
     if: ${{( github.event_name == 'push' && github.ref == 'refs/heads/master') ||  github.event_name == 'workflow_dispatch'}}
     steps:
+    - uses: actions/checkout@v3
     - name: Set IMAGE_ID as env variable
       run: echo "IMAGE_ID=${{ env.ACR_URL }}/${{ env.APP_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
     - name: Print IMAGE_ID
