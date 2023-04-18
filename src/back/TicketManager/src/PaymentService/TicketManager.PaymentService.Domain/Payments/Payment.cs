@@ -4,7 +4,7 @@ namespace TicketManager.PaymentService.Domain.Payments;
 
 public partial class Payment: IAggregateRoot<Guid>, IOptimisticConcurrent
 {
-    private TimeSpan  timeToExpire;
+    private readonly TimeSpan  timeToExpire;
     
     public Guid Id { get; private init; }
     public PaymentStatus PaymentStatus { get; private set; }

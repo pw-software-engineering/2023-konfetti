@@ -2,13 +2,12 @@
 
 public partial class Payment
 {
-    public static Payment CreateForTests(PaymentStatus status, DateTime dateCreated, TimeSpan timeToExpire)
+    public static Payment CreateForTests(PaymentStatus status, DateTime dateCreated)
     {
         return new Payment
         {
             PaymentStatus = status,
-            DateCreated = dateCreated,
-            timeToExpire = timeToExpire    
+            DateCreated = dateCreated
         };
     } 
 }

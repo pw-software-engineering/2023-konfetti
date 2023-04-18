@@ -68,7 +68,7 @@ public class PaymentTests
         [Fact]
         public void WhenPaymentHasAlreadyExpired_DecisionShouldThrowException()
         {
-            var payment = Payment.CreateForTests(PaymentStatus.Created, DateTime.UtcNow.AddDays(-1), TimeSpan.Zero);
+            var payment = Payment.CreateForTests(PaymentStatus.Created, DateTime.UtcNow.AddDays(-1));
 
             var func1 = () => payment.CancelPayment();
             var func2 = () =>  payment.ConfirmPayment();

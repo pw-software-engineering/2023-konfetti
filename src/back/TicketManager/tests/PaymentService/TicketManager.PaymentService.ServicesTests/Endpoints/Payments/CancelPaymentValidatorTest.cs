@@ -21,10 +21,10 @@ public class CancelPaymentValidatorTest
     {
         payments = new List<Payment>
         {
-            Payment.CreateForTests(PaymentStatus.Created, DateTime.Now, TimeSpan.FromDays(1)),
-            Payment.CreateForTests(PaymentStatus.Confirmed, DateTime.Now, TimeSpan.FromDays(1)),
-            Payment.CreateForTests(PaymentStatus.Cancelled, DateTime.Now, TimeSpan.FromDays(1)),
-            Payment.CreateForTests(PaymentStatus.Cancelled, DateTime.Now.AddDays(-1), TimeSpan.Zero)
+            Payment.CreateForTests(PaymentStatus.Created, DateTime.Now.AddDays(1)),
+            Payment.CreateForTests(PaymentStatus.Confirmed, DateTime.Now.AddDays(1)),
+            Payment.CreateForTests(PaymentStatus.Cancelled, DateTime.Now.AddDays(1)),
+            Payment.CreateForTests(PaymentStatus.Cancelled, DateTime.Now.AddDays(-1))
         };
         validator = GetValidator(payments);
     }
