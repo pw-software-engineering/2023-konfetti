@@ -1,6 +1,7 @@
 using CrossTeamTestSuite.Data;
 using CrossTeamTestSuite.Endpoints.Contracts.Accounts;
 using CrossTeamTestSuite.Endpoints.Instances;
+using CrossTeamTestSuite.Endpoints.Instances.Accounts;
 using CrossTeamTestSuite.TestsInfrastructure;
 using FluentAssertions;
 
@@ -28,7 +29,7 @@ public class AdminLoginTest: SingleTest
         var response = await accountLoginInstance.HandleEndpointAsync(adminLoginRequest);
         
         response.Should().NotBeNull();
-        response.AccessToken.Should().NotBeNullOrEmpty();
+        response!.AccessToken.Should().NotBeNullOrEmpty();
 
         CommonTokenSingleton.SetToken(CommonTokenType.AdminToken, response.AccessToken);
     }

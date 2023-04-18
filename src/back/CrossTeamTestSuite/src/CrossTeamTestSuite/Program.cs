@@ -6,6 +6,7 @@ using CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 using CrossTeamTestSuite.Endpoints.Extensions;
 using CrossTeamTestSuite.Tests.Admin;
 using CrossTeamTestSuite.Tests.Examples;
+using CrossTeamTestSuite.Tests.User;
 using CrossTeamTestSuite.TestsInfrastructure;
 
 namespace CrossTeamTestSuite;
@@ -23,9 +24,12 @@ class Program
         var adminEmail = args[1];
         var adminPassword = args[2];
         ApiClientSingleton.ConfigureClient(address);
+        
 
         await new TestPipeline()
             .AddTest(new AdminLoginTest(adminEmail, adminPassword))
+            .AddTest(new UserRegisterTest())
+            .AddTest(new UserLoginTest())
             .GetExecutor()
             .ExecuteAsync();
     }
