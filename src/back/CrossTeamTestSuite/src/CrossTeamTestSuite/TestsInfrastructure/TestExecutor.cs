@@ -26,7 +26,8 @@ public class TestExecutor
 
     private void WriteTestResult(Test test, int testNumber)
     {
-        Console.Write($"{testNumber}.\t{test.Name} finished ");
+        ConsoleExtensions.WriteWithColor($"{testNumber}.\t{test.Name} finished ",
+            test.Succeeded ? ConsoleColor.Green : ConsoleColor.Red);
         if (test.Succeeded)
         {
             ConsoleExtensions.WriteLineWithColor("successfully", ConsoleColor.Green);
