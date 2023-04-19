@@ -42,3 +42,45 @@ jobs:
       run: dotnet test tests/Core/TicketManager.Core.ServicesTests/TicketManager.Core.ServicesTests.csproj --no-build
     - name: Test Integration Tests
       run: dotnet test tests/TicketManager.IntegrationTests/TicketManager.IntegrationTests.csproj --no-build
+
+  deploy:
+    name: Deploy docker image to repository
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/back/TicketManager
+    needs: build
+    
+    env:
+      ACR_URL: 'powoeuwacr.azurecr.io'
+      APP_API_NAME: 'konfetti-api'
+      APP_PAYMENT_NAME: 'konfetti-payment'
+      PATH_TO_API_DOCKER_FILE: 'Dockerfile.core'
+      PATH_TO_PAYMENT_DOCKER_FILE: 'Dockerfile.payment'
+      PATH_TO_APP_SRC: '.'                      
+      
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set API_IMAGE_ID as env variable
+      run: echo "IMAGE_ID_API=${{ env.ACR_URL }}/${{ env.APP_API_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Set PAYMENT_IMAGE_ID as env variable
+      run: echo "IMAGE_ID_PAYMENT=${{ env.ACR_URL }}/${{ env.APP_PAYMENT_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Print API_IMAGE_ID
+      run: echo "IMAGE_ID_API:${{ env.IMAGE_ID_API }}"
+    - name: Print PAYMENT_IMAGE_ID
+      run: echo "IMAGE_ID_PAYMENT:${{ env.IMAGE_ID_PAYMENT }}"
+    - name: Login to ACR
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.ACR_URL }}
+        username: ${{ secrets.ACR_USER_ID }}
+        password: ${{ secrets.ACR_USER_PASSWORD }}
+    - name: Build docker image for api
+      run: docker build -f ${{ env.PATH_TO_API_DOCKER_FILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_API }}
+    - name: Build docker image for payment service
+      run: docker build -f ${{ env.PATH_TO_PAYMENT_DOCKER_FILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_PAYMENT }}
+    - name: Push docker image for api
+      run: docker push ${{ env.IMAGE_ID_API }}
+    - name: Push docker image for payment service
+      run: docker push ${{ env.IMAGE_ID_PAYMENT }}

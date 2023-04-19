@@ -17,6 +17,7 @@ public class GetQueryParamConverter<TRequest>
         valueConverters = new()
         {
             new StringValueConverter(),
+            new DateOnlyValueConverter(),
             new SimpleValueConverter<int>(),
             new SimpleValueConverter<OrganizerListSortByDto>(),
             new SimpleValueConverter<bool>(),
