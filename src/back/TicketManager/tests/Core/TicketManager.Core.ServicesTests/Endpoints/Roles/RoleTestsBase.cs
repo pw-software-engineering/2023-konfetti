@@ -39,6 +39,9 @@ public class RoleTestsBase
 
         var accountMock = new Mock<Repository<Account, Guid>>(dbContext);
         dependencies.Add(typeof(Repository<Account, Guid>), accountMock.Object);
+        
+        var sectorMock = new Mock<Repository<Sector, Guid>>(dbContext);
+        dependencies.Add(typeof(Repository<Sector, Guid>), sectorMock.Object);
 
         var passwordManagerMock = new Mock<PasswordManager>();
         dependencies.Add(typeof(PasswordManager), passwordManagerMock.Object);

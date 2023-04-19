@@ -48,9 +48,7 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
         using var scope = scopeFactory.CreateScope();
 
         return await dbResolver.Resolve(scope)
-            .Events
-            .Where(e => e.Id == req.EventId)
-            .SelectMany(e => e.Sectors)
-            .AnyAsync(s => s.Name == req.SectorName, cancellationToken);
+            .Sectors
+            .AnyAsync(s => s.EventId == req.EventId && s.Name == req.SectorName, cancellationToken);
     }
 }

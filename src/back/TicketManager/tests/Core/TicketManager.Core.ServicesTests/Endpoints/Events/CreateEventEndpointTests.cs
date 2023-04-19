@@ -19,7 +19,9 @@ public class CreateEventEndpointTests
         var dbContext = dbContextMock.Object;
         var eventsMock = new Mock<Repository<Event, Guid>>(dbContext);
         var events = eventsMock.Object;
-        var endpoint = Factory.Create<CreateEventEndpoint>(events);
+        var sectorsMock = new Mock<Repository<Sector, Guid>>(dbContext);
+        var sectors = sectorsMock.Object;
+        var endpoint = Factory.Create<CreateEventEndpoint>(events, sectors);
         var req = new CreateEventRequest
         {
             AccountId = Guid.NewGuid(),
