@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,13 +8,6 @@ import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
-import 'package:ticketer/pages/organizer/organizer_event_list_page.dart';
-
-Widget _homeWidget() {
-  return const MaterialApp(
-    home: OrganizerEventListPage(),
-  );
-}
 
 const String loginPath = "/account/login";
 
@@ -103,8 +93,6 @@ void main() {
   });
   group('Organizer event list page tests', () {
     test('Should return event organizer list of events', () async {
-      // given
-      // await tester.pumpWidget(_homeWidget());
       assert(BackendCommunication().isInitialized == true);
 
       await Auth().logInWithEmailAndPassword(
