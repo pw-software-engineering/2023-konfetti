@@ -49,6 +49,7 @@ dependencies:
   build_runner: ^2.3.3
   tuple: ^2.0.1
   dart_jsonwebtoken: ^2.7.1
+  input_quantity: ^1.1.5
 
 dev_dependencies:
   flutter_test:

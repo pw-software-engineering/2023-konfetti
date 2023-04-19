@@ -384,6 +384,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  input_quantity:
+    dependency: "direct main"
+    description:
+      name: input_quantity
+      sha256: "257c111830684c211ae8b4165cae401ccb05c7bc5be7fa51543f9118603a4627"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.5"
   io:
     dependency: transitive
     description:
