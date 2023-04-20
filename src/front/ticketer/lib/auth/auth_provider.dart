@@ -8,7 +8,7 @@ import 'package:ticketer/auth/jwt_token.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/credentials.dart';
 
-import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer_account.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
 
@@ -108,7 +108,7 @@ class AuthProvider {
 
   Stream<Account?> get authStateChanges => _controller.stream;
 
-  Future<ResponseCode> registerOrginizer(Organizer organizer) async {
+  Future<ResponseCode> registerOrginizer(OrganizerAccount organizer) async {
     try {
       var token = await BackendCommunication().organizer.register(organizer);
       return token.item2;

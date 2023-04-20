@@ -129,6 +129,7 @@ class BackendCommunication {
       }
       dio.options.contentType = Headers.jsonContentType;
       dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
+      dio.options.contentType = Headers.jsonContentType;
       response = await dio.post(path, data: data);
     } on DioError catch (e) {
       log(e.toString());
