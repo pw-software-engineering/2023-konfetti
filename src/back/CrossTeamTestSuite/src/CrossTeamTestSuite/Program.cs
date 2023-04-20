@@ -6,6 +6,7 @@ using CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 using CrossTeamTestSuite.Endpoints.Extensions;
 using CrossTeamTestSuite.Tests.Admin;
 using CrossTeamTestSuite.Tests.Examples;
+using CrossTeamTestSuite.Tests.Organizer;
 using CrossTeamTestSuite.Tests.User;
 using CrossTeamTestSuite.TestsInfrastructure;
 
@@ -30,6 +31,8 @@ class Program
             .AddTest(new AdminLoginTest(adminEmail, adminPassword))
             .AddTest(new UserRegisterTest())
             .AddTest(new UserLoginTest())
+            .AddTest(new OrganizerRegisterTest())
+            .AddTest(new OrganizerLoginTest())
             .GetExecutor()
             .ExecuteAsync();
     }
