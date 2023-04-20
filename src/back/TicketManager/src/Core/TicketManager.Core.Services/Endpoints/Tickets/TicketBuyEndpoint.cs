@@ -44,10 +44,6 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-
-        var seatReservation = sector.AddSeatReservation(req.UserId, req.NumberOfSeats);
-        coreDbContext.Add(seatReservation);
-        await sectorRepository.UpdateAsync(sector, ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 
@@ -56,7 +52,11 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-        
+
+        var seatReservation = sector.AddSeatReservation(req.UserId, req.NumberOfSeats, paymentId.Value);
+        coreDbContext.Add(seatReservation);
+        await sectorRepository.UpdateAsync(sector, ct);
+
         await SendAsync(new TicketPaymentDto{PaymentId = (Guid)paymentId}, cancellation: ct);
     }
 }

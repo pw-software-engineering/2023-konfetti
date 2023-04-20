@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TicketManager.Core.Contracts.Organizers;
@@ -15,10 +16,12 @@ using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Extensions.Parsers;
+using TicketManager.Core.Services.Processes.Events;
 using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
+using Event = TicketManager.Core.Domain.Events.Event;
 
 namespace TicketManager.Core.Api;
 
@@ -63,6 +66,18 @@ public class Program
         });
 
         builder.Services.AddJWTBearerAuth(signingKey);
+
+        builder.Services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host("rabbit");
+                cfg.ConfigureEndpoints(ctx);
+            });
+
+            x.AddConsumer<LockSeatsForTicketConsumer>();
+            x.AddConsumer<UnlockSeatsForInvalidPaymentConsumer>();
+        });
         
         var app = builder.Build();
 
