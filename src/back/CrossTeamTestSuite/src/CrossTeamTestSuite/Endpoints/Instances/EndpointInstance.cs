@@ -21,6 +21,7 @@ public abstract class EndpointInstance<TRequest, TResponse>
     {
         if(Token == string.Empty)
             return;
+        HttpClient.DefaultRequestHeaders.Clear();
         HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Token}");
     }
     

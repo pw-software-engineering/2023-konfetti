@@ -34,6 +34,7 @@ class Program
             .AddTest(new OrganizerRegisterTest())
             .AddTest(new OrganizerDecideTest())
             .AddTest(new OrganizerLoginTest())
+            .AddTest(new OrganizerViewTest())
             .GetExecutor()
             .ExecuteAsync();
     }
