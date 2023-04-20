@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
+import 'package:ticketer/pages/user/payment_page.dart';
 
 class EventTile extends StatefulWidget {
   final Event event;
@@ -120,15 +119,24 @@ class _EventTileState extends State<EventTile> {
         child: const Text('Cancel'),
       ),
       ElevatedButton(
-        onPressed: () => {
-          Navigator.pop(context),
-        },
+        onPressed: () => _navigateToPayment(),
         style: ElevatedButton.styleFrom(
           fixedSize: const Size(100, 35),
         ),
         child: const Text('Purchase'),
       ),
     ];
+  }
+
+  void _navigateToPayment() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) =>
+            PaymentPage(event: _event, seatsInSectors: _seatsInSectors)),
+      ),
+    );
   }
 
   SingleChildScrollView _getSimpleSectorList() {
@@ -159,7 +167,7 @@ class _EventTileState extends State<EventTile> {
       children: [
         Flexible(
           flex: 3,
-          child: Text(s.toString().toUpperCase()),
+          child: Text(s.toString()),
         ),
         Flexible(
           flex: 2,
