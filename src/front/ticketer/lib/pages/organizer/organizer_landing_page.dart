@@ -393,7 +393,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text("Event has been created"),
-          content: Text(id),
+          content: const Text(
+              "Your event has been published! You can see it in 'My Events' tab."),
           actions: [
             ElevatedButton(
               onPressed: () => {
