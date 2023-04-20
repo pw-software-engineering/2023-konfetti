@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Payments;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.Processes.Events;
 using TicketManager.Core.Services.Services.HttpClients;
@@ -32,7 +33,7 @@ public class FinishPaymentEndpoint : Endpoint<FinishPaymentRequest, FinishPaymen
     {
         var status = await paymentClient.GetPaymentStatusAsync(new() { Id = req.PaymentId, }, ct);
 
-        if (status != PaymentStatusDto.Confirmed)
+        if (status?.Status != PaymentStatusDto.Confirmed)
         {
             await bus.Publish(new UnlockSeatsForInvalidPayment { PaymentId = req.PaymentId }, ct);
             await SendOkAsync(new FinishPaymentResponse(), ct);
@@ -41,9 +42,9 @@ public class FinishPaymentEndpoint : Endpoint<FinishPaymentRequest, FinishPaymen
 
         var doesPaymentReservationExist = await dbContext
             .Sectors
-            .AnyAsync(s => s.SeatReservations.Any(sr => sr.PaymentId == req.PaymentId && !sr.IsExpired), ct);
+            .AnyAsync(s => s.SeatReservations.Any(sr => sr.PaymentId == req.PaymentId && sr.CreationDate + SeatReservation.ReservationLifetime >= DateTime.UtcNow), ct);
 
-        if (doesPaymentReservationExist)
+        if (!doesPaymentReservationExist)
         {
             await SendOkAsync(new FinishPaymentResponse(), ct);
             return;

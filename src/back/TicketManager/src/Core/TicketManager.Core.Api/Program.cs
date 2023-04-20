@@ -71,7 +71,11 @@ public class Program
         {
             x.UsingRabbitMq((ctx, cfg) =>
             {
-                cfg.Host("rabbit");
+                cfg.Host("rabbitmq", "/", cfg =>
+                {
+                    cfg.Username("guest");
+                    cfg.Password("guest");
+                });
                 cfg.ConfigureEndpoints(ctx);
             });
 

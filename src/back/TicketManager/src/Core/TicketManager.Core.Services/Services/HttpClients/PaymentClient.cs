@@ -30,7 +30,7 @@ public class PaymentClient
         return content!.Id;
     }
 
-    public async Task<PaymentStatusDto?> GetPaymentStatusAsync(CheckPaymentStatusRequest request, CancellationToken ct)
+    public async Task<CheckPaymentStatusResponse?> GetPaymentStatusAsync(CheckPaymentStatusRequest request, CancellationToken ct)
     {
         var response = await client.GetAsync($"payment/status?Id={request.Id}", ct);
         
@@ -39,6 +39,6 @@ public class PaymentClient
             return null;
         }
         
-        return await response.Content.ReadFromJsonAsync<PaymentStatusDto>(cancellationToken: ct);
+        return await response.Content.ReadFromJsonAsync<CheckPaymentStatusResponse>(cancellationToken: ct);
     }
 }
