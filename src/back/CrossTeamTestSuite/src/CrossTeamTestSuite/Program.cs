@@ -5,6 +5,7 @@ using CrossTeamTestSuite.Endpoints.Contracts.Common;
 using CrossTeamTestSuite.Endpoints.Contracts.Organizers;
 using CrossTeamTestSuite.Endpoints.Extensions;
 using CrossTeamTestSuite.Tests.Admin;
+using CrossTeamTestSuite.Tests.Event;
 using CrossTeamTestSuite.Tests.Examples;
 using CrossTeamTestSuite.Tests.Organizer;
 using CrossTeamTestSuite.Tests.User;
@@ -36,6 +37,7 @@ class Program
             .AddTest(new OrganizerLoginTest())
             .AddTest(new OrganizerViewTest())
             .AddTest(new UserViewTest())
+            .AddTest(new EventCreateTest())
             .GetExecutor()
             .ExecuteAsync();
     }
