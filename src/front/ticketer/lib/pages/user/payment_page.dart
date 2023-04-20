@@ -190,15 +190,24 @@ class _PaymentPageState extends State<PaymentPage> {
   DataRow _toDataRow(int index) {
     return DataRow(
       cells: <DataCell>[
-        DataCell(Text(_event.sectors[index].name)),
-        DataCell(Text(_seatsInSectors[index].toString())),
-        DataCell(Text("\$${_event.sectors[index].price}")),
         DataCell(
-          Text(
-              "\$${double.parse((_seatsInSectors[index] * _event.sectors[index].price).toStringAsFixed(2)).toStringAsFixed(2)}"),
+          Text(_event.sectors[index].name),
+        ),
+        DataCell(
+          Text(_seatsInSectors[index].toString()),
+        ),
+        DataCell(
+          Text("\$${_event.sectors[index].price}"),
+        ),
+        DataCell(
+          Text(_calculateSectorPrice(index)),
         ),
       ],
     );
+  }
+
+  String _calculateSectorPrice(int index) {
+    return "\$${double.parse((_seatsInSectors[index] * _event.sectors[index].price).toStringAsFixed(2)).toStringAsFixed(2)}";
   }
 
   @override
