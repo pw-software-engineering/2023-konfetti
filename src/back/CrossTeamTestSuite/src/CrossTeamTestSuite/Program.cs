@@ -32,6 +32,7 @@ class Program
             .AddTest(new UserRegisterTest())
             .AddTest(new UserLoginTest())
             .AddTest(new OrganizerRegisterTest())
+            .AddTest(new OrganizerDecideTest())
             .AddTest(new OrganizerLoginTest())
             .GetExecutor()
             .ExecuteAsync();
