@@ -96,8 +96,10 @@ class BackendCommunication {
       {Object? data}) async {
     if (!isInitialized) throw Exception("Not initilized");
     Response response;
+    var options = dio.options;
 
     try {
+      dio.options.contentType = Headers.jsonContentType;
       response = await dio.post(path, data: data);
     } on DioError catch (e) {
       log(e.toString());
@@ -106,6 +108,8 @@ class BackendCommunication {
       } else {
         response = Response(requestOptions: RequestOptions());
       }
+    } finally {
+      dio.options = options;
     }
 
     return Tuple2<Response, ResponseCode>(
@@ -123,6 +127,7 @@ class BackendCommunication {
       if (!token.isValid) {
         throw ArgumentError("Token is not valid");
       }
+      dio.options.contentType = Headers.jsonContentType;
       dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
       response = await dio.post(path, data: data);
     } on DioError catch (e) {
