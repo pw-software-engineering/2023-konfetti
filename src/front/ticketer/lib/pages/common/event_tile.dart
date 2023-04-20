@@ -129,6 +129,7 @@ class _EventTileState extends State<EventTile> {
   }
 
   void _navigateToPayment() {
+    if (!_seatsInSectors.any((element) => element > 0)) return;
     Navigator.pop(context);
     Navigator.push(
       context,
