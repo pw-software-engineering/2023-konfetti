@@ -1,7 +1,11 @@
-import 'dart:ui';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:input_quantity/input_quantity.dart';
+import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/sector.dart';
 
 class EventTile extends StatefulWidget {
   final Event event;
@@ -14,13 +18,19 @@ class EventTile extends StatefulWidget {
 
 class _EventTileState extends State<EventTile> {
   late Event _event;
+  late AccountType _accountType;
+  late List<int> _seatsInSectors;
 
   Widget _eventContainer() {
     return InkWell(
       onTap: () => _showEventDetails(),
       child: Container(
         padding: const EdgeInsets.all(9.0),
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).hintColor,
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -39,49 +49,140 @@ class _EventTileState extends State<EventTile> {
     await showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(_event.name),
-          scrollable: true,
-          content: SingleChildScrollView(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width / 4,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _event.description,
-                    textAlign: TextAlign.justify,
-                  ),
-                  const Text(
-                    "\nSectors: ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: _event.sectors
-                          .map((s) => Text(s.toString()))
-                          .toList(),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () => {
-                Navigator.pop(context),
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
+        return _showDetails(context);
       },
+    );
+  }
+
+  AlertDialog _showDetails(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        _event.name,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      scrollable: true,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 4,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _event.description,
+                textAlign: TextAlign.justify,
+              ),
+              Text(
+                "\nSectors: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).primaryColorDark,
+                  fontSize: 18,
+                ),
+              ),
+              _accountType == AccountType.User
+                  ? _getPurchasableSectorList()
+                  : _getSimpleSectorList(),
+            ],
+          ),
+        ),
+      ),
+      actions: _accountType == AccountType.User
+          ? _getPurchasableActions()
+          : _getSimpleActions(),
+    );
+  }
+
+  List<Widget> _getSimpleActions() {
+    return [
+      ElevatedButton(
+        onPressed: () => {
+          Navigator.pop(context),
+        },
+        child: const Text('OK'),
+      ),
+    ];
+  }
+
+  List<Widget> _getPurchasableActions() {
+    return [
+      ElevatedButton(
+        onPressed: () => {
+          Navigator.pop(context),
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.redAccent,
+          fixedSize: const Size(100, 35),
+        ),
+        child: const Text('Cancel'),
+      ),
+      ElevatedButton(
+        onPressed: () => {
+          Navigator.pop(context),
+        },
+        style: ElevatedButton.styleFrom(
+          fixedSize: const Size(100, 35),
+        ),
+        child: const Text('Purchase'),
+      ),
+    ];
+  }
+
+  SingleChildScrollView _getSimpleSectorList() {
+    return SingleChildScrollView(
+      child: ListView(
+        shrinkWrap: true,
+        children: _event.sectors.map((s) => Text(s.toString())).toList(),
+      ),
+    );
+  }
+
+  SingleChildScrollView _getPurchasableSectorList() {
+    return SingleChildScrollView(
+      child: ListView(
+        shrinkWrap: true,
+        children: _event.sectors.asMap().entries.map((s) {
+          int idx = s.key;
+          var val = s.value;
+          return _getSectorPicker(val, idx);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _getSectorPicker(Sector s, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Text(s.toString().toUpperCase()),
+        ),
+        Flexible(
+          flex: 2,
+          child: InputQty(
+            btnColor1: Theme.of(context).primaryColor,
+            minVal: 0,
+            initVal: 0,
+            showMessageLimit: false,
+            boxDecoration: const BoxDecoration(),
+            isIntrinsicWidth: false,
+            textFieldDecoration: const InputDecoration(
+              isDense: false,
+              contentPadding: EdgeInsets.symmetric(horizontal: 5),
+            ),
+            onQtyChanged: (v) {
+              if (v == 0) return;
+              setState(() {
+                _seatsInSectors[index] = v!.toInt();
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -121,6 +222,8 @@ class _EventTileState extends State<EventTile> {
   @override
   void initState() {
     _event = widget.event;
+    _seatsInSectors = List<int>.filled(_event.sectors.length, 0);
+    _accountType = Auth().getCurrentAccount!.type;
     super.initState();
   }
 

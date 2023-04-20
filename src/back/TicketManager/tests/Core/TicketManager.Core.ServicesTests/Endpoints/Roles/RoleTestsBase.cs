@@ -9,6 +9,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Organizer;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
+using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
 using TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
@@ -38,12 +39,18 @@ public class RoleTestsBase
 
         var accountMock = new Mock<Repository<Account, Guid>>(dbContext);
         dependencies.Add(typeof(Repository<Account, Guid>), accountMock.Object);
+        
+        var sectorMock = new Mock<Repository<Sector, Guid>>(dbContext);
+        dependencies.Add(typeof(Repository<Sector, Guid>), sectorMock.Object);
 
         var passwordManagerMock = new Mock<PasswordManager>();
         dependencies.Add(typeof(PasswordManager), passwordManagerMock.Object);
         
         var tokenCreatorMock = new Mock<TokenCreator>(new TokenConfiguration(""));
         dependencies.Add(typeof(TokenCreator), tokenCreatorMock.Object);
+
+        var paymentClientMock = new Mock<PaymentClient>(new HttpClient());
+        dependencies.Add(typeof(PaymentClient), paymentClientMock.Object);
     }
 
     public RoleTestInstance<T> GetRoleTestInstance<T>() where T : BaseEndpoint
