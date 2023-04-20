@@ -37,6 +37,7 @@ public class CoreDbContext : DbContext
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
         ConfigureSectors(modelBuilder);
+        ConfigureTickets(modelBuilder);
     }
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
@@ -118,7 +119,7 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(e => e.Id);
             cfg.OwnsMany(e => e.Seats);
-            
+
             cfg.IsOptimisticConcurrent();
         });
     }
