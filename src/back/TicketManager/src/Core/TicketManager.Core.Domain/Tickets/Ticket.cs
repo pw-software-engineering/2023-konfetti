@@ -9,6 +9,7 @@ public class Ticket : IAggregateRoot<Guid>, IOptimisticConcurrent
     public Guid Id { get; private init; }
     public Guid EventId { get; private init; }
     public Guid SectorId { get; private init; }
+    public bool IsPdfGenerated { get; private set; }
     public IReadOnlyList<TicketSeat> Seats => seats;
 
     public DateTime DateModified { get; set; }
