@@ -31,7 +31,7 @@ public static class HttpClientExtensions
     {
         var response = await client.PostOrGetAsync(request);
 
-        return await response.Content.ReadFromJsonAsync<TResponse>();
+        return await response.Content.ReadFromJsonAsync<TResponse>(jsonSerializerOptions);
     }
     
     private static Task<HttpResponseMessage> PostOrGetAsync<TRequest>(this HttpClient client, TRequest request)
