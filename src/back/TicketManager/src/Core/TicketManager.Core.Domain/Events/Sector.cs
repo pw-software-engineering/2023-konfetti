@@ -42,8 +42,10 @@ public class Sector:
         reservation.Close();
     }
 
-    public void TakeSeats(Guid paymentId)
+    public List<TakenSeat> TakeSeats(Guid paymentId)
     {
+        var result = new List<TakenSeat>();
+        
         var reservation = seatReservations.First(sr => sr.PaymentId == paymentId);
         reservation.Close();
 
@@ -52,10 +54,13 @@ public class Sector:
             int freeSeats = GetNumberOfFreeSeats(i);
             if (freeSeats >= reservation.ReservedSeatNumber)
             {
-                takenSeats.AddRange(Enumerable
+                var currentSeats = Enumerable
                     .Range(GetNumberOfTakenSeats(i), reservation.ReservedSeatNumber)
-                    .Select(c => new TakenSeat(i, c)));
-                return;
+                    .Select(c => new TakenSeat(i, c))
+                    .ToList();
+                result.AddRange(currentSeats);
+                takenSeats.AddRange(currentSeats);
+                return result;
             }
         }
 
@@ -65,16 +70,22 @@ public class Sector:
             int freeSeats = GetNumberOfFreeSeats(i);
             if (freeSeats >= seatsToReserve)
             {
-                takenSeats.AddRange(Enumerable
+                var currentSeats = Enumerable
                     .Range(GetNumberOfTakenSeats(i), seatsToReserve)
-                    .Select(c => new TakenSeat(i, c)));
+                    .Select(c => new TakenSeat(i, c))
+                    .ToList();
+                takenSeats.AddRange(currentSeats);
+                result.AddRange(currentSeats);
                 seatsToReserve = 0;
             }
             else
             {
-                takenSeats.AddRange(Enumerable
+                var currentSeats = Enumerable
                     .Range(GetNumberOfTakenSeats(i), freeSeats)
-                    .Select(c => new TakenSeat(i, c)));
+                    .Select(c => new TakenSeat(i, c))
+                    .ToList();
+                takenSeats.AddRange(currentSeats);
+                result.AddRange(currentSeats);
                 seatsToReserve -= freeSeats;
             }
             
@@ -84,6 +95,8 @@ public class Sector:
                 break;
             }
         }
+
+        return result;
     }
 
     private int GetNumberOfFreeSeats(int row)
