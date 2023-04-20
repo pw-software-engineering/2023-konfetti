@@ -33,7 +33,7 @@ class BackendCommunication {
   EventCommunication get event => _eventCommunication;
 
   late final Dio dio;
-  static const Map<String, dynamic> headers = <String, String>{
+  static Map<String, dynamic> headers = <String, String>{
     "Access-Control-Allow-Origin": "*",
     'Content-Type': 'application/json',
     'Accept': '*/*'

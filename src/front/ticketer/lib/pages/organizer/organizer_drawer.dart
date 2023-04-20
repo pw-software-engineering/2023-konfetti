@@ -1,14 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/organizer/organizer_event_list_page.dart';
+import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 
 class OrganizerNavigationDrawer extends StatefulWidget {
   const OrganizerNavigationDrawer({
-        Key? key,
-      }) : super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<OrganizerNavigationDrawer> createState() => _OrganizerNavigationDrawerState();
+  State<OrganizerNavigationDrawer> createState() =>
+      _OrganizerNavigationDrawerState();
 }
 
 class _OrganizerNavigationDrawerState extends State<OrganizerNavigationDrawer> {
@@ -42,20 +44,29 @@ class _OrganizerNavigationDrawerState extends State<OrganizerNavigationDrawer> {
         bottom: 18,
       ),
       color: Theme.of(context).primaryColor,
-      child: Column(
-        children:
-             const [
-          Text(
-            "Logged on as organizer",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        ]
-      ),
+      child: Column(children: const [
+        Text(
+          "Logged on as organizer",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ]),
     );
+  }
+
+  Future<void> launchCreateEventAction(BuildContext context) async {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const OrganizerLandingPage()));
+  }
+
+  Future<void> launchMyEventsAction(BuildContext context) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const OrganizerEventListPage()));
   }
 
   Future<void> launchEditAccount(BuildContext context) async {
@@ -69,13 +80,22 @@ class _OrganizerNavigationDrawerState extends State<OrganizerNavigationDrawer> {
     await Auth().logOut();
   }
 
-
   Widget buildMenuItems(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(24),
       child: Wrap(
         runSpacing: 16,
         children: [
+          ListTile(
+            leading: const Icon(Icons.add_box),
+            title: const Text("Create Event"),
+            onTap: () => {launchCreateEventAction(context)},
+          ),
+          ListTile(
+            leading: const Icon(Icons.event_available_rounded),
+            title: const Text("My Events"),
+            onTap: () => {launchMyEventsAction(context)},
+          ),
           ListTile(
             leading: const Icon(Icons.edit),
             title: const Text("Edit Data"),
