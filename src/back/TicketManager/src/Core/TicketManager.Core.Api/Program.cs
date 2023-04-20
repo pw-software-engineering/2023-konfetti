@@ -10,6 +10,7 @@ using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
@@ -17,6 +18,7 @@ using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Extensions.Parsers;
 using TicketManager.Core.Services.Processes.Events;
+using TicketManager.Core.Services.Processes.Tickets;
 using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
@@ -54,6 +56,7 @@ public class Program
         builder.Services.AddScoped<Repository<Account, Guid>>();
         builder.Services.AddScoped<Repository<Event, Guid>>();
         builder.Services.AddScoped<Repository<Sector, Guid>>();
+        builder.Services.AddScoped<Repository<Ticket, Guid>>();
         
         builder.Services.AddFastEndpoints();
         
@@ -81,6 +84,7 @@ public class Program
 
             x.AddConsumer<LockSeatsForTicketConsumer>();
             x.AddConsumer<UnlockSeatsForInvalidPaymentConsumer>();
+            x.AddConsumer<CreateTicketConsumer>();
         });
         
         var app = builder.Build();
