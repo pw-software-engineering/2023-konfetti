@@ -356,7 +356,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         if (response.item2 != ResponseCode.allGood) {
           await _showDialogOnFailure(response.item2.name);
         } else {
-          await _showDialogAfterEventCreation(response.item1.data['id']);
+          await _showDialogAfterEventCreation();
         }
       } catch (e) {
         await _showDialogOnFailure(e.toString());
@@ -387,13 +387,14 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Future<void> _showDialogAfterEventCreation(String id) async {
+  Future<void> _showDialogAfterEventCreation() async {
     await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Event has been created"),
-          content: Text(id),
+          content: const Text(
+              "Your event has been published! You can see it in 'My Events' tab."),
           actions: [
             ElevatedButton(
               onPressed: () => {
