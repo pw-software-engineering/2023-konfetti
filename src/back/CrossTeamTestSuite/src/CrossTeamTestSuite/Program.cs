@@ -38,6 +38,7 @@ class Program
             .AddTest(new OrganizerViewTest())
             .AddTest(new UserViewTest())
             .AddTest(new EventCreateTest())
+            .AddTest(new EventListTest())
             .GetExecutor()
             .ExecuteAsync();
     }

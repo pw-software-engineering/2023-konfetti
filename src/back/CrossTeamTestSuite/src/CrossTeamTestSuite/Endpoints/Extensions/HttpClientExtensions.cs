@@ -12,10 +12,10 @@ public static class HttpClientExtensions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
-        IgnoreNullValues = true,
         Converters =
         {
             new DateOnlyConverter(),
+            new DateTimeConverter()
         }
     };
     
