@@ -16,7 +16,7 @@ on:
       - 'fix/*'
       - 'hotfix/*'
     paths:
-      - 'src/back/*'
+      - 'src/back/**'
   workflow_dispatch:
   
 jobs:
