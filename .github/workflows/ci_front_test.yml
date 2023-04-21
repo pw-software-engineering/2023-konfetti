@@ -12,6 +12,7 @@ on:
       - 'hotfix/*'
     paths:
       - 'src/front/ticketer/*'
+      - '.github/**'
 
   workflow_dispatch:
 
