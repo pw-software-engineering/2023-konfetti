@@ -32,7 +32,7 @@ public class CheckPaymentStatusEndpoint: Endpoint<CheckPaymentStatusRequest, Che
             .Where(p => p.Id == req.Id)
             .Select(p => new CheckPaymentStatusResponse
             {
-                Status = (PaymentStatusDto)p.PaymentStatus
+                Status = p.HasExpired? PaymentStatusDto.Expired: (PaymentStatusDto)p.PaymentStatus
             })
             .FirstOrDefaultAsync(ct);
 

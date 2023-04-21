@@ -52,6 +52,7 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -95,11 +96,52 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
 
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("TicketManager.Core.Domain.Events.Sector", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateModified")
+                        .IsConcurrencyToken()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<int>("NumberOfColumns")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfRows")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PriceInSmallestUnit")
+                        .HasColumnType("integer");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0])
+                        .HasColumnName("RowVersion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sectors");
                 });
 
             modelBuilder.Entity("TicketManager.Core.Domain.Organizer.Organizer", b =>
@@ -142,6 +184,7 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.Property<string>("TaxId")
@@ -193,6 +236,7 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -200,37 +244,37 @@ namespace TicketManager.Core.Services.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TicketManager.Core.Domain.Events.Event", b =>
+            modelBuilder.Entity("TicketManager.Core.Domain.Events.Sector", b =>
                 {
-                    b.OwnsMany("TicketManager.Core.Domain.Events.Sector", "Sectors", b1 =>
+                    b.OwnsMany("TicketManager.Core.Domain.Events.SeatReservation", "SeatReservations", b1 =>
                         {
-                            b1.Property<Guid>("EventId")
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Name")
-                                .HasMaxLength(250)
-                                .HasColumnType("character varying(250)");
+                            b1.Property<DateTime>("CreationDate")
+                                .HasColumnType("timestamp with time zone");
 
-                            b1.Property<int>("NumberOfColumns")
+                            b1.Property<int>("ReservedSeatNumber")
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("NumberOfRows")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("SectorId")
+                                .HasColumnType("uuid");
 
-                            b1.Property<int>("PriceInSmallestUnit")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
-                            b1.HasKey("EventId", "Name");
+                            b1.HasKey("Id");
 
-                            b1.HasIndex("EventId");
+                            b1.HasIndex("SectorId");
 
-                            b1.ToTable("Sector");
+                            b1.ToTable("SeatReservation");
 
                             b1.WithOwner()
-                                .HasForeignKey("EventId");
+                                .HasForeignKey("SectorId");
                         });
 
-                    b.Navigation("Sectors");
+                    b.Navigation("SeatReservations");
                 });
 #pragma warning restore 612, 618
         }

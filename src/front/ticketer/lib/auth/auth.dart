@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:ticketer/auth/account.dart';
 import 'package:ticketer/auth/auth_provider.dart';
-import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer_account.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
 
@@ -16,8 +16,8 @@ class Auth {
 
   Auth._internal() : _provider = AuthProvider();
 
-  void init() async {
-    await _provider.init();
+  Future<void> init({bool skipSavedToken = false}) async {
+    await _provider.init(skipSavedToken: skipSavedToken);
   }
 
   Future<ResponseCode> logInWithEmailAndPassword({
@@ -43,7 +43,7 @@ class Auth {
     return await _provider.registerUser(user);
   }
 
-  Future<ResponseCode> registerOrganizer(Organizer organizer) async {
+  Future<ResponseCode> registerOrganizer(OrganizerAccount organizer) async {
     if (!_provider.isInitialized) throw Exception("Provider not initilized");
     return await _provider.registerOrginizer(organizer);
   }

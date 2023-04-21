@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/backend_communication/model/organizer.dart';
+import 'package:ticketer/backend_communication/model/organizer_account.dart';
 import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
 
@@ -12,7 +12,7 @@ void main() async {
               email: "email@email.com", password: "123123Aa"),
           throwsA(anything));
       expect(
-          () => Auth().registerOrganizer(Organizer(
+          () => Auth().registerOrganizer(OrganizerAccount(
               "companyName",
               "address",
               TaxType.NIP,

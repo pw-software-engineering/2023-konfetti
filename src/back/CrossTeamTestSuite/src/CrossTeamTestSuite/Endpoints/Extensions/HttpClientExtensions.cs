@@ -1,11 +1,24 @@
 using System.Net.Http.Json;
+using System.Text.Json;
 using CrossTeamTestSuite.Endpoints.Contracts.Abstraction;
 using CrossTeamTestSuite.Endpoints.Converters.GetQueryParamsConverters;
+using CrossTeamTestSuite.Endpoints.Converters.JsonConverters;
 
 namespace CrossTeamTestSuite.Endpoints.Extensions;
 
 public static class HttpClientExtensions
 {
+    private static JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        Converters =
+        {
+            new DateOnlyConverter(),
+            new DateTimeConverter()
+        }
+    };
+    
     public async static Task CallEndpointAsync<TRequest>(this HttpClient client, TRequest request)
         where TRequest : class, IRequest
     {
@@ -18,7 +31,7 @@ public static class HttpClientExtensions
     {
         var response = await client.PostOrGetAsync(request);
 
-        return await response.Content.ReadFromJsonAsync<TResponse>();
+        return await response.Content.ReadFromJsonAsync<TResponse>(jsonSerializerOptions);
     }
     
     private static Task<HttpResponseMessage> PostOrGetAsync<TRequest>(this HttpClient client, TRequest request)
@@ -26,7 +39,7 @@ public static class HttpClientExtensions
     {
         if (request.Type == RequestType.Post)
         {
-            return client.PostAsJsonAsync(request.Path, request);
+            return client.PostAsJsonAsync(request.Path, request, jsonSerializerOptions);
         }
 
         var queryParamConverter = new GetQueryParamConverter<TRequest>();

@@ -10,7 +10,7 @@ public static class ToDtoConverters
         return new PaymentDto()
         {
             Id = payment.Id,
-            PaymentStatus = (PaymentStatusDto)payment.PaymentStatus,
+            PaymentStatus = payment.HasExpired? PaymentStatusDto.Expired: (PaymentStatusDto)payment.PaymentStatus,
             DateCreated = payment.DateCreated
         };
     }

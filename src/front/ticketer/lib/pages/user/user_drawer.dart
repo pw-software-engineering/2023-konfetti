@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
   const UserNavigationDrawer({
-        Key? key,
-      }) : super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<UserNavigationDrawer> createState() => _UserNavigationDrawerState();
@@ -42,19 +41,16 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
         bottom: 18,
       ),
       color: Theme.of(context).primaryColor,
-      child: Column(
-        children:
-             const [
-          Text(
-            "Logged on as user",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        ]
-      ),
+      child: Column(children: const [
+        Text(
+          "Logged on as user",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ]),
     );
   }
 
@@ -65,10 +61,9 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
   }
 
   Future<void> signOut(BuildContext context) async {
-    Navigator.pop(context);
+    Navigator.of(context).popUntil((route) => route.isFirst);
     await Auth().logOut();
   }
-
 
   Widget buildMenuItems(BuildContext context) {
     return Container(
