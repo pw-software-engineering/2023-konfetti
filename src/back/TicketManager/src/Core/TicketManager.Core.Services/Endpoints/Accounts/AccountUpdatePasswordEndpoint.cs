@@ -21,6 +21,7 @@ public class AccountUpdatePasswordEndpoint: Endpoint<AccountUpdatePasswordReques
     public override void Configure()
     {
         Post("/account/updatePassword");
+        Roles(AccountRoles.User, AccountRoles.Organizer, AccountRoles.Admin);
     }
 
     public override async Task HandleAsync(AccountUpdatePasswordRequest req, CancellationToken ct)
