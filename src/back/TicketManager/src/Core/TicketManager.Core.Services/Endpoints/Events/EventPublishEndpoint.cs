@@ -24,7 +24,15 @@ public class EventPublishEndpoint: Endpoint<EventStatusManipulationRequest>
     public override async Task HandleAsync(EventStatusManipulationRequest req, CancellationToken ct)
     {
         var @event = await events.FindAndEnsureExistenceAsync(req.Id, ct);
-        @event.ChangeEventStatus(EventStatus.Published);
+        try
+        {
+            @event.ChangeEventStatus(EventStatus.Published);
+        }
+        catch (Exception e)
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
         await events.UpdateAsync(@event, ct);
         await SendOkAsync(ct);
     }
