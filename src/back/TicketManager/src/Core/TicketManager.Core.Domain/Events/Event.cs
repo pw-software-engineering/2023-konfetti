@@ -10,6 +10,7 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
     public string Description { get; private set; } = null!;
     public string Location { get; private set; } = null!;
     public DateTime Date { get; private set; }
+    public EventStatus Status { get; private set; }
     
     public DateTime DateModified { get; set; }
     
