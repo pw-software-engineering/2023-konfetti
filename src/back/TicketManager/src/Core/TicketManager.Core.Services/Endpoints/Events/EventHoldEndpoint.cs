@@ -28,7 +28,7 @@ public class EventHoldEndpoint: Endpoint<EventStatusManipulationRequest>
         {
             @event.ChangeEventStatus(EventStatus.Held);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await SendErrorsAsync(cancellation: ct);
             return;

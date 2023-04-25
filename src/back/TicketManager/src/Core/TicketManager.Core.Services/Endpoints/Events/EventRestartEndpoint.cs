@@ -28,7 +28,7 @@ public class EventRestartEndpoint : Endpoint<EventStatusManipulationRequest>
         {
             @event.ChangeEventStatus(EventStatus.Verified);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await SendErrorsAsync(cancellation: ct);
             return;

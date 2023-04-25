@@ -6,27 +6,27 @@ using TicketManager.Core.Services.DataAccess.Repositories;
 
 namespace TicketManager.Core.Services.Endpoints.Events;
 
-public class EventRecallEndpoint: Endpoint<EventStatusManipulationRequest>
+public class EventSaleStopEndpoint: Endpoint<EventSaleStatusRequest>
 {
     private readonly Repository<Event, Guid> events;
 
-    public EventRecallEndpoint(Repository<Event, Guid> events)
+    public EventSaleStopEndpoint(Repository<Event, Guid> events)
     {
         this.events = events;
     }
 
     public override void Configure()
     {
-        Post("/event/recall");
-        Roles(AccountRoles.Organizer, AccountRoles.Admin);
+        Post("/event/sale/stop");
+        Roles(AccountRoles.Organizer);
     }
 
-    public override async Task HandleAsync(EventStatusManipulationRequest req, CancellationToken ct)
+    public override async Task HandleAsync(EventSaleStatusRequest req, CancellationToken ct)
     {
-        var @event = await events.FindAndEnsureExistenceAsync(req.Id, ct);
+        var @event = await events.FindAndEnsureExistenceAsync(req.EventId, ct);
         try
         {
-            @event.ChangeEventStatus(EventStatus.Recalled);
+            @event.ChangeEventStatus(EventStatus.Closed);
         }
         catch (Exception)
         {

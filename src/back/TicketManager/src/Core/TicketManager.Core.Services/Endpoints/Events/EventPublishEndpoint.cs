@@ -28,7 +28,7 @@ public class EventPublishEndpoint: Endpoint<EventStatusManipulationRequest>
         {
             @event.ChangeEventStatus(EventStatus.Published);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await SendErrorsAsync(cancellation: ct);
             return;

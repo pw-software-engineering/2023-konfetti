@@ -28,7 +28,7 @@ public class EventSaleStartEndpoint: Endpoint<EventSaleStatusRequest>
         {
             @event.ChangeEventStatus(EventStatus.Opened);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await SendErrorsAsync(cancellation: ct);
             return;
