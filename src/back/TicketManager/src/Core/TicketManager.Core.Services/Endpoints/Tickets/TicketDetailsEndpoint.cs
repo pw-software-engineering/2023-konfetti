@@ -26,6 +26,7 @@ public class TicketDetailsEndpoint : Endpoint<TicketDetailsRequest, TicketDto>
     {
         var dbData = await dbContext
             .Tickets
+            .Where(t => t.Id == req.Id)
             .Join(dbContext.Events, t => t.EventId, e => e.Id, (ticket, @event) => new { ticket, @event })
             .Join(dbContext.Sectors, te => te.@event.Id, s => s.EventId, (te, sector) => new { te.ticket, te.@event, sector })
             .ToListAsync(ct);
