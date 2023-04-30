@@ -58,7 +58,10 @@ public class Program
         builder.Services.AddScoped<Repository<Sector, Guid>>();
         builder.Services.AddScoped<Repository<Ticket, Guid>>();
         
-        builder.Services.AddFastEndpoints();
+        builder.Services.AddFastEndpoints(options =>
+        {
+            options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.Core.Services") ?? false;
+        });
         
         builder.Services.AddSwaggerDoc();
 
