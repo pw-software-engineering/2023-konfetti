@@ -29,7 +29,7 @@ public class Program
         
         builder.Services.AddFastEndpoints(options =>
         {
-            options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.Core.Services") ?? false;
+            options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.PaymentService.Services") ?? false;
         });
         
         builder.Services.AddSwaggerDoc();

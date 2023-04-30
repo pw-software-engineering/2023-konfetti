@@ -30,6 +30,7 @@
       <ProjectReference Include="..\..\src\Core\TicketManager.Core.Contracts\TicketManager.Core.Contracts.csproj" />
       <ProjectReference Include="..\..\src\Core\TicketManager.Core.Domain\TicketManager.Core.Domain.csproj" />
       <ProjectReference Include="..\..\src\Core\TicketManager.Core.Services\TicketManager.Core.Services.csproj" />
+      <ProjectReference Include="..\..\src\PaymentService\TicketManager.PaymentService.Api\TicketManager.PaymentService.Api.csproj" />
     </ItemGroup>
 
 </Project>
