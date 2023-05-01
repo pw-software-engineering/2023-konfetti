@@ -31,9 +31,9 @@ public class Sector:
 
     private Sector() { }
 
-    public SeatReservation AddSeatReservation(Guid userId, int numberOfSeats, Guid paymentId)
+    public void AddSeatReservation(Guid userId, int numberOfSeats, Guid paymentId)
     {
-        return new SeatReservation(Id, userId, numberOfSeats, paymentId);
+        seatReservations.Add(new(userId, numberOfSeats, paymentId));
     }
 
     public void CloseReservation(Guid paymentId)

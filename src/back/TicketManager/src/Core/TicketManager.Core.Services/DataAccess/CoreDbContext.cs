@@ -101,12 +101,7 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(s => s.Id);
             cfg.Property(s => s.Name).HasMaxLength(StringLengths.ShortString);
-            cfg.OwnsMany(s => s.SeatReservations, scfg =>
-            {
-                scfg.HasKey(s => s.Id);
-                scfg.WithOwner().HasForeignKey(s => s.SectorId);
-                scfg.Property(s => s.CreationDate);
-            });
+            cfg.OwnsMany(s => s.SeatReservations);
             cfg.OwnsMany(s => s.TakenSeats);
             
             cfg.IsOptimisticConcurrent();

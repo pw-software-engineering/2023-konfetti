@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TicketManager.Core.Services.DataAccess;
@@ -11,9 +12,11 @@ using TicketManager.Core.Services.DataAccess;
 namespace TicketManager.Core.Services.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230501120256_RemoveSectorReservations")]
+    partial class RemoveSectorReservations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,40 +284,6 @@ namespace TicketManager.Core.Services.Migrations
 
             modelBuilder.Entity("TicketManager.Core.Domain.Events.Sector", b =>
                 {
-                    b.OwnsMany("TicketManager.Core.Domain.Events.SeatReservation", "SeatReservations", b1 =>
-                        {
-                            b1.Property<Guid>("SectorId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<bool>("IsClosed")
-                                .HasColumnType("boolean");
-
-                            b1.Property<Guid>("PaymentId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("ReservedSeatNumber")
-                                .HasColumnType("integer");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("SectorId", "Id");
-
-                            b1.ToTable("SeatReservation");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SectorId");
-                        });
-
                     b.OwnsMany("TicketManager.Core.Domain.Events.TakenSeat", "TakenSeats", b1 =>
                         {
                             b1.Property<Guid>("SectorId")
@@ -339,8 +308,6 @@ namespace TicketManager.Core.Services.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("SectorId");
                         });
-
-                    b.Navigation("SeatReservations");
 
                     b.Navigation("TakenSeats");
                 });
