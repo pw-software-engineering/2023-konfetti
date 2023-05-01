@@ -13,4 +13,11 @@ public class TicketRoleTests
         var testInstance = testsBase.GetRoleTestInstance<TicketBuyEndpoint>();
         testInstance.AsUser().Check();
     }
+    
+    [Fact]
+    public void WhenTicketDetailsChecked_ItShouldAllowOnlyUser()
+    {
+        var testInstance = testsBase.GetRoleTestInstance<TicketDetailsEndpoint>();
+        testInstance.AsUser().Check();
+    }
 }
