@@ -66,7 +66,7 @@ public class UserBuyingTicketTests : TestBase
                 PaymentId = payment.PaymentId,
             });
 
-        await Task.Delay(100);
+        await Task.Delay(500);
 
         return finishPayment.TicketId!.Value;
     }
