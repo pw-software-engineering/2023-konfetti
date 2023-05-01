@@ -31,17 +31,13 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        // var sectorId = await coreDbContext.Sectors.Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
-        //     .Select(s => s.Id)
-        //     .FirstOrDefaultAsync(ct);
-        // var sector = await sectorRepository.FindAndEnsureExistenceAsync(sectorId, ct);
         var sector = await coreDbContext
             .Sectors
             .AsTracking()
             .Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
             .FirstAsync(ct);
 
-        var freeSeats = sector.NumberOfSeats - sector.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
+        var freeSeats = sector.GetNumberOfFreeSeats();
         
         if (freeSeats < req.NumberOfSeats)
         {

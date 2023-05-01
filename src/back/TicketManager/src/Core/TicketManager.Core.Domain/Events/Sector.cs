@@ -51,7 +51,7 @@ public class Sector:
 
         for (int i = 0; i < NumberOfRows; i++)
         {
-            int freeSeats = GetNumberOfFreeSeats(i);
+            int freeSeats = GetNumberOfNotTakenSeats(i);
             if (freeSeats >= reservation.ReservedSeatNumber)
             {
                 var currentSeats = Enumerable
@@ -67,7 +67,7 @@ public class Sector:
         int seatsToReserve = reservation.ReservedSeatNumber;
         for (int i = 0; i < NumberOfRows; i++)
         {
-            int freeSeats = GetNumberOfFreeSeats(i);
+            int freeSeats = GetNumberOfNotTakenSeats(i);
             if (freeSeats >= seatsToReserve)
             {
                 var currentSeats = Enumerable
@@ -99,7 +99,7 @@ public class Sector:
         return result;
     }
 
-    private int GetNumberOfFreeSeats(int row)
+    private int GetNumberOfNotTakenSeats(int row)
     {
         return NumberOfColumns - GetNumberOfTakenSeats(row);
     }
@@ -107,5 +107,10 @@ public class Sector:
     private int GetNumberOfTakenSeats(int row)
     {
         return takenSeats.Count(ts => ts.RowNumber == row);
+    }
+
+    public int GetNumberOfFreeSeats()
+    {
+        return NumberOfSeats - takenSeats.Count - seatReservations.Where(sr => sr.IsCurrent).Sum(sr => sr.ReservedSeatNumber);
     }
 }

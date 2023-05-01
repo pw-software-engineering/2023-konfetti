@@ -8,6 +8,7 @@ public record SeatReservation(Guid UserId, int ReservedSeatNumber, Guid PaymentI
     public bool IsClosed { get; private set; }
     
     public bool IsExpired => CreationDate + ReservationLifetime <= DateTime.UtcNow;
+    public bool IsCurrent => !IsExpired && !IsClosed;
 
     public void Close()
     {
