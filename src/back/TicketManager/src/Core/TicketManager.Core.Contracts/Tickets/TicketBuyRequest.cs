@@ -13,8 +13,8 @@ public class TicketBuyRequest
     
     public static class ErrorCodes
     {
-        public static int EventDoesNotExist = 1;
-        public static int SectorDoesNotExist = 2;
-        public static int NumberOfSeatsIsNotPositive = 3;
+        public const int EventDoesNotExist = 1;
+        public const int SectorDoesNotExist = 2;
+        public const int NumberOfSeatsIsNotPositive = 3;
     }
 }

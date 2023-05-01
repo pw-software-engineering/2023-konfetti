@@ -37,8 +37,9 @@ public class TestBase : IAsyncDisposable
         paymentServiceApp = new();
         paymentServiceApp.InitializeAsync().Wait();
         PaymentClient = paymentServiceApp.CreateClient();
+        PaymentClient.DefaultRequestHeaders.Add("pay_api_key", "ApiKey");
         
-        coreApp = new();
+        coreApp = new(PaymentClient);
         coreApp.InitializeAsync().Wait();
         AnonymousClient = coreApp.CreateClient();
 

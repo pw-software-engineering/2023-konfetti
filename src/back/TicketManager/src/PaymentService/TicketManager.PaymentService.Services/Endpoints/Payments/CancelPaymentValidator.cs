@@ -11,14 +11,8 @@ namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 
 public class CancelPaymentValidator : Validator<CancelPaymentRequest>
 {
-    private readonly IServiceScopeFactory scopeFactory;
-    private readonly MockablePaymentDbResolver dbResolver;
-    
-    public CancelPaymentValidator(IServiceScopeFactory scopeFactory, MockablePaymentDbResolver dbResolver)
+    public CancelPaymentValidator()
     {
-        this.scopeFactory = scopeFactory;
-        this.dbResolver = dbResolver;
-
         RuleFor(req => req.Id)
             .MustAsync(IsIdPresentAsync)
             .WithCode(CancelPaymentRequest.ErrorCodes.PaymentDoesNotExist)
@@ -33,18 +27,14 @@ public class CancelPaymentValidator : Validator<CancelPaymentRequest>
     
     private async Task<bool> IsIdPresentAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-        
-        return await dbResolver.Resolve(scope)
+        return await Resolve<PaymentDbContext>()
             .Payments
             .AnyAsync(p => p.Id == id, cancellationToken);
     }
     
     private async Task<bool> IsNotDecidedAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-        
-        var payment = await dbResolver.Resolve(scope)
+        var payment = await Resolve<PaymentDbContext>()
             .Payments
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
@@ -54,9 +44,7 @@ public class CancelPaymentValidator : Validator<CancelPaymentRequest>
     
     private async Task<bool> HasNotExpiredAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-        
-        var payment = await dbResolver.Resolve(scope)
+        var payment = await Resolve<PaymentDbContext>()
             .Payments
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync(cancellationToken);

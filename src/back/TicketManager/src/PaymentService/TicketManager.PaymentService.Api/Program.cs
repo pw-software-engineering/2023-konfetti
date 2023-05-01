@@ -34,6 +34,15 @@ public class Program
         
         builder.Services.AddSwaggerDoc();
         
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.SetIsOriginAllowed(host => host.StartsWith("http://localhost"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            }));
+        
         var app = builder.Build();
 
         app.UseAuthorization();
