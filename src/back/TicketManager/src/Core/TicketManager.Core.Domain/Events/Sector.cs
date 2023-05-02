@@ -73,28 +73,15 @@ public class Sector:
         for (int i = 0; i < NumberOfRows; i++)
         {
             int freeSeats = GetNumberOfNotTakenSeats(i);
-            if (freeSeats >= seatsToReserve)
-            {
-                var currentSeats = Enumerable
-                    .Range(GetNumberOfTakenSeats(i), seatsToReserve)
-                    .Select(c => new TakenSeat(i, c))
-                    .ToList();
-                takenSeats.AddRange(currentSeats);
-                result.AddRange(currentSeats);
-                seatsToReserve = 0;
-            }
-            else
-            {
-                var currentSeats = Enumerable
-                    .Range(GetNumberOfTakenSeats(i), freeSeats)
-                    .Select(c => new TakenSeat(i, c))
-                    .ToList();
-                takenSeats.AddRange(currentSeats);
-                result.AddRange(currentSeats);
-                seatsToReserve -= freeSeats;
-            }
-            
-            
+            int currentSeatsToReserve = Math.Min(freeSeats, seatsToReserve);
+            var currentSeats = Enumerable
+                .Range(GetNumberOfTakenSeats(i), currentSeatsToReserve)
+                .Select(c => new TakenSeat(i, c))
+                .ToList();
+            takenSeats.AddRange(currentSeats);
+            result.AddRange(currentSeats);
+            seatsToReserve -= currentSeatsToReserve;
+
             if (seatsToReserve == 0)
             {
                 break;
