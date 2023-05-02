@@ -77,10 +77,10 @@ public class Program
         {
             x.UsingRabbitMq((ctx, cfg) =>
             {
-                cfg.Host("rabbitmq", "/", cfg =>
+                cfg.Host(builder.Configuration["RabbitMqHost"], builder.Configuration["RabbitMqVirtualHost"], cfg =>
                 {
-                    cfg.Username("guest");
-                    cfg.Password("guest");
+                    cfg.Username(builder.Configuration["RabbitMqUsername"]);
+                    cfg.Password(builder.Configuration["RabbitMqPassword"]);
                 });
                 cfg.ConfigureEndpoints(ctx);
             });
