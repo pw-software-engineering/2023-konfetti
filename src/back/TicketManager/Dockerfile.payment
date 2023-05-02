@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-COPY ./src/PaymentService/*.Api/*.csproj /restore/TicketManager.PaymentService.Api/
-COPY ./src/PaymentService/*.Contracts/*.csproj /restore/TicketManager.PaymentService.Contracts/
-COPY ./src/PaymentService/*.Domain/*.csproj /restore/TicketManager.PaymentService.Domain/
-COPY ./src/PaymentService/*.Services/*.csproj /restore/TicketManager.PaymentService.Services/
+COPY ./src/PaymentService/TicketManager.PaymentService.Api/*.csproj /restore/TicketManager.PaymentService.Api/
+COPY ./src/PaymentService/TicketManager.PaymentService.Contracts/*.csproj /restore/TicketManager.PaymentService.Contracts/
+COPY ./src/PaymentService/TicketManager.PaymentService.Domain/*.csproj /restore/TicketManager.PaymentService.Domain/
+COPY ./src/PaymentService/TicketManager.PaymentService.Services/*.csproj /restore/TicketManager.PaymentService.Services/
 RUN dotnet restore "/restore/TicketManager.PaymentService.Api/TicketManager.PaymentService.Api.csproj"
 WORKDIR /src
 COPY ./src/. .

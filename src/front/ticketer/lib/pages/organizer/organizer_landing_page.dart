@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
+import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/common/organizer_card.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
@@ -37,7 +39,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
-          const OrganizerCard(),
+          OrganizerCard(organizer: Organizer("123","Januszex.pl", "Warszawa", TaxType.KRS, "12345",
+              "Januszex", "jan.nowak@pw.edu.pl", "+48600900600")),
           _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),
@@ -356,7 +359,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         if (response.item2 != ResponseCode.allGood) {
           await _showDialogOnFailure(response.item2.name);
         } else {
-          await _showDialogAfterEventCreation(response.item1.data['id']);
+          await _showDialogAfterEventCreation();
         }
       } catch (e) {
         await _showDialogOnFailure(e.toString());
@@ -387,13 +390,14 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Future<void> _showDialogAfterEventCreation(String id) async {
+  Future<void> _showDialogAfterEventCreation() async {
     await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Event has been created"),
-          content: Text(id),
+          content: const Text(
+              "Your event has been published! You can see it in 'My Events' tab."),
           actions: [
             ElevatedButton(
               onPressed: () => {
