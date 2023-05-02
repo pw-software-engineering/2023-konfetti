@@ -38,16 +38,21 @@ public class Sector:
 
     public void CloseReservation(Guid paymentId)
     {
-        var reservation = seatReservations.First(sr => sr.PaymentId == paymentId);
+        var reservation = GetReservationByPayment(paymentId);
         reservation.Close();
+    }
+
+    private SeatReservation GetReservationByPayment(Guid paymentId)
+    {
+        return seatReservations.First(sr => sr.PaymentId == paymentId);
     }
 
     public List<TakenSeat> TakeSeats(Guid paymentId)
     {
-        var result = new List<TakenSeat>();
+        CloseReservation(paymentId);
         
-        var reservation = seatReservations.First(sr => sr.PaymentId == paymentId);
-        reservation.Close();
+        var result = new List<TakenSeat>();
+        var reservation = GetReservationByPayment(paymentId);
 
         for (int i = 0; i < NumberOfRows; i++)
         {
