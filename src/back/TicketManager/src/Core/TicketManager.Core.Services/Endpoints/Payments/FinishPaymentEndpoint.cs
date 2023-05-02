@@ -33,7 +33,7 @@ public class FinishPaymentEndpoint : Endpoint<FinishPaymentRequest, FinishPaymen
     {
         var status = await paymentClient.GetPaymentStatusAsync(new() { Id = req.PaymentId, }, ct);
 
-        if (status?.Status != PaymentStatusDto.Confirmed)
+        if (status != PaymentStatusDto.Confirmed)
         {
             await bus.Publish(new UnlockSeatsForInvalidPayment { PaymentId = req.PaymentId }, ct);
             await SendOkAsync(new FinishPaymentResponse(), ct);
