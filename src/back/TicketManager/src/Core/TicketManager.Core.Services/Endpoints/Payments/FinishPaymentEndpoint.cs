@@ -40,9 +40,7 @@ public class FinishPaymentEndpoint : Endpoint<FinishPaymentRequest, FinishPaymen
             return;
         }
 
-        var doesPaymentReservationExist = await dbContext
-            .Sectors
-            .AnyAsync(s => s.SeatReservations.Any(sr => sr.PaymentId == req.PaymentId && sr.CreationDate + SeatReservation.ReservationLifetime >= DateTime.UtcNow), ct);
+        var doesPaymentReservationExist = await GetPaymentReservationExistenceAsync(req.PaymentId, ct);
 
         if (!doesPaymentReservationExist)
         {
@@ -53,5 +51,19 @@ public class FinishPaymentEndpoint : Endpoint<FinishPaymentRequest, FinishPaymen
         var ticketId = Guid.NewGuid();
         await bus.Publish(new LockSeatsForTicket { PaymentId = req.PaymentId, TicketId = ticketId }, ct);
         await SendOkAsync(new FinishPaymentResponse { TicketId = ticketId }, ct);
+    }
+
+    private async Task<bool> GetPaymentReservationExistenceAsync(Guid paymentId, CancellationToken ct)
+    {
+        var sector = await dbContext
+            .Sectors
+            .FirstOrDefaultAsync(s => s.SeatReservations.Any(sr => sr.PaymentId == paymentId), ct);
+
+        if (sector is null)
+        {
+            return false;
+        }
+
+        return sector.SeatReservations.Any(sr => sr.PaymentId == paymentId && sr.IsCurrent);
     }
 }
