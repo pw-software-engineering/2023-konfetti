@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TicketManager.Core.Contracts.Organizers;
@@ -9,16 +10,20 @@ using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Configuration;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Extensions.Parsers;
+using TicketManager.Core.Services.Processes.Events;
+using TicketManager.Core.Services.Processes.Tickets;
 using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
+using Event = TicketManager.Core.Domain.Events.Event;
 
 namespace TicketManager.Core.Api;
 
@@ -51,8 +56,12 @@ public class Program
         builder.Services.AddScoped<Repository<Account, Guid>>();
         builder.Services.AddScoped<Repository<Event, Guid>>();
         builder.Services.AddScoped<Repository<Sector, Guid>>();
+        builder.Services.AddScoped<Repository<Ticket, Guid>>();
         
-        builder.Services.AddFastEndpoints();
+        builder.Services.AddFastEndpoints(options =>
+        {
+            options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.Core.Services") ?? false;
+        });
         
         builder.Services.AddSwaggerDoc();
 
@@ -63,6 +72,23 @@ public class Program
         });
 
         builder.Services.AddJWTBearerAuth(signingKey);
+
+        builder.Services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(builder.Configuration["RabbitMqHost"], builder.Configuration["RabbitMqVirtualHost"], cfg =>
+                {
+                    cfg.Username(builder.Configuration["RabbitMqUsername"]);
+                    cfg.Password(builder.Configuration["RabbitMqPassword"]);
+                });
+                cfg.ConfigureEndpoints(ctx);
+            });
+
+            x.AddConsumer<LockSeatsForTicketConsumer>();
+            x.AddConsumer<UnlockSeatsForInvalidPaymentConsumer>();
+            x.AddConsumer<CreateTicketConsumer>();
+        });
         
         var app = builder.Build();
 

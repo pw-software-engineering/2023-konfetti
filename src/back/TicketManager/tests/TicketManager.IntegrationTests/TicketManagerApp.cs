@@ -1,6 +1,7 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TicketManager.Core.Api;
 using TicketManager.Core.Services.DataAccess;
+using TicketManager.Core.Services.Services.HttpClients;
 using Xunit;
 
 namespace TicketManager.IntegrationTests;
@@ -23,11 +25,18 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
             Username = "testUser",
             Password = "doesnt_matter",
         }).Build();
-    
+
+    private readonly HttpClient paymentClient;
+
+    public TicketManagerApp(HttpClient paymentClient)
+    {
+        this.paymentClient = paymentClient;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // comment for debug purposes
-        //builder.ConfigureLogging(logging => logging.ClearProviders());
+        builder.ConfigureLogging(logging => logging.ClearProviders());
         
         builder.ConfigureTestServices(services =>
         {
@@ -41,6 +50,13 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                     .UseNpgsql(database.ConnectionString)
             );
+
+            services.AddMassTransitTestHarness();
+
+            // big hack, but for our needs it's gonna work
+            services.RemoveAll<PaymentClient>();
+            services.AddSingleton(paymentClient);
+            services.AddSingleton<PaymentClient>();
         });
     }
     

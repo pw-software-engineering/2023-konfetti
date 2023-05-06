@@ -1,4 +1,4 @@
-namespace TicketManager.Core.Contracts.Payments;
+namespace TicketManager.Core.Services.Services.HttpClients;
 
 public class PaymentTokenDto
 {
