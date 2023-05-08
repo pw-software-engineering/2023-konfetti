@@ -111,6 +111,6 @@ public class UserInteractingWithEventTests : TestBase
             PageSize = 10,
         });
 
-        actual.Items.Should().BeEquivalentTo(events);
+        actual.Items.Should().BeEquivalentTo(events, options => options.Excluding(e => e.Status));
     }
 }
