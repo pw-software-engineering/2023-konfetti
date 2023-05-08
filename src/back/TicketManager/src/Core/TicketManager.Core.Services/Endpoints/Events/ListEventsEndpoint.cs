@@ -38,6 +38,7 @@ public class ListEventsEndpoint : Endpoint<ListEventsRequest, PaginatedResponse<
                 Description = e.Event.Description,
                 Location = e.Event.Location,
                 Date = e.Event.Date,
+                Status = (EventStatusDto)e.Event.Status,
                 Sectors = e.Sectors.Select(s => new SectorDto
                 {
                     Name = s.Name,
