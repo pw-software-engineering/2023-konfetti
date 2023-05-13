@@ -1,4 +1,5 @@
 using MassTransit;
+using TicketManager.PdfGenerator.Api.Processes;
 
 namespace TicketManager.PdfGenerator.Api;
 
@@ -19,6 +20,8 @@ public class Program
                 });
                 cfg.ConfigureEndpoints(ctx);
             });
+            
+            x.AddConsumer<GenerateTicketPdfConsumer>();
         });
         
         var app = builder.Build();
