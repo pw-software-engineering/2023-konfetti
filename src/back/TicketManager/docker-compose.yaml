@@ -18,6 +18,7 @@ services:
       - api-postgres
       - payment-service
       - rabbitmq
+      - pdf-generator
   api-postgres:
     container_name: api-database
     image: "postgres:latest"
@@ -49,6 +50,18 @@ services:
       - 15672:15672
     networks:
       - rabbit
+  pdf-generator:
+    container_name: pdf-generator
+    image: pdf-generator
+    build:
+      context: .
+      dockerfile: Dockerfile.pdf_generator
+    networks:
+      - rabbit
+    env_file:
+      - variables.env
+    depends_on:
+      - rabbitmq
 networks:
   db:
     name: db
