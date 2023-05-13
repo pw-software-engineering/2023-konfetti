@@ -35,5 +35,7 @@ public class UpdateOrganizerEndpoint : Endpoint<UpdateOrganizerRequest>
             req.PhoneNumber ?? organizer.PhoneNumber);
 
         await organizers.UpdateAsync(organizer, ct);
+
+        await SendOkAsync(ct);
     }
 }
