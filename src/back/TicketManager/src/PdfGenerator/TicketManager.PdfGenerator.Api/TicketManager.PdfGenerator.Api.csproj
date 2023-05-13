@@ -6,4 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MassTransit" Version="8.0.14" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+    </ItemGroup>
+
 </Project>
