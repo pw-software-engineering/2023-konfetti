@@ -11,4 +11,8 @@
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TicketManager.PdfGenerator.Contracts\TicketManager.PdfGenerator.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>
