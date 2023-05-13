@@ -19,6 +19,7 @@ public class UserBuyingTicketTests : TestBase
     public async Task User_can_buy_ticket()
     {
         var @event = await CreateEventAsync();
+        await ChangeEventStatusAsync(@event.Id);
         var ticketId = await ButTicketAsync(@event);
         var ticket = await GetTicketAsync(ticketId);
         VerifyTicket(ticket, @event);
@@ -111,5 +112,19 @@ public class UserBuyingTicketTests : TestBase
         result.Id = eventId.Id;
         
         return result;
+    }
+
+    private async Task ChangeEventStatusAsync(Guid eventId)
+    {
+
+        await OrganizerClient.PostSuccessAsync<EventPublishEndpoint, EventStatusManipulationRequest>(
+            new EventStatusManipulationRequest
+            {
+                Id = eventId
+            });
+        await OrganizerClient.PostSuccessAsync<EventSaleStartEndpoint, EventSaleStatusRequest>(new EventSaleStatusRequest
+        {
+            EventId = eventId
+        });
     }
 }
