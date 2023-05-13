@@ -5,6 +5,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.DtoMappers;
 using TicketManager.Core.Services.Extensions;
+using TicketManager.Core.Services.Helpers;
 
 namespace TicketManager.Core.Services.Endpoints.Events;
 
