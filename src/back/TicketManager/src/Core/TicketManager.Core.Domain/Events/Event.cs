@@ -86,4 +86,19 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
 
         Status = status;
     }
+
+    public void UpdateName(string name)
+    {
+        Name = name;
+    }
+
+    public void UpdateDescription(string description)
+    {
+        Description = description;
+    }
+
+    public void UpdateLocation(string location)
+    {
+        Location = location;
+    }
 }
