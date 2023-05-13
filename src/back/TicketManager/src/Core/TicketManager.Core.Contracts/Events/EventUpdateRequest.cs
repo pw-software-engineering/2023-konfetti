@@ -11,11 +11,15 @@ public class EventUpdateRequest
     
     public static class ErrorCodes
     {
-        public const int NameIsTooLong = 1;
-        public const int DescriptionIsTooLong = 2;
-        public const int LocationIsTooLong = 3;
-        public const int DateIsNotFuture = 4;
-        public const int SectorNamesAreNotUnique = 5;
+        public const int NameIsEmpty = 1;
+        public const int NameIsTooLong = 2;
+        public const int DescriptionIsEmpty = 3;
+        public const int DescriptionIsTooLong = 4;
+        public const int LocationIsEmpty = 5;
+        public const int LocationIsTooLong = 6;
+        public const int DateIsNotFuture = 7;
+        public const int SectorsAreEmpty = 8;
+        public const int SectorNamesAreNotUnique = 9;
 
         public class SectorErrorCodes : SectorDto.ErrorCodes { }
     }
