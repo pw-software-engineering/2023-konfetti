@@ -27,20 +27,14 @@ public class EventUpdateValidator: Validator<EventUpdateRequest>
             .WithMessage("Event with this Id does not exist");
         
         RuleFor(req => req.Name)
-            .NotEmpty()
-            .WithCode(EventUpdateRequest.ErrorCodes.NameIsEmpty)
             .MaximumLength(StringLengths.ShortString)
             .WithCode(EventUpdateRequest.ErrorCodes.NameIsTooLong);
 
         RuleFor(req => req.Description)
-            .NotEmpty()
-            .WithCode(EventUpdateRequest.ErrorCodes.DescriptionIsEmpty)
             .MaximumLength(StringLengths.MediumString)
             .WithCode(EventUpdateRequest.ErrorCodes.DescriptionIsTooLong);
 
         RuleFor(req => req.Location)
-            .NotEmpty()
-            .WithCode(EventUpdateRequest.ErrorCodes.LocationIsEmpty)
             .MaximumLength(StringLengths.MediumString)
             .WithCode(EventUpdateRequest.ErrorCodes.LocationIsTooLong);
 
@@ -50,8 +44,6 @@ public class EventUpdateValidator: Validator<EventUpdateRequest>
             .WithMessage("Date is not future");
 
         RuleFor(req => req.Sectors)
-            .NotEmpty()
-            .WithCode(EventUpdateRequest.ErrorCodes.SectorsAreEmpty)
             .Must(AreSectorsNamesUnique)
             .WithCode(EventUpdateRequest.ErrorCodes.SectorNamesAreNotUnique);
 
