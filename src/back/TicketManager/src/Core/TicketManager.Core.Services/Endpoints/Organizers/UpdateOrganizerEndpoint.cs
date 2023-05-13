@@ -25,6 +25,15 @@ public class UpdateOrganizerEndpoint : Endpoint<UpdateOrganizerRequest>
     {
         var organizer = await organizers.FindAndEnsureExistenceAsync(req.AccountId, ct);
 
+        organizer.Update(
+            req.Email ?? organizer.Email,
+            req.CompanyName ?? organizer.CompanyName,
+            req.Address ?? organizer.Address,
+            req.TaxId ?? organizer.TaxId,
+            (TaxIdType?)req.TaxIdType ?? organizer.TaxIdType,
+            req.DisplayName ?? organizer.DisplayName,
+            req.PhoneNumber ?? organizer.PhoneNumber);
+
         await organizers.UpdateAsync(organizer, ct);
     }
 }
