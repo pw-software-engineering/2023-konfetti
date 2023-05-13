@@ -50,7 +50,7 @@ public class EventUpdateEndpoint: Endpoint<EventUpdateRequest>
 
         if (req.Sectors is not null)
         {
-            var sectorsList = await dbContext.Sectors.Where(s => s.EventId == req.Id).ToListAsync(ct);
+            var sectorsList = await dbContext.Sectors.AsTracking().Where(s => s.EventId == req.Id).ToListAsync(ct);
 
             foreach (var sector in sectorsList)
             {
@@ -83,5 +83,6 @@ public class EventUpdateEndpoint: Endpoint<EventUpdateRequest>
             events.Update(@event);
         }
         await dbContext.SaveChangesAsync(ct);
+        await SendOkAsync(ct);
     }
 }
