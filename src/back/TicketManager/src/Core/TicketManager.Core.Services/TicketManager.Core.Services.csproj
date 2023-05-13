@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\PdfGenerator\TicketManager.PdfGenerator.Contracts\TicketManager.PdfGenerator.Contracts.csproj" />
       <ProjectReference Include="..\TicketManager.Core.Contracts\TicketManager.Core.Contracts.csproj" />
       <ProjectReference Include="..\TicketManager.Core.Domain\TicketManager.Core.Domain.csproj" />
     </ItemGroup>

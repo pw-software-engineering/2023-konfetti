@@ -1,6 +1,7 @@
 using MassTransit;
 using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Services.DataAccess.Repositories;
+using TicketManager.PdfGenerator.Contracts;
 
 namespace TicketManager.Core.Services.Processes.Tickets;
 
@@ -22,10 +23,12 @@ public class TicketSeat
 public class CreateTicketConsumer : IConsumer<CreateTicket>
 {
     private readonly Repository<Ticket, Guid> tickets;
+    private readonly IBus bus;
 
-    public CreateTicketConsumer(Repository<Ticket, Guid> tickets)
+    public CreateTicketConsumer(Repository<Ticket, Guid> tickets, IBus bus)
     {
         this.tickets = tickets;
+        this.bus = bus;
     }
 
     public async Task Consume(ConsumeContext<CreateTicket> context)
@@ -39,5 +42,7 @@ public class CreateTicketConsumer : IConsumer<CreateTicket>
             message.Seats.Select(s => new Domain.Tickets.TicketSeat(s.Row, s.Column)));
 
         await tickets.AddAsync(ticket, context.CancellationToken);
+
+        await bus.Publish(new GenerateTicketPdf());
     }
 }
