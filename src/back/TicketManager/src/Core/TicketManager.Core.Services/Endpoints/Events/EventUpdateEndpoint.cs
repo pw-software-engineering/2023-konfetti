@@ -47,6 +47,11 @@ public class EventUpdateEndpoint: Endpoint<EventUpdateRequest>
             @event.UpdateName(req.Location);
             updateEvent = true;
         }
+        if (req.Date is not null)
+        {
+            @event.UpdateDate((DateTime)req.Date);
+            updateEvent = true;
+        }
 
         if (req.Sectors is not null)
         {

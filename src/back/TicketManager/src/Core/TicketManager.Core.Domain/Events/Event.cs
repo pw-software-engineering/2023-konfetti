@@ -101,4 +101,9 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
     {
         Location = location;
     }
+    
+    public void UpdateDate(DateTime date)
+    {
+        Date = date;
+    }
 }
