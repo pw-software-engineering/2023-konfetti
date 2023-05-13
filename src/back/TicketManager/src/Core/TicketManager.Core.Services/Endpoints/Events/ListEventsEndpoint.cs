@@ -29,6 +29,7 @@ public class ListEventsEndpoint : Endpoint<ListEventsRequest, PaginatedResponse<
     {
         var result = await dbContext
             .Events
+            .HandleEventFilter(req)
             .GroupJoin(dbContext.Sectors, e => e.Id, s => s.EventId, (e, s) => new { Event = e, Sectors = s })
             .Select(e => new EventDto
             {
