@@ -1,14 +1,9 @@
 using MassTransit;
+using TicketManager.Core.Contracts.Processes;
 using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Services.DataAccess.Repositories;
 
 namespace TicketManager.Core.Services.Processes.Events;
-
-public class SetPdfGenerationFlag
-{
-    public Guid TicketId { get; set; }
-}
-
 public class SetPdfGenerationFlagConsumer : IConsumer<SetPdfGenerationFlag>
 {
     private readonly Repository<Ticket, Guid> tickets;

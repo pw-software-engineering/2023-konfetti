@@ -1,10 +1,9 @@
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using MassTransit;
-using TicketManager.Core.Services.Processes.Events;
+using TicketManager.Core.Contracts.Processes;
 using TicketManager.PdfGenerator.Contracts;
 
 namespace TicketManager.PdfGenerator.Api.Processes;
