@@ -26,4 +26,9 @@ public class Ticket : IAggregateRoot<Guid>, IOptimisticConcurrent
         SectorId = sectorId;
         this.seats.AddRange(seats);
     }
+    
+    public void SetGeneratedPdf()
+    {
+        IsPdfGenerated = true;
+    }
 }
