@@ -42,6 +42,16 @@ public class Sector:
         reservation.Close();
     }
 
+    public void RemoveAllReservations()
+    {
+        seatReservations.Clear();
+    }
+
+    public void RemoveAllTakenSeats()
+    {
+        takenSeats.Clear();
+    }
+
     private SeatReservation GetReservationByPayment(Guid paymentId)
     {
         return seatReservations.First(sr => sr.PaymentId == paymentId);
