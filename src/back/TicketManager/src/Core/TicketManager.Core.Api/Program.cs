@@ -89,6 +89,9 @@ public class Program
             x.AddConsumer<LockSeatsForTicketConsumer>();
             x.AddConsumer<UnlockSeatsForInvalidPaymentConsumer>();
             x.AddConsumer<CreateTicketConsumer>();
+            x.AddConsumer<RemoveEventTicketsConsumer>();
+            x.AddConsumer<DeleteTicketConsumer>();
+            x.AddConsumer<DeleteSectorReservationConsumer>();
         });
         
         var app = builder.Build();
