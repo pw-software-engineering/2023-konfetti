@@ -2,9 +2,9 @@ namespace TicketManager.PdfGenerator.Contracts.Ticket;
 
 public class EventDto
 {
-    public string Name { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
-    public string Location { get; private set; } = null!;
-    public DateTime Date { get; private set; }
-    public OrganizerDto Organizer { get; private set; } = null!;
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public string Location { get; set; } = null!;
+    public DateTime Date { get; set; }
+    public OrganizerDto Organizer { get; set; } = null!;
 }
