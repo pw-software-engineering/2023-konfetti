@@ -5,7 +5,7 @@ RUN dotnet restore "/restore/TicketManager.PdfGenerator.Api/TicketManager.PdfGen
 WORKDIR /src
 COPY ./src/. .
 RUN cp -r /restore/* PdfGenerator/
-RUN dotnet publish "PdfGenerator/TicketManager.PdfGenerator.Api/TicketManager.PdfGenerator.Api.csproj" -c Release -o /app/publish --no-restore
+RUN dotnet publish "PdfGenerator/TicketManager.PdfGenerator.Api/TicketManager.PdfGenerator.Api.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app

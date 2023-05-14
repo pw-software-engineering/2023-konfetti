@@ -4,6 +4,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using MassTransit;
+using TicketManager.Core.Services.Processes.Events;
 using TicketManager.PdfGenerator.Contracts;
 
 namespace TicketManager.PdfGenerator.Api.Processes;
@@ -11,10 +12,12 @@ namespace TicketManager.PdfGenerator.Api.Processes;
 public class GenerateTicketPdfConsumer : IConsumer<GenerateTicketPdf>
 {
     private readonly ILogger<GenerateTicketPdfConsumer> logger;
+    private readonly IBus bus;
 
-    public GenerateTicketPdfConsumer(ILogger<GenerateTicketPdfConsumer> logger)
+    public GenerateTicketPdfConsumer(ILogger<GenerateTicketPdfConsumer> logger, IBus bus)
     {
         this.logger = logger;
+        this.bus = bus;
     }
 
     public Task Consume(ConsumeContext<GenerateTicketPdf> context)
@@ -70,6 +73,11 @@ public class GenerateTicketPdfConsumer : IConsumer<GenerateTicketPdf>
         document.Add(table);
         
         document.Close();
+
+        bus.Publish(new SetPdfGenerationFlag
+        {
+            TicketId = ticket.Id,
+        });
         
         return Task.CompletedTask;
     }
