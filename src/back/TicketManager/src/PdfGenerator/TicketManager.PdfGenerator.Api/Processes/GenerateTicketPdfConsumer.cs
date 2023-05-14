@@ -19,20 +19,56 @@ public class GenerateTicketPdfConsumer : IConsumer<GenerateTicketPdf>
 
     public Task Consume(ConsumeContext<GenerateTicketPdf> context)
     {
-        logger.LogInformation("Ticket {TicketId} pdf generation started", Guid.NewGuid());
+        var ticket = context.Message.Ticket;
+        var user = context.Message.User;
+        var @event = context.Message.Event;
+        
+        logger.LogInformation("Ticket {TicketId} pdf generation started", ticket.Id);
 
-        PdfWriter writer = new PdfWriter("./demo.pdf");
+        PdfWriter writer = new PdfWriter($"ticket-{ticket.Id}.pdf");
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
-        Paragraph header = new Paragraph("HEADER")
+        
+        Paragraph paragraph = new Paragraph(@event.Name)
+            .SetTextAlignment(TextAlignment.CENTER)
+            .SetFontSize(32);
+        document.Add(paragraph);
+        
+        paragraph = new Paragraph($"{@event.Location}, {@event.Date:dd/MM/yyyy HH:mm}")
             .SetTextAlignment(TextAlignment.CENTER)
             .SetFontSize(20);
-        Paragraph body = new Paragraph("Some super ticket")
-            .SetTextAlignment(TextAlignment.LEFT)
+        document.Add(paragraph);
+        
+        paragraph = new Paragraph(@event.Description)
+            .SetTextAlignment(TextAlignment.CENTER)
             .SetFontSize(14);
+        document.Add(paragraph);
+        
+        paragraph = new Paragraph($"Organizer: {@event.Organizer.DisplayName}\n {@event.Organizer.PhoneNumber}, {@event.Organizer.Address}")
+            .SetTextAlignment(TextAlignment.CENTER)
+            .SetFontSize(12);
+        document.Add(paragraph);
+        document.Add(new Paragraph("\n"));
+        document.Add(new Paragraph("\n"));
 
-        document.Add(header);
-        document.Add(body);
+        paragraph = new Paragraph($"Ticket for {user.FirstName} {user.LastName}, born on {user.BirthDate:dd/MM/yyyy}")
+            .SetTextAlignment(TextAlignment.LEFT)
+            .SetFontSize(20);
+        document.Add(paragraph);
+
+        Table table = new Table(ticket.Seats.Count);
+        table.SetWidth(UnitValue.CreatePercentValue(60));
+        table.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+        
+        foreach (var seat in ticket.Seats)
+        {
+            table.AddCell(new Cell()
+                .Add(new Paragraph($"Row: {seat.Row} Column: {seat.Column}")
+                    .SetTextAlignment(TextAlignment.JUSTIFIED)));
+            table.StartNewRow();
+        }
+        document.Add(table);
+        
         document.Close();
         
         return Task.CompletedTask;
