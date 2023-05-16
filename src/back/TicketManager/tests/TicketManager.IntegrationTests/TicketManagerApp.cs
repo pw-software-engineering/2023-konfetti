@@ -36,7 +36,7 @@ public class TicketManagerApp : WebApplicationFactory<Program>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // comment for debug purposes
-        builder.ConfigureLogging(logging => logging.ClearProviders());
+        // builder.ConfigureLogging(logging => logging.ClearProviders());
         
         builder.ConfigureTestServices(services =>
         {
