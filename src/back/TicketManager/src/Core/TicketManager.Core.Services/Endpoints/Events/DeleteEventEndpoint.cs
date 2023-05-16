@@ -2,6 +2,7 @@ using FastEndpoints;
 using MassTransit;
 using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Domain.Accounts;
+using TicketManager.Core.Services.Authorizers;
 using TicketManager.Core.Services.DataAccess.Repositories;
 using TicketManager.Core.Services.Processes.Events;
 using Event = TicketManager.Core.Domain.Events.Event;
@@ -23,6 +24,7 @@ public class DeleteEventEndpoint : Endpoint<DeleteEventRequest>
     {
         Post("/event/delete");
         Roles(AccountRoles.Admin, AccountRoles.Organizer);
+        PreProcessors(new EventAuthorizer<DeleteEventRequest>(events));
     }
 
     public override async Task HandleAsync(DeleteEventRequest req, CancellationToken ct)
