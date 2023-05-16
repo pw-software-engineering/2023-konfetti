@@ -12,6 +12,7 @@ class EventCommunication {
   static const String _createEndPoint = "/event/create";
   static const String _listEndPoint = "/event/list";
   static const String _organizerListEndPoint = "/event/organizer/my/list";
+  static const String _editEndPoint = "/event/update";
 
   Future<Tuple2<Response, ResponseCode>> create(Event body) async {
     if (Auth().getCurrentAccount == null) {
@@ -35,5 +36,14 @@ class EventCommunication {
     return await BackendCommunication().getCallAuthorized(
         _organizerListEndPoint, Token(Auth().getCurrentAccount!.token),
         params: params);
+  }
+
+  Future<Tuple2<Response, ResponseCode>> edit(Event body) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().postCallAuthorized(
+        _editEndPoint, Token(Auth().getCurrentAccount!.token),
+        data: jsonEncode(body));
   }
 }

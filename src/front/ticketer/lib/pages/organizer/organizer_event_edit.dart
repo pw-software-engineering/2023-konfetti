@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
-import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
-import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
-import 'package:ticketer/pages/common/organizer_card.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
+import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 
-class OrganizerLandingPage extends StatefulWidget {
-  const OrganizerLandingPage({Key? key}) : super(key: key);
+class EventEditPage extends StatefulWidget {
+  const EventEditPage({Key? key, required this.event}) : super(key: key);
+  final Event event;
 
   @override
-  State<OrganizerLandingPage> createState() => _OrganizerLandingPageState();
+  State<EventEditPage> createState() => _EventEditPageState();
 }
 
-class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
+class _EventEditPageState extends State<EventEditPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _eventName = TextEditingController();
@@ -29,6 +28,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   final TextEditingController _sectorColumns = TextEditingController();
   final TextEditingController _sectorRows = TextEditingController();
 
+  late Event _event;
+
   List<Sector> sectors = List.empty(growable: true);
 
   Widget _getContent() {
@@ -37,19 +38,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _getUserIcon(),
           _getGreeting(),
-          OrganizerCard(
-              organizer: Organizer(
-                  "123",
-                  "Januszex.pl",
-                  "Warszawa",
-                  TaxType.KRS,
-                  "12345",
-                  "Januszex",
-                  "jan.nowak@pw.edu.pl",
-                  "+48600900600")),
-          _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),
               margin: const EdgeInsets.only(top: 20, bottom: 20),
@@ -64,17 +53,6 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
                 ],
               )),
         ],
-      ),
-    );
-  }
-
-  Text _getEventCreationBanner() {
-    return Text(
-      "Create new event",
-      style: TextStyle(
-        fontSize: 24,
-        color: Theme.of(context).primaryColor,
-        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -346,36 +324,37 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     return Container(
       margin: const EdgeInsets.only(top: 15.0),
       child: ElevatedButton(
-        onPressed: () => _submitEventCreation(),
-        child: const Text("Create"),
+        onPressed: () => _submitEventEdit(),
+        child: const Text("Update"),
       ),
     );
   }
 
-  Future<void> _submitEventCreation() async {
+  Future<void> _submitEventEdit() async {
     if (_formKey.currentState!.validate() && sectors.isNotEmpty) {
       try {
-        Event event = Event(
-            null,
-            _eventName.text,
-            _eventDescription.text,
-            _eventLocation.text,
-            '${_eventDate.text}T${_eventTime.text}:00.000Z',
-            sectors);
+        _event.name = _eventName.text;
+        _event.description = _eventDescription.text;
+        _event.date = '${_eventDate.text}T${_eventTime.text}:00.000Z';
+        _event.location = _eventLocation.text;
+        _event.sectors = sectors;
 
-        var response = await BackendCommunication().event.create(event);
+        var response = await BackendCommunication().event.edit(_event);
 
         if (response.item2 != ResponseCode.allGood) {
           await _showDialogOnFailure(response.item2.name);
         } else {
-          await _showDialogAfterEventCreation();
+          await _showDialogAfterEventEdit();
         }
       } catch (e) {
         await _showDialogOnFailure(e.toString());
       }
 
       if (!mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const OrganizerLandingPage()));
     }
   }
 
@@ -399,14 +378,14 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Future<void> _showDialogAfterEventCreation() async {
+  Future<void> _showDialogAfterEventEdit() async {
     await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Event has been created"),
+          title: const Text("Event has been updated"),
           content: const Text(
-              "Your event has been published! You can see it in 'My Events' tab."),
+              "Your event has been updated! You can see it in 'My Events' tab."),
           actions: [
             ElevatedButton(
               onPressed: () => {
@@ -422,7 +401,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
 
   Text _getGreeting() {
     return Text(
-      "Hello organizer",
+      "Edit event",
       style: TextStyle(
         fontSize: 26,
         color: Theme.of(context).primaryColor,
@@ -431,21 +410,19 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
     );
   }
 
-  Container _getUserIcon() {
-    return Container(
-      height: 60,
-      width: 60,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).primaryColor,
-      ),
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.person,
-        color: Colors.white,
-        size: 40,
-      ),
-    );
+  @override
+  void initState() {
+    _event = widget.event;
+    _eventName.text = _event.name;
+    _eventDescription.text = _event.description;
+    var dateIn = _event.date.split(" ")[0].split("/");
+    String date = "${dateIn[2]}-${dateIn[0]}-${dateIn[1]}";
+    var time = _event.date.split(" ")[1].split("T")[0].replaceAll(":00", "");
+    _eventDate.text = date;
+    _eventTime.text = time;
+    _eventLocation.text = _event.location;
+    sectors = _event.sectors;
+    super.initState();
   }
 
   @override
