@@ -5,6 +5,7 @@ import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
+import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 
 class EventEditPage extends StatefulWidget {
   const EventEditPage({Key? key, required this.event}) : super(key: key);
@@ -343,14 +344,17 @@ class _EventEditPageState extends State<EventEditPage> {
         if (response.item2 != ResponseCode.allGood) {
           await _showDialogOnFailure(response.item2.name);
         } else {
-          await _showDialogAfterEventCreation();
+          await _showDialogAfterEventEdit();
         }
       } catch (e) {
         await _showDialogOnFailure(e.toString());
       }
 
       if (!mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const OrganizerLandingPage()));
     }
   }
 
@@ -374,7 +378,7 @@ class _EventEditPageState extends State<EventEditPage> {
     );
   }
 
-  Future<void> _showDialogAfterEventCreation() async {
+  Future<void> _showDialogAfterEventEdit() async {
     await showDialog(
       context: context,
       builder: (context) {
