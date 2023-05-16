@@ -60,6 +60,7 @@ services:
       - rabbit
     env_file:
       - variables.env
+      - secrets.env
     depends_on:
       - rabbitmq
 networks:
