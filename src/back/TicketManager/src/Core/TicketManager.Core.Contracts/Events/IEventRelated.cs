@@ -4,5 +4,4 @@ public interface IEventRelated
 {
     public Guid Id { get; }
     public Guid AccountId { get; }
-    public string Role { get; }
 }

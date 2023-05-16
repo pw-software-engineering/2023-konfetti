@@ -1,5 +1,6 @@
 using FastEndpoints;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Services.Authorizers;
@@ -13,18 +14,20 @@ public class DeleteEventEndpoint : Endpoint<DeleteEventRequest>
 {
     private readonly Repository<Event, Guid> events;
     private readonly IBus bus;
+    private readonly IServiceScopeFactory scopeFactory;
 
-    public DeleteEventEndpoint(Repository<Event, Guid> events, IBus bus)
+    public DeleteEventEndpoint(Repository<Event, Guid> events, IBus bus, IServiceScopeFactory scopeFactory)
     {
         this.events = events;
         this.bus = bus;
+        this.scopeFactory = scopeFactory;
     }
 
     public override void Configure()
     {
         Post("/event/delete");
         Roles(AccountRoles.Admin, AccountRoles.Organizer);
-        PreProcessors(new EventAuthorizer<DeleteEventRequest>(events));
+        PreProcessors(new EventAuthorizer<DeleteEventRequest>(scopeFactory));
     }
 
     public override async Task HandleAsync(DeleteEventRequest req, CancellationToken ct)
@@ -38,5 +41,7 @@ public class DeleteEventEndpoint : Endpoint<DeleteEventRequest>
         {
             await bus.Publish(new RemoveEventTickets() { EventId = @event.Id }, ct);
         }
+
+        await SendOkAsync(ct);
     }
 }

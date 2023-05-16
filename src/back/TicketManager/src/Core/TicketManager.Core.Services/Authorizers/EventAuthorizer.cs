@@ -1,6 +1,7 @@
 using FastEndpoints;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Events;
@@ -11,22 +12,25 @@ namespace TicketManager.Core.Services.Authorizers;
 public class EventAuthorizer<TRequest> : IPreProcessor<TRequest>
     where TRequest : IEventRelated
 {
-    private readonly Repository<Event, Guid> events;
+    private readonly IServiceScopeFactory scopeFactory;
 
-    public EventAuthorizer(Repository<Event, Guid> events)
+    public EventAuthorizer(IServiceScopeFactory scopeFactory)
     {
-        this.events = events;
+        this.scopeFactory = scopeFactory;
     }
 
     public async Task PreProcessAsync(TRequest req, HttpContext ctx, List<ValidationFailure> failures, CancellationToken ct)
     {
-        if (req.Role == AccountRoles.Admin)
+        if (ctx.User.IsInRole(AccountRoles.Admin))
         {
             return;
         }
 
-        var @event = await events.FindAndEnsureExistenceAsync(req.Id, ct);
+        using var scope = scopeFactory.CreateScope();
+        var events = scope.ServiceProvider.GetRequiredService<Repository<Event, Guid>>();
 
+        var @event = await events.FindAndEnsureExistenceAsync(req.Id, ct);
+        
         if (@event.OrganizerId != req.AccountId)
         {
             await ctx.Response.SendUnauthorizedAsync(ct);
