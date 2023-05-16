@@ -1,4 +1,6 @@
 using FastEndpoints;
+using FluentAssertions;
+using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Accounts;
@@ -53,6 +55,16 @@ public class TestBase : IAsyncDisposable
 
         OrganizerClient = coreApp.CreateClient();
         ConfigureOrganizerAsync(password).Wait();
+    }
+
+    public async Task WaitForProcessingAsync()
+    {
+        var harness = coreApp.Services.GetTestHarness();
+        var bus = harness.Bus;
+        var activityMonitor = bus.CreateBusActivityMonitor();
+        await activityMonitor.AwaitBusInactivity(TimeSpan.FromSeconds(15));
+        var consumed = await harness.Consumed.Any();
+        consumed.Should().BeTrue();
     }
 
     private async Task ConfigureOrganizerAsync(string password)
