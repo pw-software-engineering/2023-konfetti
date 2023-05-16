@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 
 import '../common/app_bar.dart';
@@ -124,7 +125,17 @@ class _PaymentPageState extends State<PaymentPage> {
             padding: const EdgeInsets.only(left: 8.0),
             child: ElevatedButton(
               onPressed: () => {
-                Navigator.pop(context),
+                // Navigator.pop(context),
+                // todo: link action here
+                for (int i = 0; i <= _seatsInSectors.length; ++i)
+                  {
+                    if (_seatsInSectors[i] > 0)
+                      {
+                        BackendCommunication()
+                            .ticket
+                            .buy(_event, _event.sectors[i], _seatsInSectors[i])
+                      }
+                  },
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(100, 35),
