@@ -2,6 +2,8 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Contracts.Common;
+using TicketManager.Core.Contracts.Events;
+using TicketManager.Core.Domain.Events;
 
 namespace TicketManager.Core.Services.Extensions;
 
@@ -79,4 +81,54 @@ public static class QueryableExtensions
         var lambda = Expression.Lambda<Func<T, bool>>(call, exp.Parameters);
         return query.Where(lambda);
     }
+
+    public static IQueryable<T> FilterDateTimeField<T>(this IQueryable<T> query, Expression<Func<T, DateTime>> exp,
+        DateTime? filterValue, DateTimeFilterType filterType)
+    {
+        if (filterValue is null)
+        {
+            return query;
+        }
+
+        filterValue = filterValue.Value.SetKindUtc();
+        var comparisonExpression = GetComparisonExpression(exp.Body, (DateTime)filterValue, filterType);
+        var lambda = Expression.Lambda<Func<T, bool>>(comparisonExpression, exp.Parameters);
+        return query.Where(lambda);
+    }
+
+    private static DateTime SetKindUtc(this DateTime dateTime)
+    {
+        if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
+        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+    }
+    private static Expression GetComparisonExpression(Expression memberExpression, DateTime filterValue, DateTimeFilterType filterType)
+    {
+        Expression comparisonExpression;
+        switch (filterType)
+        {
+            case DateTimeFilterType.LaterThan:
+                comparisonExpression = Expression.GreaterThan(memberExpression, Expression.Constant(filterValue, typeof(DateTime)));
+                break;
+            case DateTimeFilterType.LaterThanInclusive:
+                comparisonExpression = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(filterValue, typeof(DateTime)));
+                break;
+            case DateTimeFilterType.EarlierThan:
+                comparisonExpression = Expression.LessThan(memberExpression, Expression.Constant(filterValue, typeof(DateTime)));
+                break;
+            case DateTimeFilterType.EarlierThanInclusive:
+                comparisonExpression = Expression.LessThanOrEqual(memberExpression, Expression.Constant(filterValue, typeof(DateTime)));
+                break;
+            default:
+                throw new ArgumentException("Invalid comparison operator.");
+        }
+        return comparisonExpression;
+    }
+}
+
+public enum DateTimeFilterType
+{
+    EarlierThan = 0,
+    EarlierThanInclusive = 1,
+    LaterThan = 2,
+    LaterThanInclusive = 3,
 }

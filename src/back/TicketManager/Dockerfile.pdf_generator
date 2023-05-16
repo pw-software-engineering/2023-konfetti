@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+COPY ./src/PdfGenerator/TicketManager.PdfGenerator.Api/*.csproj /restore/PdfGenerator/TicketManager.PdfGenerator.Api/
+COPY ./src/PdfGenerator/TicketManager.PdfGenerator.Contracts/*.csproj /restore/PdfGenerator/TicketManager.PdfGenerator.Contracts/
+COPY ./src/Core/TicketManager.Core.Contracts/*.csproj /restore/Core/TicketManager.Core.Contracts/
+RUN dotnet restore "/restore/PdfGenerator/TicketManager.PdfGenerator.Api/TicketManager.PdfGenerator.Api.csproj"
+WORKDIR /src
+COPY ./src/. .
+RUN cp -r /restore/PdfGenerator/* PdfGenerator/
+RUN cp -r /restore/Core/* Core/
+RUN dotnet publish "PdfGenerator/TicketManager.PdfGenerator.Api/TicketManager.PdfGenerator.Api.csproj" -c Release -o /app/publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "TicketManager.PdfGenerator.Api.dll"]

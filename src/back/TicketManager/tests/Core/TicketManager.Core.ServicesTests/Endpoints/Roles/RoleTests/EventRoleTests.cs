@@ -66,4 +66,11 @@ public class EventRoleTests
         var testInstance = testsBase.GetRoleTestInstance<EventSaleStopEndpoint>();
         testInstance.AsOrganizer().Check();
     }
+
+    [Fact]
+    public void WhenEventUpdateChecked_ItShouldAllowOrganizerAndAdmin()
+    {
+        var testInstance = testsBase.GetRoleTestInstance<EventUpdateEndpoint>();
+        testInstance.AsOrganizer().AsAdmin().Check();
+    }
 }

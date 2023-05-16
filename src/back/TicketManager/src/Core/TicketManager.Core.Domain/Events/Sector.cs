@@ -42,11 +42,45 @@ public class Sector:
         reservation.Close();
     }
 
+    public void RemoveAllReservations()
+    {
+        seatReservations.Clear();
+    }
+
+    public void RemoveAllTakenSeats()
+    {
+        takenSeats.Clear();
+    }
+
     private SeatReservation GetReservationByPayment(Guid paymentId)
     {
         return seatReservations.First(sr => sr.PaymentId == paymentId);
     }
 
+    public bool Update(int priceInSmallestUnit, int numberOfColumns, int numberOfRows)
+    {
+        var changed = false;
+        if (PriceInSmallestUnit != priceInSmallestUnit)
+        {
+            PriceInSmallestUnit = priceInSmallestUnit;
+            changed = true;
+        }
+
+        if (NumberOfColumns != numberOfColumns)
+        {
+            NumberOfColumns = numberOfColumns;
+            changed = true;
+        }
+
+        if (NumberOfRows != numberOfRows)
+        {
+            NumberOfRows = numberOfRows;
+            changed = true;
+        }
+        
+        return changed;
+    }
+    
     public List<TakenSeat> TakeSeats(Guid paymentId)
     {
         CloseReservation(paymentId);

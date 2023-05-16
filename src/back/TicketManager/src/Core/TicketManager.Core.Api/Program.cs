@@ -5,6 +5,7 @@ using FastEndpoints.Swagger;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TicketManager.Core.Contracts.Events;
 using TicketManager.Core.Contracts.Organizers;
 using TicketManager.Core.Contracts.Validation;
 using TicketManager.Core.Domain.Accounts;
@@ -88,6 +89,9 @@ public class Program
             x.AddConsumer<LockSeatsForTicketConsumer>();
             x.AddConsumer<UnlockSeatsForInvalidPaymentConsumer>();
             x.AddConsumer<CreateTicketConsumer>();
+            x.AddConsumer<RemoveEventTicketsConsumer>();
+            x.AddConsumer<DeleteTicketConsumer>();
+            x.AddConsumer<DeleteSectorReservationConsumer>();
         });
         
         var app = builder.Build();

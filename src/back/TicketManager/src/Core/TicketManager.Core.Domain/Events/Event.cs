@@ -92,4 +92,24 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
     {
         IsDeleted = true;
     }
+
+    public void UpdateName(string name)
+    {
+        Name = name;
+    }
+
+    public void UpdateDescription(string description)
+    {
+        Description = description;
+    }
+
+    public void UpdateLocation(string location)
+    {
+        Location = location;
+    }
+    
+    public void UpdateDate(DateTime date)
+    {
+        Date = date;
+    }
 }
