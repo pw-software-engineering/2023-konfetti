@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/user/user_modify_data.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
   const UserNavigationDrawer({
@@ -56,8 +57,12 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
 
   Future<void> launchEditAccount(BuildContext context) async {
     Navigator.pop(context);
-
-    throw UnimplementedError("This is not implemented yet");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const UserDataEdit()),
+      ),
+    );
   }
 
   Future<void> signOut(BuildContext context) async {
