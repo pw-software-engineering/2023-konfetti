@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
-import 'package:ticketer/pages/user/user_modify_data.dart';
+import 'package:ticketer/pages/user/user_edit_data.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
   const UserNavigationDrawer({

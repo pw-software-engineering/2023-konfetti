@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
@@ -20,6 +21,7 @@ class _UserDataEditState extends State<UserDataEdit> {
   final TextEditingController _firstName = TextEditingController();
   final TextEditingController _lastName = TextEditingController();
   final TextEditingController _birthDate = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Widget _getContent() {
     return SingleChildScrollView(
@@ -69,6 +71,7 @@ class _UserDataEditState extends State<UserDataEdit> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          _emailEntryField(),
           _firstNameEntryField(),
           _lastNameEntryField(),
           _birthDateEntryField(),
@@ -145,10 +148,30 @@ class _UserDataEditState extends State<UserDataEdit> {
         lastDate: DateTime.now());
   }
 
+  Widget _emailEntryField() {
+    return TextFormField(
+      controller: _controllerEmail,
+      decoration: const InputDecoration(
+          labelText: "e-mail", hintText: 'Enter your e-mail'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter email";
+        } else if (!EmailValidator.validate(value)) {
+          return "Not a valid email";
+        }
+        return null;
+      },
+    );
+  }
+
   Future<void> submitUserData() async {
     if (_formKey.currentState!.validate()) {
-      User user =
-          User(_firstName.text, _lastName.text, _birthDate.text, "", "");
+      UserUpdate user = UserUpdate(
+        _firstName.text,
+        _lastName.text,
+        _birthDate.text,
+        _controllerEmail.text,
+      );
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
     }

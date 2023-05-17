@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
@@ -27,6 +28,7 @@ class _OrganizerDataEditState extends State<OrganizerDataEdit> {
   final TextEditingController _taxId = TextEditingController();
   final TextEditingController _displayName = TextEditingController();
   final TextEditingController _phone = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   late TaxType taxType = TaxType.NIP;
@@ -82,6 +84,7 @@ class _OrganizerDataEditState extends State<OrganizerDataEdit> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          _emailEntryField(),
           _companyNameEntryField(),
           _companyCityEntryField(),
           _companyZipCodeEntryField(),
@@ -207,6 +210,22 @@ class _OrganizerDataEditState extends State<OrganizerDataEdit> {
         ));
   }
 
+  Widget _emailEntryField() {
+    return TextFormField(
+      controller: _controllerEmail,
+      decoration: const InputDecoration(
+          labelText: "e-mail", hintText: 'Enter your e-mail'),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter email";
+        } else if (!EmailValidator.validate(value)) {
+          return "Not a valid email";
+        }
+        return null;
+      },
+    );
+  }
+
   Future<DateTime?> _selectDate(BuildContext context, DateTime initial) async {
     const daysInAYear = 365;
     const maxAge = 100;
@@ -238,15 +257,15 @@ class _OrganizerDataEditState extends State<OrganizerDataEdit> {
 
   Future<void> submitOrganizerData() async {
     if (_formKey.currentState!.validate()) {
-      OrganizerAccount organizer = OrganizerAccount(
-          _companyName.text,
-          '${_addressStreet.text}/${_addressZip.text}/${_addressCity.text}',
-          taxType,
-          _taxId.text,
-          _displayName.text,
-          "",
-          "",
-          _phone.text);
+      OrganizerAccountUpdate organizer = OrganizerAccountUpdate(
+        _companyName.text,
+        '${_addressStreet.text}/${_addressZip.text}/${_addressCity.text}',
+        taxType,
+        _taxId.text,
+        _displayName.text,
+        _controllerEmail.text,
+        _phone.text,
+      );
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
