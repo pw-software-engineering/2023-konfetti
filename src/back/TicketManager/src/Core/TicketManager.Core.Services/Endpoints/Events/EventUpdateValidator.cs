@@ -76,7 +76,7 @@ public class EventUpdateValidator: Validator<EventUpdateRequest>
         
         return await dbResolver.Resolve(scope)
             .Events
-            .AnyAsync(e => e.Id == id && e.Status != EventStatus.Opened, cancellationToken);
+            .AnyAsync(e => e.Id == id && e.Status != EventStatus.Opened && !e.IsDeleted, cancellationToken);
     }
     
     private bool IsDateFuture(DateTime? date)
