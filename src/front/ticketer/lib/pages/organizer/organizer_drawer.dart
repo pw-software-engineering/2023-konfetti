@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/organizer/organizer_edit_data.dart';
 import 'package:ticketer/pages/organizer/organizer_event_list_page.dart';
 import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 
@@ -71,8 +72,12 @@ class _OrganizerNavigationDrawerState extends State<OrganizerNavigationDrawer> {
 
   Future<void> launchEditAccount(BuildContext context) async {
     Navigator.pop(context);
-
-    throw UnimplementedError("This is not implemented yet");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const OrganizerDataEdit()),
+      ),
+    );
   }
 
   Future<void> signOut(BuildContext context) async {

@@ -129,7 +129,7 @@ class _UserDataEditState extends State<UserDataEdit> {
     return Container(
         margin: const EdgeInsets.only(top: 15.0),
         child: ElevatedButton(
-          onPressed: () => {},
+          onPressed: () => submitUserData(),
           child: const Text("Submit"),
         ));
   }
