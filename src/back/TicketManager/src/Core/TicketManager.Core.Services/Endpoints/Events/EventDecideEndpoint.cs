@@ -31,7 +31,7 @@ public class EventDecideEndpoint : Endpoint<EventDecideRequest>
         }
         else
         {
-            // delete it when possible
+            @event.Delete();
         }
 
         await events.UpdateAsync(@event, ct);
