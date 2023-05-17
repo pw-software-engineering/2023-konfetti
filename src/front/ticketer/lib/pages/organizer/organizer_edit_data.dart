@@ -266,9 +266,56 @@ class _OrganizerDataEditState extends State<OrganizerDataEdit> {
         _controllerEmail.text,
         _phone.text,
       );
+      var response = await BackendCommunication().organizer.update(organizer);
+      if (response.item2.value != 200) {
+        await showDialogAfterUnsuccesfullUpdate(
+            response.item2.getResponseString());
+      } else {
+        await showDialogAfterUpdate();
+      }
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
+  }
+
+  Future<void> showDialogAfterUpdate() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Thank you"),
+          content: const Text("Your data has been updated"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showDialogAfterUnsuccesfullUpdate(String errorMess) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Something went wrong"),
+          content: Text("Your request faced an error: $errorMess"),
+          actions: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.pop(context),
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
