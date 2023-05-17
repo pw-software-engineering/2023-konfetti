@@ -25,7 +25,7 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
         Description = description;
         Location = location;
         Date = date;
-        Status = EventStatus.Verified;
+        Status = EventStatus.Unverified;
     }
 
     public void ChangeEventStatus(EventStatus status)
