@@ -39,12 +39,12 @@ public class EventUpdateEndpoint: Endpoint<EventUpdateRequest>
         }
         if (req.Description is not null)
         {
-            @event.UpdateName(req.Description);
+            @event.UpdateDescription(req.Description);
             updateEvent = true;
         }
         if (req.Location is not null)
         {
-            @event.UpdateName(req.Location);
+            @event.UpdateLocation(req.Location);
             updateEvent = true;
         }
         if (req.Date is not null)

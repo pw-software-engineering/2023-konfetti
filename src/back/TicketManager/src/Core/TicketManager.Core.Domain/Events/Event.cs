@@ -11,6 +11,7 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
     public string Location { get; private set; } = null!;
     public DateTime Date { get; private set; }
     public EventStatus Status { get; private set; }
+    public bool IsDeleted { get; private set; }
     
     public DateTime DateModified { get; set; }
     
@@ -85,6 +86,11 @@ public class Event : IAggregateRoot<Guid>, IOptimisticConcurrent
         }
 
         Status = status;
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
     }
 
     public void UpdateName(string name)

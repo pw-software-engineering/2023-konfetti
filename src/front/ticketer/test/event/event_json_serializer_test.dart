@@ -11,11 +11,11 @@ void main() {
       // given
       Sector s1 = Sector("VIP", 240.48, 10, 12);
       Sector s2 = Sector("Basic", 119.90, 100, 50);
-      Event event = Event("My Event", "My description", "Warsaw",
+      Event event = Event(null, "My Event", "My description", "Warsaw",
           "2023-03-30T01:00:00.000Z", List.from([s1, s2]));
 
       String expected =
-          '{"name":"My Event","description":"My description","location":"Warsaw",'
+          '{"id":null,"name":"My Event","description":"My description","location":"Warsaw",'
           '"date":"2023-03-30T01:00:00.000Z","sectors":'
           '[{"name":"VIP","priceInSmallestUnit":24048,"numberOfColumns":12,"numberOfRows":10},'
           '{"name":"Basic","priceInSmallestUnit":11990,"numberOfColumns":50,"numberOfRows":100}]}';

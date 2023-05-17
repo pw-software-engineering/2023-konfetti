@@ -115,6 +115,7 @@ public class ManagingEventTests : TestBase
         @event.Should().BeEquivalentTo(defaultEvent, options => options
             .Excluding(e => e.DateModified)
             .Excluding(e => e.Id)
+            .Excluding(e => e.IsDeleted)
             .Using<DateTime>(ctx => 
                 ctx.Subject.Should().BeCloseTo(ctx.Expectation, precision: TimeSpan.FromSeconds(1))).WhenTypeIs<DateTime>());
     }

@@ -1,4 +1,5 @@
 using MassTransit;
+using TicketManager.PdfGenerator.Api.Helpers;
 using TicketManager.PdfGenerator.Api.Processes;
 
 namespace TicketManager.PdfGenerator.Api;
@@ -8,6 +9,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddSingleton(new BlobConfiguration(
+            builder.Configuration["BlobStorageConnectionString"],
+            builder.Configuration["BlobStorageContainerName"]));
         
         builder.Services.AddMassTransit(x =>
         {

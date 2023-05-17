@@ -28,7 +28,7 @@ public class ListEventsForOrganizerEndpoint: Endpoint<ListEventForOrganizerReque
     {
         var result = await dbContext
             .Events
-            .Where(e => e.OrganizerId == req.OrganizerId)
+            .Where(e => e.OrganizerId == req.OrganizerId && !e.IsDeleted)
             .HandleEventFilter(req)
             .GroupJoin(dbContext.Sectors, e => e.Id, s => s.EventId, (e, s) => new { Event = e, Sectors = s })
             .Select(e => new EventDto

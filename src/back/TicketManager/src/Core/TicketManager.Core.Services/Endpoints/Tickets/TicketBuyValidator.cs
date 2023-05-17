@@ -40,7 +40,7 @@ public class TicketBuyValidator: Validator<TicketBuyRequest>
         
         return await dbResolver.Resolve(scope)
             .Events
-            .AnyAsync(e => e.Id == id && e.Status == EventStatus.Opened, cancellationToken);
+            .AnyAsync(e => e.Id == id && e.Status == EventStatus.Opened && !e.IsDeleted, cancellationToken);
     }
 
     private async Task<bool> IsSectorNameValidAsync(TicketBuyRequest req, CancellationToken cancellationToken)
