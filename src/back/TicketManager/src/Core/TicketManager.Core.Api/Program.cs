@@ -104,6 +104,7 @@ public class Program
             c.Serializer.Options.Converters.Add(new DateTimeConverter());
             c.Binding.ValueParserFor<List<TaxIdTypeDto>>(DtoListParser<TaxIdTypeDto>.Parse);
             c.Binding.ValueParserFor<List<VerificationStatusDto>>(DtoListParser<VerificationStatusDto>.Parse);
+            c.Binding.ValueParserFor<List<EventStatusDto>>(DtoListParser<EventStatusDto>.Parse);
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) => new ValidationErrorResponse
             {
                 Errors = failures.Select(f =>
