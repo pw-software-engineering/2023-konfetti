@@ -108,6 +108,12 @@ public class UserBuyingTicketTests : TestBase
             Location = result.Location,
             Sectors = result.Sectors,
         });
+        
+        await AdminClient.PostSuccessAsync<EventDecideEndpoint, EventDecideRequest>(new()
+        {
+            Id = eventId.Id,
+            IsAccepted = true,
+        });
 
         result.Id = eventId.Id;
         

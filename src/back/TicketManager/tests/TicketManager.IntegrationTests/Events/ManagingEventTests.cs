@@ -28,7 +28,7 @@ public class ManagingEventTests : TestBase
         await CreateEvent();
         await VerifyEvent();
         
-        //TODO: Add verification
+        await VerifyEventPositively();
 
         await PublishEvent();
         await VerifyEvent();
@@ -45,8 +45,8 @@ public class ManagingEventTests : TestBase
     {
         await CreateEvent();
         await VerifyEvent();
-        
-        //TODO: Add verification
+
+        await VerifyEventPositively();
 
         await PublishEvent();
         await VerifyEvent();
@@ -136,7 +136,18 @@ public class ManagingEventTests : TestBase
                 NumberOfRows = s.NumberOfRows,
             }).ToList()
         });
-        
+
         realEventId = eventId.Id;
+    }
+
+    private async Task VerifyEventPositively()
+    {
+        await AdminClient.PostSuccessAsync<EventDecideEndpoint, EventDecideRequest>(new()
+        {
+            Id = realEventId,
+            IsAccepted = true,
+        });
+
+        defaultEvent.ChangeEventStatus(EventStatus.Verified);
     }
 }

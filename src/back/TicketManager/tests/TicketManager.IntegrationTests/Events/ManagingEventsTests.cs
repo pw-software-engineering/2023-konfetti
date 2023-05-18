@@ -15,7 +15,7 @@ public class ManagingEventsTests : TestBase
     [Fact]
     public async Task Organizer_can_manage_events()
     {
-        await CreateEventAsync(new()
+        await CreateEventAndVerifyPositivelyAsync(new()
         {
             Name = "name 1",
             Date = TimeProvider.Now().AddDays(5),
@@ -43,7 +43,7 @@ public class ManagingEventsTests : TestBase
         });
         await VerifyEventsAsync();
         
-        await CreateEventAsync(new()
+        await CreateEventAndVerifyPositivelyAsync(new()
         {
             Name = "name 2",
             Date = TimeProvider.Now().AddDays(5),
@@ -75,7 +75,7 @@ public class ManagingEventsTests : TestBase
         await VerifyEventsAsync();
     }
 
-    private async Task CreateEventAsync(EventDto @event)
+    private async Task CreateEventAndVerifyPositivelyAsync(EventDto @event)
     {
         var response = await OrganizerClient.PostSuccessAsync<CreateEventEndpoint, CreateEventRequest, IdResponse>(new()
         {
@@ -84,6 +84,12 @@ public class ManagingEventsTests : TestBase
             Location = @event.Location,
             Date = @event.Date,
             Sectors = @event.Sectors,
+        });
+
+        await AdminClient.PostSuccessAsync<EventDecideEndpoint, EventDecideRequest>(new()
+        {
+            Id = response.Id,
+            IsAccepted = true,
         });
 
         @event.Id = response.Id;
