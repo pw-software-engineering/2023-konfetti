@@ -47,4 +47,9 @@ class Auth {
     if (!_provider.isInitialized) throw Exception("Provider not initilized");
     return await _provider.registerOrginizer(organizer);
   }
+
+  Future<ResponseCode> changePassword(String newPassword) async {
+    if (!_provider.isInitialized) throw Exception("Provider not initilized");
+    return await _provider.changePassword(newPassword);
+  }
 }

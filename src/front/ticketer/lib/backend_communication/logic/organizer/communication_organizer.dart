@@ -12,21 +12,24 @@ import 'package:tuple/tuple.dart';
 import '../../model/organizer.dart';
 
 class OrganizerCommunication {
-
   static const String _updateEndPoint = "/organizer/update";
   static const String _registerEndPoint = "/organizer/register";
   static const String _listEndPoint = "/organizer/list";
   static const String _decideEndPoint = "/organizer/decide";
 
-  Future<Tuple2<Response, ResponseCode>> update(OrganizerAccount body) async =>
-      await BackendCommunication()
-          .postCall(_updateEndPoint, data: jsonEncode(body));
+  Future<Tuple2<Response, ResponseCode>> update(
+          OrganizerAccountUpdate body) async =>
+      await BackendCommunication().postCallAuthorized(
+          _updateEndPoint, Token(Auth().getCurrentAccount!.token),
+          data: jsonEncode(body));
 
-  Future<Tuple2<Response, ResponseCode>> register(OrganizerAccount body) async =>
+  Future<Tuple2<Response, ResponseCode>> register(
+          OrganizerAccount body) async =>
       await BackendCommunication()
           .postCall(_registerEndPoint, data: jsonEncode(body));
 
-  Future<Tuple2<Response, ResponseCode>> listToVerify(int pageNumber, int pageSize) async {
+  Future<Tuple2<Response, ResponseCode>> listToVerify(
+      int pageNumber, int pageSize) async {
     if (Auth().getCurrentAccount == null) {
       throw Exception("Non authorized API call");
     }
@@ -38,17 +41,18 @@ class OrganizerCommunication {
       "VerificationStatusesFilter": OrganizerVerificationStatus.Waiting.index
     };
     return await BackendCommunication().getCallAuthorized(
-      _listEndPoint, Token(Auth().getCurrentAccount!.token),  params: params);
+        _listEndPoint, Token(Auth().getCurrentAccount!.token),
+        params: params);
   }
 
-  Future<Tuple2<Response, ResponseCode>> decide(Organizer organizer, bool isAccepted) async {
+  Future<Tuple2<Response, ResponseCode>> decide(
+      Organizer organizer, bool isAccepted) async {
     if (Auth().getCurrentAccount == null) {
       throw Exception("Non authorized API call");
     }
-    return await BackendCommunication()
-        .postCallAuthorized(_decideEndPoint,
-        Token(Auth().getCurrentAccount!.token),
-        data: jsonEncode({"organizerId": organizer.id, "isAccepted": isAccepted})
-    );
+    return await BackendCommunication().postCallAuthorized(
+        _decideEndPoint, Token(Auth().getCurrentAccount!.token),
+        data: jsonEncode(
+            {"organizerId": organizer.id, "isAccepted": isAccepted}));
   }
 }
