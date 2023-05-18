@@ -30,6 +30,11 @@ env:
   DEPLOYMENT_DIRECTORY: './deployment'
   DEPLOYMENT_FILE_NAME: 'konfetti-api.yml'
   NAMESPACE: 'konfetti'
+  PAYMENT_CLIENT_URL: 'http://payment-service'
+  RABBIT_MQ_HOST: 'rabbitmq'
+  RABBIT_MQ_PASSWORD: 'guest'
+  RABBIT_MQ_USERNAME: 'guest'
+  RABBIT_MQ_VIRTUALHOST: '/'
   
 jobs:
   build:
