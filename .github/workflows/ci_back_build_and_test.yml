@@ -24,8 +24,10 @@ env:
   ACR_URL: 'powoeuwacr.azurecr.io'
   APP_API_NAME: 'konfetti-api'
   APP_PAYMENT_NAME: 'konfetti-payment'
+  APP_PDF_GENERATOR_NAME: 'konfetti-pdf-generator'
   PATH_TO_API_DOCKER_FILE: 'Dockerfile.core'
   PATH_TO_PAYMENT_DOCKER_FILE: 'Dockerfile.payment'
+  PATH_TO_PDF_GENERATOR_DOCKER_FILE: 'Dockerfile.pdf_generator'
   PATH_TO_APP_SRC: '.'
   DEPLOYMENT_DIRECTORY: './deployment'
   DEPLOYMENT_FILE_NAME: 'konfetti-api.yml'
@@ -75,10 +77,14 @@ jobs:
       run: echo "IMAGE_ID_API=${{ env.ACR_URL }}/${{ env.APP_API_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
     - name: Set PAYMENT_IMAGE_ID as env variable
       run: echo "IMAGE_ID_PAYMENT=${{ env.ACR_URL }}/${{ env.APP_PAYMENT_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Set PDF_IMAGE_ID as env variable
+      run: echo "IMAGE_ID_PDF=${{ env.ACR_URL }}/${{ env.APP_PDF_GENERATOR_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
     - name: Print API_IMAGE_ID
       run: echo "IMAGE_ID_API:${{ env.IMAGE_ID_API }}"
     - name: Print PAYMENT_IMAGE_ID
       run: echo "IMAGE_ID_PAYMENT:${{ env.IMAGE_ID_PAYMENT }}"
+    - name: Print PDF_IMAGE_ID
+      run: echo "IMAGE_ID_PDF:${{ env.IMAGE_ID_PDF }}"
     - name: Login to ACR
       uses: docker/login-action@v2
       with:
@@ -89,10 +95,14 @@ jobs:
       run: docker build -f ${{ env.PATH_TO_API_DOCKER_FILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_API }}
     - name: Build docker image for payment service
       run: docker build -f ${{ env.PATH_TO_PAYMENT_DOCKER_FILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_PAYMENT }}
+    - name: Build docker image for pdf generator
+      run: docker build -f ${{ env.PATH_TO_PDF_GENERATOR_DOCKER_FILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_PDF }}
     - name: Push docker image for api
       run: docker push ${{ env.IMAGE_ID_API }}
     - name: Push docker image for payment service
       run: docker push ${{ env.IMAGE_ID_PAYMENT }}
+    - name: Push docker image for pdf genertator
+      run: docker push ${{ env.IMAGE_ID_PDF }}
       
   deploy:
     name: Deploy app to kubernetes
