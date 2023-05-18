@@ -8,6 +8,7 @@ using CrossTeamTestSuite.Tests.Admin;
 using CrossTeamTestSuite.Tests.Event;
 using CrossTeamTestSuite.Tests.Examples;
 using CrossTeamTestSuite.Tests.Organizer;
+using CrossTeamTestSuite.Tests.Ticket;
 using CrossTeamTestSuite.Tests.User;
 using CrossTeamTestSuite.TestsInfrastructure;
 
@@ -39,6 +40,7 @@ class Program
             .AddTest(new UserViewTest())
             .AddTest(new EventCreateTest())
             .AddTest(new EventListTest())
+            .AddTest(new TicketBuyTest())
             .GetExecutor()
             .ExecuteAsync();
     }
