@@ -6,10 +6,10 @@ namespace TicketManager.Core.Domain.Users;
 public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
 {
     public Guid Id { get; private init; }
-    public string Email { get; private init; } = null!;
-    public string FirstName { get; private init; } = null!;
-    public string LastName { get; private init; } = null!;
-    public DateOnly BirthDate { get; private init; }
+    public string Email { get; private set; } = null!;
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public DateOnly BirthDate { get; private set; }
 
     public DateTime DateModified { get; set; }
     
@@ -27,5 +27,17 @@ public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
     public Account GetAccount(string passwordHash)
     {
         return new Account(Id, Email, passwordHash, AccountRoles.User);
+    }
+
+    public void Update(
+        string email,
+        string firstName,
+        string lastName,
+        DateOnly birthDate)
+    {
+        Email = email;
+        FirstName = firstName;
+        LastName = lastName;
+        BirthDate = birthDate;
     }
 }
