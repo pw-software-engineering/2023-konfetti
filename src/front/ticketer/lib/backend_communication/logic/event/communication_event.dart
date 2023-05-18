@@ -64,14 +64,23 @@ class EventCommunication {
         _listEndPoint, Token(Auth().getCurrentAccount!.token),  params: params);
   }
 
-  Future<Tuple2<Response, ResponseCode>> listVerified(int pageNumber, int pageSize) async {
+  Future<Tuple2<Response, ResponseCode>> listVerified(
+      int pageNumber, int pageSize, String name, String location, String earlier, String later) async {
     Map<String, dynamic> params = {
       "PageNumber": pageNumber,
       "PageSize": pageSize,
       "ShowAscending": true,
       "SortBy": 0,
+      "EventNameFilter": name,
+      "Location": location,
       "EventStatusesFilter": EventStatus.Verified.index
     };
+    if(earlier.isNotEmpty) {
+      params.addAll({"EarlierThanInclusiveFilter": earlier});
+    }
+    if(later.isNotEmpty) {
+      params.addAll({"LaterThanInclusiveFilter": later});
+    }
     return await BackendCommunication().getCallAuthorized(
         _listEndPoint, Token(Auth().getCurrentAccount!.token),  params: params);
   }
