@@ -35,6 +35,16 @@ public class TicketBuyTest: SingleTest
         paymentConfirmInstance.SetPaymentClient();
         await paymentConfirmInstance.HandleEndpointAsync(paymentConfirmRequest);
         
+        var paymentFinishRequest = new PaymentFinishRequest
+        {
+            PaymentId = responseTicketBuy.PaymentId
+        };
         
+        var paymentFinishInstance = new PaymentFinishInstance();
+        paymentFinishInstance.SetToken(CommonTokenType.UserToken);
+        var responsePaymentFinish = await paymentFinishInstance.HandleEndpointAsync(paymentFinishRequest);
+        
+        responsePaymentFinish.Should().NotBeNull();
+        responsePaymentFinish!.TicketId.Should().NotBeEmpty();
     }
 }
