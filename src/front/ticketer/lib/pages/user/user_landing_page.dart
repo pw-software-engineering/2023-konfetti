@@ -21,7 +21,7 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final List<Event> _events = [];
 
   Future<void> _fetchMoreData() async {
-    final res = await BackendCommunication().event.list(_pageNo, _pageSize);
+    final res = await BackendCommunication().event.listVerified(_pageNo, _pageSize);
     setState(() {
       int before = _events.length;
       for (var ev in res.item1.data["items"]) {
