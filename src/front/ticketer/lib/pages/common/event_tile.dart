@@ -258,10 +258,16 @@ class _EventTileState extends State<EventTile> {
               contentPadding: EdgeInsets.symmetric(horizontal: 5),
             ),
             onQtyChanged: (v) {
-              if (v == 0) return;
-              setState(() {
-                _seatsInSectors[index] = v!.toInt();
-              });
+              Future.delayed(
+                Duration.zero,
+                () {
+                  setState(
+                    () {
+                      _seatsInSectors[index] = v!.toInt();
+                    },
+                  );
+                },
+              );
             },
           ),
         ),

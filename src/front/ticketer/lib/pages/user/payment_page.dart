@@ -19,6 +19,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   late Event _event;
   late List<int> _seatsInSectors;
+  late List<String> ticketsIds = List.empty(growable: true);
 
   Widget _getContent() {
     return SingleChildScrollView(
@@ -126,7 +127,8 @@ class _PaymentPageState extends State<PaymentPage> {
             child: ElevatedButton(
               onPressed: () => {
                 // Navigator.pop(context),
-                // todo: link action here
+                // todo: handle returned ids into ticketsIds list
+                // and continue with logic:
                 for (int i = 0; i <= _seatsInSectors.length; ++i)
                   {
                     if (_seatsInSectors[i] > 0)
