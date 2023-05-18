@@ -116,6 +116,10 @@ jobs:
         echo "${{ env.DOMAIN }}"
         echo "${{ env.IMAGE_ID_KONFETTI_API }}"
     - name: Substitute environment variables in app deployment file
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+        DATABASE_CONNECTION_STRING: ${{ secrets.DATABASE_CONNECTION_STRING }}
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }}"
     - name: Deploy app to the cluster
       run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }} --wait
