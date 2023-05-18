@@ -19,11 +19,11 @@ public class GetQueryParamConverter<TRequest>
             new StringValueConverter(),
             new DateOnlyValueConverter(),
             new SimpleValueConverter<int>(),
-            new SimpleValueConverter<OrganizerListSortByDto>(),
+            new EnumValueConverter<OrganizerListSortByDto>(),
             new SimpleValueConverter<bool>(),
             new ListValueConverter<int>(),
-            new ListValueConverter<TaxIdTypeDto>(),
-            new ListValueConverter<VerificationStatusDto>(),
+            new ListValueConverter<TaxIdTypeDto>(new EnumValueConverter<TaxIdTypeDto>()),
+            new ListValueConverter<VerificationStatusDto>(new EnumValueConverter<VerificationStatusDto>()),
             new ListValueConverter<string>(new StringValueConverter()),
         };
     }
