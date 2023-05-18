@@ -10,7 +10,7 @@ public class EventCreateInstance: EndpointInstance<EventCreateRequest, IdRespons
 {
     public override async Task<IdResponse?> HandleEndpointAsync(EventCreateRequest request)
     {
-        var response = await HttpClient.CallEndpointAsync<EventCreateRequest, IdResponse>(request);
+        var response = await HttpClient.CallEndpointSuccessAsync<EventCreateRequest, IdResponse>(request);
         var eventRepository = DataAccessSingleton.GetInstance().EventRepository;
         var @event = new Event
         {

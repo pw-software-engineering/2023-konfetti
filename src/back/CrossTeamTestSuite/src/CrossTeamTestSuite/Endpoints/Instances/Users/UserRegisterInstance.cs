@@ -9,7 +9,7 @@ public class UserRegisterInstance: EndpointInstance<UserRegisterRequest>
 {
     public override async Task HandleEndpointAsync(UserRegisterRequest request)
     {
-        await HttpClient.CallEndpointAsync(request);
+        await HttpClient.CallEndpointSuccessAsync(request);
         
         var dataAccess = DataAccessSingleton.GetInstance();
         var user = new User(request.Email, request.Password, request.FirstName, request.LastName, request.BirthDate);
