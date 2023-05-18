@@ -9,10 +9,12 @@ namespace TicketManager.Core.Services.Endpoints.Organizers;
 public class UpdateOrganizerEndpoint : Endpoint<UpdateOrganizerRequest>
 {
     private readonly Repository<Organizer, Guid> organizers;
+    private readonly Repository<Account, Guid> accounts;
 
-    public UpdateOrganizerEndpoint(Repository<Organizer, Guid> organizers)
+    public UpdateOrganizerEndpoint(Repository<Organizer, Guid> organizers, Repository<Account, Guid> accounts)
     {
         this.organizers = organizers;
+        this.accounts = accounts;
     }
 
     public override void Configure()
@@ -33,6 +35,14 @@ public class UpdateOrganizerEndpoint : Endpoint<UpdateOrganizerRequest>
             (TaxIdType?)req.TaxIdType ?? organizer.TaxIdType,
             req.DisplayName ?? organizer.DisplayName,
             req.PhoneNumber ?? organizer.PhoneNumber);
+
+        if (req.Email is not null)
+        {
+            var account = await accounts.FindAndEnsureExistenceAsync(req.AccountId, ct);
+            
+            account.UpdateEmail(req.Email);
+            accounts.Update(account);
+        }
 
         await organizers.UpdateAsync(organizer, ct);
 
