@@ -29,6 +29,7 @@ env:
   PATH_TO_APP_SRC: '.'
   DEPLOYMENT_DIRECTORY: './deployment'
   DEPLOYMENT_FILE_NAME: 'konfetti-api.yml'
+  NAMESPACE: 'konfetti'
   
 jobs:
   build:
