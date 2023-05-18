@@ -1,6 +1,8 @@
 using CrossTeamTestSuite.Data;
 using CrossTeamTestSuite.Endpoints.Contracts.Tickets;
+using CrossTeamTestSuite.Endpoints.Instances.Tickets;
 using CrossTeamTestSuite.TestsInfrastructure;
+using FluentAssertions;
 
 namespace CrossTeamTestSuite.Tests.Ticket;
 
@@ -15,6 +17,13 @@ public class TicketBuyTest: SingleTest
             SectorName = DataAccessSingleton.GetInstance().EventRepository.DefaultEvent!.Sectors.First().Name,
             NumberOfSeats = 4
         };
+        var ticketBuyInstance = new TicketBuyInstance();
+        ticketBuyInstance.SetToken(CommonTokenType.UserToken);
 
+        var response = await ticketBuyInstance.HandleEndpointAsync(ticketBuyRequest);
+        response.Should().NotBeNull();
+        response!.PaymentId.Should().NotBeEmpty();
+        
+        
     }
 }
