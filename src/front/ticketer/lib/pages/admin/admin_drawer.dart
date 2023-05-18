@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/admin/events/admin_verify_events_page.dart';
+import 'package:ticketer/pages/admin/landing/admin_landing_page.dart';
 
 class AdminNavigationDrawer extends StatefulWidget {
   const AdminNavigationDrawer({
@@ -64,10 +66,23 @@ class _AdminNavigationDrawerState extends State<AdminNavigationDrawer> {
   }
 
   Future<void> signOut(BuildContext context) async {
-    Navigator.pop(context);
+    Navigator.of(context).popUntil((route) => route.isFirst);
     await Auth().logOut();
   }
 
+  Future<void> launchVerifyOrganizers(BuildContext context) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const AdminLandingPage()));
+  }
+
+  Future<void> launchVerifyEvents(BuildContext context) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const AdminVerifyEventsPage()));
+  }
 
   Widget buildMenuItems(BuildContext context) {
     return Container(
@@ -79,6 +94,19 @@ class _AdminNavigationDrawerState extends State<AdminNavigationDrawer> {
             leading: const Icon(Icons.logout),
             title: const Text("Sign out"),
             onTap: () => {signOut(context)},
+          ),
+          const Divider(
+            color: Colors.black54,
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_box),
+            title: const Text("Organizers to verify"),
+            onTap: () => {launchVerifyOrganizers(context)},
+          ),
+          ListTile(
+            leading: const Icon(Icons.calendar_month),
+            title: const Text("Events to verify"),
+            onTap: () => {launchVerifyEvents(context)},
           ),
         ],
       ),
