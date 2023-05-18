@@ -1,5 +1,7 @@
 using CrossTeamTestSuite.Data;
+using CrossTeamTestSuite.Endpoints.Contracts.Payments;
 using CrossTeamTestSuite.Endpoints.Contracts.Tickets;
+using CrossTeamTestSuite.Endpoints.Instances.Payments;
 using CrossTeamTestSuite.Endpoints.Instances.Tickets;
 using CrossTeamTestSuite.TestsInfrastructure;
 using FluentAssertions;
@@ -20,9 +22,18 @@ public class TicketBuyTest: SingleTest
         var ticketBuyInstance = new TicketBuyInstance();
         ticketBuyInstance.SetToken(CommonTokenType.UserToken);
 
-        var response = await ticketBuyInstance.HandleEndpointAsync(ticketBuyRequest);
-        response.Should().NotBeNull();
-        response!.PaymentId.Should().NotBeEmpty();
+        var responseTicketBuy = await ticketBuyInstance.HandleEndpointAsync(ticketBuyRequest);
+        responseTicketBuy.Should().NotBeNull();
+        responseTicketBuy!.PaymentId.Should().NotBeEmpty();
+
+        var paymentConfirmRequest = new PaymentConfirmRequest
+        {
+            Id = responseTicketBuy.PaymentId
+        };
+        
+        var paymentConfirmInstance = new PaymentConfirmInstance();
+        paymentConfirmInstance.SetPaymentClient();
+        await paymentConfirmInstance.HandleEndpointAsync(paymentConfirmRequest);
         
         
     }
