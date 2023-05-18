@@ -10,10 +10,14 @@ Future<void> changePasswordDialog(BuildContext context) async {
         content: PasswordEntry(),
         actions: [
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              fixedSize: const Size(90, 30),
+            ),
             onPressed: () => {
               Navigator.pop(context),
             },
-            child: const Text('OK'),
+            child: const Text("Cancel"),
           ),
         ],
       );
