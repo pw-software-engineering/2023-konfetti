@@ -7,6 +7,6 @@ public class OrganizerViewInstance: EndpointInstance<OrganizerViewRequest, Organ
 {
     public override async Task<OrganizerDto?> HandleEndpointAsync(OrganizerViewRequest request)
     {
-        return await HttpClient.CallEndpointAsync<OrganizerViewRequest, OrganizerDto>(request);
+        return await HttpClient.CallEndpointSuccessAsync<OrganizerViewRequest, OrganizerDto>(request);
     }
 }

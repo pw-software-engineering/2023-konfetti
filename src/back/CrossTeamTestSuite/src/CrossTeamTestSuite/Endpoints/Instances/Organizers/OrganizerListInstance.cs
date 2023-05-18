@@ -9,7 +9,7 @@ public class OrganizerListInstance: EndpointInstance<OrganizerListRequest, Pagin
 {
     public override async Task<PaginatedResponse<OrganizerDto>?> HandleEndpointAsync(OrganizerListRequest request)
     {
-        var response = await HttpClient.CallEndpointAsync<OrganizerListRequest, PaginatedResponse<OrganizerDto>>(request);
+        var response = await HttpClient.CallEndpointSuccessAsync<OrganizerListRequest, PaginatedResponse<OrganizerDto>>(request);
         return response;
     }
 }

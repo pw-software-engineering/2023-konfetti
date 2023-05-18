@@ -9,7 +9,7 @@ public class OrganizerRegisterInstance: EndpointInstance<OrganizerRegisterReques
 {
     public override async Task HandleEndpointAsync(OrganizerRegisterRequest request)
     {
-        await HttpClient.CallEndpointAsync(request);
+        await HttpClient.CallEndpointSuccessAsync(request);
 
         var dataAccess = DataAccessSingleton.GetInstance();
         var organizer = new Organizer(request.CompanyName, request.Address, (TaxIdType)request.TaxIdType, request.TaxId,

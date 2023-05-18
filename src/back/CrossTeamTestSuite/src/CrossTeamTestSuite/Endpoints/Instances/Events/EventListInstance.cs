@@ -8,6 +8,6 @@ public class EventListInstance: EndpointInstance<EventListRequest, PaginatedResp
 {
     public override async Task<PaginatedResponse<EventDto>?> HandleEndpointAsync(EventListRequest request)
     {
-        return await HttpClient.CallEndpointAsync<EventListRequest, PaginatedResponse<EventDto>>(request);
+        return await HttpClient.CallEndpointSuccessAsync<EventListRequest, PaginatedResponse<EventDto>>(request);
     }
 }

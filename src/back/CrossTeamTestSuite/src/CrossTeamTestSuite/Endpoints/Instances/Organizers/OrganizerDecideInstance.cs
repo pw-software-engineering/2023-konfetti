@@ -8,6 +8,6 @@ public class OrganizerDecideInstance: EndpointInstance<OrganizerDecideRequest>
 {
     public override async Task HandleEndpointAsync(OrganizerDecideRequest request)
     {
-        await HttpClient.CallEndpointAsync(request);
+        await HttpClient.CallEndpointSuccessAsync(request);
     }
 }

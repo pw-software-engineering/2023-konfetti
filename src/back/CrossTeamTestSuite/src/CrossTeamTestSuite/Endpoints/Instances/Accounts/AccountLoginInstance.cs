@@ -8,7 +8,7 @@ public class AccountLoginInstance: EndpointInstance<AccountLoginRequest, Account
 
     public override async Task<AccountLoginResponse?> HandleEndpointAsync(AccountLoginRequest request)
     {
-        var token =  await HttpClient.CallEndpointAsync<AccountLoginRequest, AccountLoginResponse>(request);
+        var token =  await HttpClient.CallEndpointSuccessAsync<AccountLoginRequest, AccountLoginResponse>(request);
         return token;
     }
 }
