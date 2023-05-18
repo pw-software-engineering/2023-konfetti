@@ -9,3 +9,13 @@ class Credentials {
         'password': password,
       };
 }
+
+class Password {
+  String password;
+
+  Password(this.password);
+
+  Map<String, dynamic> toJson() => {
+        'password': password,
+      };
+}

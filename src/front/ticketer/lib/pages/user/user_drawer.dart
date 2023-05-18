@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/common/password_change_dialog.dart';
 import 'package:ticketer/pages/user/user_edit_data.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
@@ -55,6 +56,10 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
     );
   }
 
+  Future<void> showChangePasswordDialog(BuildContext context) async {
+    await changePasswordDialog(context);
+  }
+
   Future<void> launchEditAccount(BuildContext context) async {
     Navigator.pop(context);
     Navigator.push(
@@ -80,6 +85,11 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
             leading: const Icon(Icons.edit),
             title: const Text("Edit Data"),
             onTap: () => {launchEditAccount(context)},
+          ),
+          ListTile(
+            leading: const Icon(Icons.password),
+            title: const Text("Change password"),
+            onTap: () => {showChangePasswordDialog(context)},
           ),
           const Divider(
             color: Colors.black54,
