@@ -1,12 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-COPY ./src/Core/TicketManager.Core.Api/*.csproj /restore/TicketManager.Core.Api/
-COPY ./src/Core/TicketManager.Core.Contracts/*.csproj /restore/TicketManager.Core.Contracts/
-COPY ./src/Core/TicketManager.Core.Domain/*.csproj /restore/TicketManager.Core.Domain/
-COPY ./src/Core/TicketManager.Core.Services/*.csproj /restore/TicketManager.Core.Services/
-RUN dotnet restore "/restore/TicketManager.Core.Api/TicketManager.Core.Api.csproj"
+COPY ./src/Core/TicketManager.Core.Api/*.csproj /restore/Core/TicketManager.Core.Api/
+COPY ./src/Core/TicketManager.Core.Contracts/*.csproj /restore/Core/TicketManager.Core.Contracts/
+COPY ./src/Core/TicketManager.Core.Domain/*.csproj /restore/Core/TicketManager.Core.Domain/
+COPY ./src/Core/TicketManager.Core.Services/*.csproj /restore/Core/TicketManager.Core.Services/
+COPY ./src/PdfGenerator/TicketManager.PdfGenerator.Contracts/*.csproj /restore/PdfGenerator/TicketManager.PdfGenerator.Contracts/
+
+RUN dotnet restore "/restore/Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj"
 WORKDIR /src
 COPY ./src/. .
-RUN cp -r /restore/* Core/
+RUN cp -r /restore/PdfGenerator/* PdfGenerator/
+RUN cp -r /restore/Core/* Core/
 RUN dotnet publish "Core/TicketManager.Core.Api/TicketManager.Core.Api.csproj" -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
