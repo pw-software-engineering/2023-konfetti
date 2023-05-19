@@ -36,25 +36,47 @@ void main() async {
         () {
       assert(BackendCommunication().isInitialized == false);
       var organizer = OrganizerAccount(
-          "companyName",
-          "address",
-          TaxType.NIP,
-          "123123123",
-          "displayName",
-          "email@email.com",
-          "password",
-          "123123123");
+        "companyName",
+        "address",
+        TaxType.NIP,
+        "123123123",
+        "displayName",
+        "email@email.com",
+        "password",
+        "123123123",
+      );
+      var organizerUpdate = OrganizerAccountUpdate(
+        "companyName",
+        "address",
+        TaxType.NIP,
+        "123123123",
+        "displayName",
+        "email@email.com",
+        "123123123",
+      );
       var user = User(
-          "firstName", "lastName", "2020-10-10", "email@email.com", "password");
+        "firstName",
+        "lastName",
+        "2020-10-10",
+        "email@email.com",
+        "password",
+      );
+      var userUpdate = UserUpdate(
+        "firstName",
+        "lastName",
+        "2020-10-10",
+        "email@email.com",
+      );
       expect(() => BackendCommunication().postCall("account/login"),
           throwsA(anything));
       expect(() => BackendCommunication().organizer.register(organizer),
           throwsA(anything));
-      expect(() => BackendCommunication().organizer.update(organizer),
+      expect(() => BackendCommunication().organizer.update(organizerUpdate),
           throwsA(anything));
       expect(
           () => BackendCommunication().user.register(user), throwsA(anything));
-      expect(() => BackendCommunication().user.update(user), throwsA(anything));
+      expect(() => BackendCommunication().user.update(userUpdate),
+          throwsA(anything));
       expect(
           () => BackendCommunication()
               .account

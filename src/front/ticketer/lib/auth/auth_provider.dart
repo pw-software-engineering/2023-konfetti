@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,6 +20,7 @@ class AuthProvider {
   AuthProvider() : _controller = StreamController<Account?>();
   final StreamController<Account?> _controller;
   static const String loginEndpoint = '/account/login';
+  static const String changePasswordEndpoint = '/account/updatePassword';
   static const String organizerRegisterEndpoint = '/organizer/register';
   static const String userRegisterEndpoint = '/user/register';
   static const Map<String, dynamic> headers = <String, String>{
@@ -124,6 +126,20 @@ class AuthProvider {
       return token.item2;
     } catch (e) {
       log("Error when trying to log-in: ${e.toString()}");
+      return ResponseCode.noResponseCode;
+    }
+  }
+
+  Future<ResponseCode> changePassword(String newPassword) async {
+    try {
+      var token = await BackendCommunication().postCallAuthorized(
+        changePasswordEndpoint,
+        Token(_currentAccount!.token),
+        data: jsonEncode(Password(newPassword)),
+      );
+      return token.item2;
+    } catch (e) {
+      log("Error when trying to change password: ${e.toString()}");
       return ResponseCode.noResponseCode;
     }
   }

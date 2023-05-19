@@ -5,7 +5,7 @@ using TicketManager.PaymentService.Services.DataAccess.Repositories;
 
 namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 
-public class CancelPaymentEndpoint: Endpoint<CancelPaymentRequest, EmptyResponse>
+public class CancelPaymentEndpoint : Endpoint<CancelPaymentRequest>
 {
     private readonly Repository<Payment, Guid> payments;
 

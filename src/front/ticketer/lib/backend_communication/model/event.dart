@@ -1,6 +1,7 @@
 import 'package:ticketer/backend_communication/model/sector.dart';
 
 class Event {
+  String? id;
   String name;
   String description;
   String location;
@@ -8,6 +9,7 @@ class Event {
   List<Sector> sectors;
 
   Event(
+    this.id,
     this.name,
     this.description,
     this.location,
@@ -18,6 +20,7 @@ class Event {
   factory Event.fromJson(Map<String, dynamic> json) {
     List<Sector> sectors = _getSectorsFromJson(json);
     return Event(
+      json['id'],
       json['name'],
       json['description'],
       json['location'],
@@ -35,6 +38,7 @@ class Event {
   }
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'name': name,
         'description': description,
         'location': location,

@@ -4,6 +4,7 @@ import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
+import 'package:ticketer/pages/organizer/organizer_event_edit.dart';
 import 'package:ticketer/pages/user/payment_page.dart';
 
 class EventTile extends StatefulWidget {
@@ -99,11 +100,28 @@ class _EventTileState extends State<EventTile> {
     return [
       ElevatedButton(
         onPressed: () => {
+          _navigateToEdit()
+          // todo: link edit actions
+        },
+        child: const Text('Edit'),
+      ),
+      ElevatedButton(
+        onPressed: () => {
           Navigator.pop(context),
         },
         child: const Text('OK'),
       ),
     ];
+  }
+
+  void _navigateToEdit() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => EventEditPage(event: _event)),
+      ),
+    );
   }
 
   List<Widget> _getPurchasableActions() {

@@ -1,4 +1,6 @@
 using FastEndpoints;
+using FluentAssertions;
+using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TicketManager.Core.Contracts.Accounts;
@@ -19,7 +21,11 @@ namespace TicketManager.IntegrationTests;
 
 public class TestBase : IAsyncDisposable
 {
-    private readonly TicketManagerApp app;
+    private readonly TicketManagerApp coreApp;
+    private readonly PaymentServiceApp paymentServiceApp;
+
+    protected readonly HttpClient PaymentClient;
+    
     protected readonly HttpClient AnonymousClient;
     protected readonly HttpClient UserClient;
     protected readonly HttpClient OrganizerClient;
@@ -30,20 +36,35 @@ public class TestBase : IAsyncDisposable
 
     public TestBase()
     {
-        app = new();
-        app.InitializeAsync().Wait();
-        AnonymousClient = app.CreateClient();
+        paymentServiceApp = new();
+        paymentServiceApp.InitializeAsync().Wait();
+        PaymentClient = paymentServiceApp.CreateClient();
+        PaymentClient.DefaultRequestHeaders.Add("pay_api_key", "ApiKey");
+        
+        coreApp = new(PaymentClient);
+        coreApp.InitializeAsync().Wait();
+        AnonymousClient = coreApp.CreateClient();
 
         var password = "Password1";
         
-        UserClient = app.CreateClient();
+        UserClient = coreApp.CreateClient();
         ConfigureUserAsync(password).Wait();
 
-        AdminClient = app.CreateClient(); ;
+        AdminClient = coreApp.CreateClient(); ;
         ConfigureAdminAsync(password).Wait();
 
-        OrganizerClient = app.CreateClient();
+        OrganizerClient = coreApp.CreateClient();
         ConfigureOrganizerAsync(password).Wait();
+    }
+
+    public async Task WaitForProcessingAsync()
+    {
+        var harness = coreApp.Services.GetTestHarness();
+        var bus = harness.Bus;
+        var activityMonitor = bus.CreateBusActivityMonitor();
+        await activityMonitor.AwaitBusInactivity(TimeSpan.FromSeconds(15));
+        var consumed = await harness.Consumed.Any();
+        consumed.Should().BeTrue();
     }
 
     private async Task ConfigureOrganizerAsync(string password)
@@ -97,7 +118,7 @@ public class TestBase : IAsyncDisposable
 
     private async Task ConfigureAdminAsync(string password)
     {
-        using var scope = app.Services.CreateScope();
+        using var scope = coreApp.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
 
         var accounts = new Repository<Account, Guid>(dbContext);
@@ -144,6 +165,7 @@ public class TestBase : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await app.DisposeAsync();
+        await coreApp.DisposeAsync();
+        await paymentServiceApp.DisposeAsync();
     }
 }

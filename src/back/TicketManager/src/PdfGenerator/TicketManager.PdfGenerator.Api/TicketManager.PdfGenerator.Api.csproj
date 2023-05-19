@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.16.0" />
+      <PackageReference Include="itext7" Version="7.2.5" />
+      <PackageReference Include="MassTransit" Version="8.0.14" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Core\TicketManager.Core.Contracts\TicketManager.Core.Contracts.csproj" />
+      <ProjectReference Include="..\TicketManager.PdfGenerator.Contracts\TicketManager.PdfGenerator.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

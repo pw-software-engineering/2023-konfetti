@@ -106,6 +106,9 @@ docker image prune
 
 Some essential variables are stored in file `variables.env` which has development environment variables used by main app. For production purposes those values should be changed approprietly
 
+Secrets are stored in file `secrets.env`. This file is not stored in code repository. Values stored there should be:
+- BlobStorageConnectionString='Blob.Connection.String'
+
 ### Test status
 
 On master

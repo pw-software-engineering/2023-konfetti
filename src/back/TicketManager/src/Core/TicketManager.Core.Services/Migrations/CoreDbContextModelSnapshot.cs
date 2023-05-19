@@ -52,7 +52,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -78,6 +77,9 @@ namespace TicketManager.Core.Services.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -96,8 +98,10 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -136,7 +140,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -184,7 +187,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.Property<string>("TaxId")
@@ -201,6 +203,40 @@ namespace TicketManager.Core.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Organizers");
+                });
+
+            modelBuilder.Entity("TicketManager.Core.Domain.Tickets.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateModified")
+                        .IsConcurrencyToken()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsPdfGenerated")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("RowVersion");
+
+                    b.Property<Guid>("SectorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("TicketManager.Core.Domain.Users.User", b =>
@@ -236,7 +272,6 @@ namespace TicketManager.Core.Services.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
-                        .HasDefaultValue(new byte[0])
                         .HasColumnName("RowVersion");
 
                     b.HasKey("Id");
@@ -248,25 +283,31 @@ namespace TicketManager.Core.Services.Migrations
                 {
                     b.OwnsMany("TicketManager.Core.Domain.Events.SeatReservation", "SeatReservations", b1 =>
                         {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
+                            b1.Property<Guid>("SectorId")
                                 .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
                             b1.Property<DateTime>("CreationDate")
                                 .HasColumnType("timestamp with time zone");
 
+                            b1.Property<bool>("IsClosed")
+                                .HasColumnType("boolean");
+
+                            b1.Property<Guid>("PaymentId")
+                                .HasColumnType("uuid");
+
                             b1.Property<int>("ReservedSeatNumber")
                                 .HasColumnType("integer");
-
-                            b1.Property<Guid>("SectorId")
-                                .HasColumnType("uuid");
 
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("SectorId");
+                            b1.HasKey("SectorId", "Id");
 
                             b1.ToTable("SeatReservation");
 
@@ -274,7 +315,64 @@ namespace TicketManager.Core.Services.Migrations
                                 .HasForeignKey("SectorId");
                         });
 
+                    b.OwnsMany("TicketManager.Core.Domain.Events.TakenSeat", "TakenSeats", b1 =>
+                        {
+                            b1.Property<Guid>("SectorId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ColumnNumber")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("RowNumber")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("SectorId", "Id");
+
+                            b1.ToTable("TakenSeat");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SectorId");
+                        });
+
                     b.Navigation("SeatReservations");
+
+                    b.Navigation("TakenSeats");
+                });
+
+            modelBuilder.Entity("TicketManager.Core.Domain.Tickets.Ticket", b =>
+                {
+                    b.OwnsMany("TicketManager.Core.Domain.Tickets.TicketSeat", "Seats", b1 =>
+                        {
+                            b1.Property<Guid>("TicketId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("Column")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Row")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("TicketId", "Id");
+
+                            b1.ToTable("TicketSeat");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TicketId");
+                        });
+
+                    b.Navigation("Seats");
                 });
 #pragma warning restore 612, 618
         }

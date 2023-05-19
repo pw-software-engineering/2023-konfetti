@@ -45,7 +45,7 @@ class MockOrganizerCommunication extends _i1.Mock
     implements _i3.OrganizerCommunication {
   @override
   _i4.Future<_i2.Tuple2<_i5.Response<dynamic>, _i6.ResponseCode>> update(
-          _i7.OrganizerAccount? body) =>
+          _i7.OrganizerAccountUpdate? body) =>
       (super.noSuchMethod(
         Invocation.method(
           #update,

@@ -7,6 +7,7 @@ using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess;
 using TicketManager.Core.Services.DataAccess.DtoMappers;
 using TicketManager.Core.Services.Extensions;
+using TicketManager.Core.Services.Helpers;
 
 namespace TicketManager.Core.Services.Endpoints.Events;
 
@@ -29,6 +30,8 @@ public class ListEventsEndpoint : Endpoint<ListEventsRequest, PaginatedResponse<
     {
         var result = await dbContext
             .Events
+            .Where(e => !e.IsDeleted)
+            .HandleEventFilter(req)
             .GroupJoin(dbContext.Sectors, e => e.Id, s => s.EventId, (e, s) => new { Event = e, Sectors = s })
             .Select(e => new EventDto
             {
@@ -38,6 +41,7 @@ public class ListEventsEndpoint : Endpoint<ListEventsRequest, PaginatedResponse<
                 Description = e.Event.Description,
                 Location = e.Event.Location,
                 Date = e.Event.Date,
+                Status = (EventStatusDto)e.Event.Status,
                 Sectors = e.Sectors.Select(s => new SectorDto
                 {
                     Name = s.Name,

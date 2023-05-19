@@ -31,12 +31,13 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
 
     public override async Task HandleAsync(TicketBuyRequest req, CancellationToken ct)
     {
-        var sectorId = await coreDbContext.Sectors.Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
-            .Select(s => s.Id)
-            .FirstOrDefaultAsync(ct);
-        var sector = await sectorRepository.FindAndEnsureExistenceAsync(sectorId, ct);
+        var sector = await coreDbContext
+            .Sectors
+            .AsTracking()
+            .Where(s => s.EventId == req.EventId && s.Name == req.SectorName)
+            .FirstAsync(ct);
 
-        var freeSeats = sector.NumberOfSeats - sector.SeatReservations.Sum(sr => sr.ReservedSeatNumber);
+        var freeSeats = sector.GetNumberOfFreeSeats();
         
         if (freeSeats < req.NumberOfSeats)
         {
@@ -44,10 +45,6 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-
-        var seatReservation = sector.AddSeatReservation(req.UserId, req.NumberOfSeats);
-        coreDbContext.Add(seatReservation);
-        await sectorRepository.UpdateAsync(sector, ct);
         
         var paymentId = await paymentClient.PostPaymentCreationAsync(ct);
 
@@ -56,7 +53,10 @@ public class TicketBuyEndpoint: Endpoint<TicketBuyRequest, TicketPaymentDto>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-        
+
+        sector.AddSeatReservation(req.UserId, req.NumberOfSeats, paymentId.Value);
+        await sectorRepository.UpdateAsync(sector, ct);
+
         await SendAsync(new TicketPaymentDto{PaymentId = (Guid)paymentId}, cancellation: ct);
     }
 }

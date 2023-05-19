@@ -5,6 +5,7 @@ using TicketManager.Core.Domain.Accounts;
 using TicketManager.Core.Domain.Common;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Domain.Organizer;
+using TicketManager.Core.Domain.Tickets;
 using TicketManager.Core.Domain.Users;
 using TicketManager.Core.Services.Services.PasswordManagers;
 
@@ -17,6 +18,7 @@ public class CoreDbContext : DbContext
     public virtual DbSet<Account> Accounts => Set<Account>();
     public DbSet<Event> Events => Set<Event>();
     public DbSet<Sector> Sectors => Set<Sector>();
+    public DbSet<Ticket> Tickets => Set<Ticket>();
 
     public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
     { }
@@ -35,6 +37,7 @@ public class CoreDbContext : DbContext
         ConfigureAccounts(modelBuilder);
         ConfigureEvents(modelBuilder);
         ConfigureSectors(modelBuilder);
+        ConfigureTickets(modelBuilder);
     }
 
     private void ConfigureUsers(ModelBuilder modelBuilder)
@@ -98,13 +101,20 @@ public class CoreDbContext : DbContext
         {
             cfg.HasKey(s => s.Id);
             cfg.Property(s => s.Name).HasMaxLength(StringLengths.ShortString);
-            cfg.OwnsMany(s => s.SeatReservations, scfg =>
-            {
-                scfg.HasKey(s => s.Id);
-                scfg.WithOwner().HasForeignKey(s => s.SectorId);
-                scfg.Property(s => s.CreationDate);
-            });
+            cfg.OwnsMany(s => s.SeatReservations);
+            cfg.OwnsMany(s => s.TakenSeats);
             
+            cfg.IsOptimisticConcurrent();
+        });
+    }
+    
+    private void ConfigureTickets(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Ticket>(cfg =>
+        {
+            cfg.HasKey(e => e.Id);
+            cfg.OwnsMany(e => e.Seats);
+
             cfg.IsOptimisticConcurrent();
         });
     }
@@ -118,8 +128,8 @@ public static class ModelBuilderExtensions
         cfg.Property<byte[]>("RowVersion")
             .HasColumnName("RowVersion")
             .IsRowVersion()
-            .IsRequired()
-            .HasDefaultValue(Array.Empty<byte>());
+            .IsRequired();
+            // .HasDefaultValue(Array.Empty<byte>());
         cfg.Property(e => e.DateModified).IsConcurrencyToken();
     }
 }

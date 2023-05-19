@@ -11,11 +11,14 @@ services:
     networks:
       - db
       - pay
+      - rabbit
     env_file:
       - variables.env
     depends_on:
       - api-postgres
       - payment-service
+      - rabbitmq
+      - pdf-generator
   api-postgres:
     container_name: api-database
     image: "postgres:latest"
@@ -39,10 +42,34 @@ services:
       - pay
     env_file:
       - variables.env
+  rabbitmq:
+    container_name: 'rabbitmq'
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - rabbit
+  pdf-generator:
+    container_name: pdf-generator
+    image: pdf-generator
+    build:
+      context: .
+      dockerfile: Dockerfile.pdf_generator
+    networks:
+      - rabbit
+    env_file:
+      - variables.env
+      - secrets.env
+    depends_on:
+      - rabbitmq
 networks:
   db:
     name: db
     driver: bridge
   pay:
     name: pay
+    driver: bridge
+  rabbit:
+    name: rabbit
     driver: bridge

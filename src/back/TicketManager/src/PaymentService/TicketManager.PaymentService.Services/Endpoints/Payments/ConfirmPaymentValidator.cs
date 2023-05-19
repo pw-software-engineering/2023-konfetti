@@ -9,16 +9,10 @@ using TicketManager.PaymentService.Services.Services.Mockables;
 
 namespace TicketManager.PaymentService.Services.Endpoints.Payments;
 
-public class ConfirmPaymentValidator: Validator<ConfirmPaymentRequest>
+public class ConfirmPaymentValidator : Validator<ConfirmPaymentRequest>
 {
-    private readonly IServiceScopeFactory scopeFactory;
-    private readonly MockablePaymentDbResolver dbResolver;
-    
-    public ConfirmPaymentValidator(IServiceScopeFactory scopeFactory, MockablePaymentDbResolver dbResolver)
+    public ConfirmPaymentValidator()
     {
-        this.scopeFactory = scopeFactory;
-        this.dbResolver = dbResolver;
-
         RuleFor(req => req.Id)
             .MustAsync(IsIdPresentAsync)
             .WithCode(ConfirmPaymentRequest.ErrorCodes.PaymentDoesNotExist)
@@ -33,34 +27,28 @@ public class ConfirmPaymentValidator: Validator<ConfirmPaymentRequest>
     
     private async Task<bool> IsIdPresentAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-        
-        return await dbResolver.Resolve(scope)
+        return await Resolve<PaymentDbContext>()
             .Payments
             .AnyAsync(p => p.Id == id, cancellationToken);
     }
     
     private async Task<bool> IsNotDecidedAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-        
-        var payment = await dbResolver.Resolve(scope)
+        var payment = await Resolve<PaymentDbContext>()
             .Payments
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
-
+    
         return !payment?.IsDecided ?? true; 
     }
     
     private async Task<bool> HasNotExpiredAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var scope = scopeFactory.CreateScope();
-
-        var payment = await dbResolver.Resolve(scope)
+        var payment = await Resolve<PaymentDbContext>()
             .Payments
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
-
+    
         return !payment?.HasExpired ?? true; 
     }
 }

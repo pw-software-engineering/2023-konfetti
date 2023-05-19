@@ -1,5 +1,6 @@
 using System.Reflection;
 using FastEndpoints;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using TicketManager.Core.Domain.Events;
 using TicketManager.Core.Services.DataAccess;
@@ -13,6 +14,7 @@ using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.PasswordManagers;
 using TicketManager.Core.Services.Services.TokenManager;
 using TicketManager.Core.ServicesTests.Endpoints.Roles.RoleTests;
+using Event = TicketManager.Core.Domain.Events.Event;
 
 namespace TicketManager.Core.ServicesTests.Endpoints.Roles;
 
@@ -51,6 +53,9 @@ public class RoleTestsBase
 
         var paymentClientMock = new Mock<PaymentClient>(new HttpClient());
         dependencies.Add(typeof(PaymentClient), paymentClientMock.Object);
+
+        var busMock = new Mock<IBus>();
+        dependencies.Add(typeof(IBus), busMock.Object);
     }
 
     public RoleTestInstance<T> GetRoleTestInstance<T>() where T : BaseEndpoint

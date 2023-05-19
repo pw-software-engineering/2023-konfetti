@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/pages/common/password_change_dialog.dart';
+import 'package:ticketer/pages/user/user_edit_data.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
   const UserNavigationDrawer({
@@ -54,10 +56,18 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
     );
   }
 
+  Future<void> showChangePasswordDialog(BuildContext context) async {
+    await changePasswordDialog(context);
+  }
+
   Future<void> launchEditAccount(BuildContext context) async {
     Navigator.pop(context);
-
-    throw UnimplementedError("This is not implemented yet");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const UserDataEdit()),
+      ),
+    );
   }
 
   Future<void> signOut(BuildContext context) async {
@@ -75,6 +85,11 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
             leading: const Icon(Icons.edit),
             title: const Text("Edit Data"),
             onTap: () => {launchEditAccount(context)},
+          ),
+          ListTile(
+            leading: const Icon(Icons.password),
+            title: const Text("Change password"),
+            onTap: () => {showChangePasswordDialog(context)},
           ),
           const Divider(
             color: Colors.black54,

@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: ${NAMESPACE}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konfetti-api
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: konfetti-api
+  template:
+    metadata:
+      labels:
+        app: konfetti-api
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: konfetti-api
+        image: ${IMAGE_ID_KONFETTI_API}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: DatabaseConnectionString
+          value: ${DATABASE_CONNECTION_STRING}
+        - name: PaymentClientApiKey
+          value: ${API_KEY}
+        - name: PaymentClientBaseUrl
+          value: ${PAYMENT_CLIENT_URL}
+        - name: RabbitMqHost
+          value: ${RABBIT_MQ_HOST}
+        - name: RabbitMqPassword
+          value: ${RABBIT_MQ_PASSWORD}
+        - name: RabbitMqUsername
+          value: ${RABBIT_MQ_USERNAME}
+        - name: RabbitMqVirtualHost
+          value: ${RABBIT_MQ_VIRTUALHOST}
+        - name: SigningKey
+          value: ${SIGNING_KEY}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konfetti-api
+  namespace: ${NAMESPACE}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: konfetti-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: konfetti-api
+  namespace: ${NAMESPACE}
+  labels:
+    name: konfetti-api
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: ${NAMESPACE}.${DOMAIN}
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service: 
+            name: konfetii-api
+            port: 
+              number: 80

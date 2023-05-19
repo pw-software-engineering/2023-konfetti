@@ -8,5 +8,6 @@ public class EventDto
     public string Description { get; set; }
     public string Location { get; set; }
     public DateTime Date { get; set; }
+    public EventStatusDto Status {get; set; }
     public List<SectorDto> Sectors { get; set; }
 }

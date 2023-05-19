@@ -27,9 +27,21 @@ public class Program
         
         builder.Services.AddScoped<Repository<Payment, Guid>>();
         
-        builder.Services.AddFastEndpoints();
+        builder.Services.AddFastEndpoints(options =>
+        {
+            options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.PaymentService.Services") ?? false;
+        });
         
         builder.Services.AddSwaggerDoc();
+        
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.SetIsOriginAllowed(host => host.StartsWith("http://localhost"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            }));
         
         var app = builder.Build();
 

@@ -8,7 +8,7 @@ public static class HttpClientExtensions
 {
     public async static Task<TResponse> PostSuccessAsync<TEndpoint, TRequest, TResponse>(this HttpClient client, TRequest request)
         where TEndpoint : Endpoint<TRequest, TResponse>
-        where TRequest : class
+        where TRequest : notnull
     {
         var response = await client.POSTAsync<TEndpoint, TRequest, TResponse>(request);
 
@@ -18,7 +18,7 @@ public static class HttpClientExtensions
     
     public async static Task PostSuccessAsync<TEndpoint, TRequest>(this HttpClient client, TRequest request)
         where TEndpoint : Endpoint<TRequest>
-        where TRequest : class
+        where TRequest : notnull
     {
         var response = await client.POSTAsync<TEndpoint, TRequest>(request);
 
@@ -27,7 +27,7 @@ public static class HttpClientExtensions
     
     public async static Task<TResponse> GetSuccessAsync<TEndpoint, TRequest, TResponse>(this HttpClient client, TRequest request)
         where TEndpoint : Endpoint<TRequest, TResponse>
-        where TRequest : class
+        where TRequest : notnull
     {
         var response = await client.GETAsync<TEndpoint, TRequest, TResponse>(request);
 
@@ -37,7 +37,7 @@ public static class HttpClientExtensions
     
     public async static Task PostFailureAsync<TEndpoint, TRequest>(this HttpClient client, TRequest request)
         where TEndpoint : IEndpoint
-        where TRequest : class
+        where TRequest : notnull
     {
         var response = await client.POSTAsync<TEndpoint, TRequest>(request);
 
