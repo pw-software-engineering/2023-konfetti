@@ -24,7 +24,7 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
 
     public override void Configure()
     {
-        Post("/account/login");
+        Post("/api/account/login");
         AllowAnonymous();
     }
 
