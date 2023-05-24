@@ -64,6 +64,7 @@ public class Program
             options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.Core.Services") ?? false;
         });
         
+        
         builder.Services.AddSwaggerDoc();
 
         builder.Services.AddAuthentication(options =>
@@ -96,6 +97,7 @@ public class Program
         
         var app = builder.Build();
 
+        app.UsePathBase("/api");
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseFastEndpoints(c =>
