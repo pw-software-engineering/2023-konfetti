@@ -98,6 +98,8 @@ public class Program
         var app = builder.Build();
 
         app.UsePathBase("/api/");
+        app.UseRouting();
+        // app.MapFastEndpoints();
         app.UseLoggingMiddleware();
         
         app.UseAuthentication();
