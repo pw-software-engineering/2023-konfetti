@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:ticketer/auth/auth.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/organizer/organizer_event_edit.dart';
+import 'package:ticketer/pages/organizer/organizer_landing_page.dart';
 import 'package:ticketer/pages/user/payment_page.dart';
 
 class EventTile extends StatefulWidget {
@@ -118,7 +120,8 @@ class _EventTileState extends State<EventTile> {
   Widget _getEventStateButton() {
     return _event.status == EventStatus.Verified
         ? _getPublishButton()
-        : (_event.status == EventStatus.Published
+        : (_event.status == EventStatus.Published ||
+                _event.status == EventStatus.Closed
             ? _getStartSaleButton()
             : (_event.status == EventStatus.Opened
                 ? _getStopSaleButton()
@@ -127,8 +130,12 @@ class _EventTileState extends State<EventTile> {
 
   Widget _getPublishButton() {
     return ElevatedButton(
-      onPressed: () => {
-        // publish action
+      onPressed: () async => {
+        await BackendCommunication().event.publish(_event),
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const OrganizerLandingPage()))
       },
       child: const Text("Publish"),
     );
@@ -136,8 +143,12 @@ class _EventTileState extends State<EventTile> {
 
   Widget _getStartSaleButton() {
     return ElevatedButton(
-      onPressed: () => {
-        // start sale action
+      onPressed: () async => {
+        await BackendCommunication().event.saleStart(_event),
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const OrganizerLandingPage()))
       },
       child: const Text("Start sale"),
     );
@@ -145,8 +156,12 @@ class _EventTileState extends State<EventTile> {
 
   Widget _getStopSaleButton() {
     return ElevatedButton(
-      onPressed: () => {
-        // stop sale action
+      onPressed: () async => {
+        await BackendCommunication().event.saleStop(_event),
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const OrganizerLandingPage()))
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.redAccent,

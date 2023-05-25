@@ -20,7 +20,7 @@ void main() {
           '"date":"2023-03-30T01:00:00.000Z","sectors":'
           '[{"name":"VIP","priceInSmallestUnit":24048,"numberOfColumns":12,"numberOfRows":10},'
           '{"name":"Basic","priceInSmallestUnit":11990,"numberOfColumns":50,"numberOfRows":100}],'
-          'status: 0}';
+          '"status":3}';
 
       // when
       var json = jsonEncode(event);
