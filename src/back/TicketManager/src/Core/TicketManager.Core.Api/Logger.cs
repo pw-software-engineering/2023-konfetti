@@ -7,7 +7,7 @@ public static class Logger
         app.Use(async (context, next) =>
         {
             var logger = context.RequestServices.GetService<ILogger<Program>>();
-            logger.LogInformation($"Request: {context.Request.Path}");
+            logger!.LogInformation($"Request: {context.Request.Path}");
 
             await next.Invoke();
         });
