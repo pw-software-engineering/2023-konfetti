@@ -3,6 +3,7 @@ import 'package:input_quantity/input_quantity.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/backend_communication/model/account_type.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
 import 'package:ticketer/pages/organizer/organizer_event_edit.dart';
 import 'package:ticketer/pages/user/payment_page.dart';
@@ -91,18 +92,18 @@ class _EventTileState extends State<EventTile> {
         ),
       ),
       actions: _accountType == AccountType.User
-          ? _getPurchasableActions()
-          : _getSimpleActions(),
+          ? _getUserActions()
+          : _getOrganizerActions(),
     );
   }
 
-  List<Widget> _getSimpleActions() {
+  List<Widget> _getOrganizerActions() {
     return [
+      Visibility(
+          visible: _event.status != EventStatus.Unverified,
+          child: _getEventStateButton()),
       ElevatedButton(
-        onPressed: () => {
-          _navigateToEdit()
-          // todo: link edit actions
-        },
+        onPressed: () => {_navigateToEdit()},
         child: const Text('Edit'),
       ),
       ElevatedButton(
@@ -112,6 +113,46 @@ class _EventTileState extends State<EventTile> {
         child: const Text('OK'),
       ),
     ];
+  }
+
+  Widget _getEventStateButton() {
+    return _event.status == EventStatus.Verified
+        ? _getPublishButton()
+        : (_event.status == EventStatus.Published
+            ? _getStartSaleButton()
+            : (_event.status == EventStatus.Opened
+                ? _getStopSaleButton()
+                : ElevatedButton(onPressed: () => {}, child: const Text(""))));
+  }
+
+  Widget _getPublishButton() {
+    return ElevatedButton(
+      onPressed: () => {
+        // publish action
+      },
+      child: const Text("Publish"),
+    );
+  }
+
+  Widget _getStartSaleButton() {
+    return ElevatedButton(
+      onPressed: () => {
+        // start sale action
+      },
+      child: const Text("Start sale"),
+    );
+  }
+
+  Widget _getStopSaleButton() {
+    return ElevatedButton(
+      onPressed: () => {
+        // stop sale action
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.redAccent,
+      ),
+      child: const Text("Stop sale"),
+    );
   }
 
   void _navigateToEdit() {
@@ -124,7 +165,7 @@ class _EventTileState extends State<EventTile> {
     );
   }
 
-  List<Widget> _getPurchasableActions() {
+  List<Widget> _getUserActions() {
     return [
       ElevatedButton(
         onPressed: () => {
