@@ -97,7 +97,7 @@ public class Program
         
         var app = builder.Build();
 
-        app.UsePathBase("/api");
+        app.UsePathBase("/api/");
         app.UseLoggingMiddleware();
         
         app.UseAuthentication();
