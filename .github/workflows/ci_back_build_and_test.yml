@@ -35,7 +35,7 @@ env:
   DEPLOYMENT_FILE_NAME_PDF: 'konfetti-pdf.yml'
   DEPLOYMENT_FILE_NAME_RABBIT: 'konfetti-rabbit.yml'
   NAMESPACE: 'konfetti'
-  PAYMENT_CLIENT_URL: 'konfetti-payment.konfetti'
+  PAYMENT_CLIENT_URL: 'http://konfetti-payment.konfetti'
   RABBIT_MQ_HOST: 'konfetti-rabbit.konfetti'
   RABBIT_MQ_PASSWORD: 'guest'
   RABBIT_MQ_USERNAME: 'guest'
