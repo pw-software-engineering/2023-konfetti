@@ -48,8 +48,14 @@ services:
       - "8081:80"
     networks:
       - pay
+      - web
     env_file:
       - variables.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.payment-service.rule=Host(`payment.localhost`)"
+      - "traefik.http.routers.payment-service.entrypoints=web"
+      - "traefik.port=80"
   rabbitmq:
     container_name: 'rabbitmq'
     image: rabbitmq:3-management-alpine
@@ -86,8 +92,14 @@ services:
       - "10000:10000"
     networks:
       - blob
+      - web
     volumes:
       - /var/ticket_manager/blob:/opt/azurite/folder
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blob-storage.rule=Host(`blob.localhost`)"
+      - "traefik.http.routers.blob-storage.entrypoints=web"
+      - "traefik.port=80"
   traefik:
     image: "traefik:v2.6"
     container_name: traefik
