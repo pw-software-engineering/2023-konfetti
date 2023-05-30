@@ -45,6 +45,9 @@ public class Program
         
         var app = builder.Build();
 
+        app.UsePathBase("/payment/");
+        app.UseRouting();
+
         app.UseAuthorization();
         app.UseFastEndpoints(c =>
         {
