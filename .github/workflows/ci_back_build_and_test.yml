@@ -123,7 +123,7 @@ jobs:
         cluster-name: ${{ secrets.AKS_NAME }}
         resource-group: ${{ secrets.AKS_RG_NAME }}
     - name: Set IMAGE_ID_KONFETTI_API as env variable
-      run: echo "IMAGE_ID_KONFETTI_API=${{ env.ACR_URL }}/${{ env.APP_PAYMENT_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+      run: echo "IMAGE_ID_KONFETTI_API=${{ env.ACR_URL }}/${{ env.APP_API_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
     - name: Set DOMAIN env variable
       run: echo "DOMAIN=$(az aks show -g ${{ secrets.AKS_RG_NAME }} -n ${{ secrets.AKS_NAME }} --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
     - name: Print DOMAIN and IMAGE_ID
