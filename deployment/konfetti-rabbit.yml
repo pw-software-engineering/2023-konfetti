@@ -32,9 +32,6 @@ spec:
             memory: 256Mi
         ports:
         - containerPort: 80
-        env:
-        - name: PaymentClientApiKey
-          value: ${KONFETTI_API_KEY}
 ---
 apiVersion: v1
 kind: Service

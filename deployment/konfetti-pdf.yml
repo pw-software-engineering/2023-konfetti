@@ -36,7 +36,7 @@ spec:
         - name: BlobStorageConnectionString
           value: ${BLOB_STORAGE_CONNECTION_STRING}
         - name: BlobStorageContainerName
-          value: ${BLOB_STORAGE_CONTAINER_NAME
+          value: ${BLOB_STORAGE_CONTAINER_NAME}
         - name: RabbitMqHost
           value: ${RABBIT_MQ_HOST}
         - name: RabbitMqPassword
