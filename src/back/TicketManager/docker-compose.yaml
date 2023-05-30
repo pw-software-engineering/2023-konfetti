@@ -12,6 +12,7 @@ services:
       - db
       - pay
       - rabbit
+      - blob
     env_file:
       - variables.env
     depends_on:
@@ -19,6 +20,7 @@ services:
       - payment-service
       - rabbitmq
       - pdf-generator
+      - blob-storage
   api-postgres:
     container_name: api-database
     image: "postgres:latest"
@@ -58,11 +60,28 @@ services:
       dockerfile: Dockerfile.pdf_generator
     networks:
       - rabbit
+      - blob
     env_file:
       - variables.env
       - secrets.env
     depends_on:
       - rabbitmq
+      - blob-storage
+  blob-storage:
+    container_name: 'blob-storage'
+    image: mcr.microsoft.com/azure-storage/azurite
+    command:
+      - azurite
+      - --blobHost
+      - 0.0.0.0
+      - --blobPort
+      - "10000"
+    ports:
+      - "10000:10000"
+    networks:
+      - blob
+    volumes:
+      - /var/ticket_manager/blob:/opt/azurite/folder
 networks:
   db:
     name: db
@@ -72,4 +91,7 @@ networks:
     driver: bridge
   rabbit:
     name: rabbit
+    driver: bridge
+  blob:
+    name: blob
     driver: bridge
