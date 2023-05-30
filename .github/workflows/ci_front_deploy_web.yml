@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master"]
+    branches: ["master", "dev"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-      name: Build front-end Web application
+      name: Build and deploy front-end Web application
       runs-on: ubuntu-latest
       defaults:
         run:
@@ -41,28 +41,18 @@ jobs:
         - name: Test app
           run: flutter test
         - name: Build web app
-          run: flutter build web
-        - name: Save web build
-          uses: actions/upload-artifact@v3
+          run: flutter build web --base-href "/2023-konfetti/"
+        - name: Create dotenv
+          run: |
+            echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}"
+            echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}" > build/web/assets/dotenv
+        - name: Setup Pages
+          uses: actions/configure-pages@v3
+        - name: Upload artifact
+          uses: actions/upload-pages-artifact@v1
           with:
-            name: release-web-build
-            retention-days: 1
-            path: ./src/front/ticketer/build/web/
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload entire repository
-          path: './src/front/ticketer/build/web/'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+            # Upload entire repository
+            path: './src/front/ticketer/build/web/'
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v2
