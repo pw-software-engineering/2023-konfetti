@@ -7,13 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile.core
     ports:
-      - "8085:80"
+      - "8080:80"
     networks:
       - db
       - pay
       - rabbit
       - blob
-      - tf
+      - web
     env_file:
       - variables.env
     depends_on:
@@ -24,7 +24,7 @@ services:
       - blob-storage
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`server.local.konfettii.pl`)"
+      - "traefik.http.routers.server.rule=Host(`server.localhost`)"
       - "traefik.http.routers.server.entrypoints=web"
       - "traefik.port=80"
   api-postgres:
@@ -90,23 +90,32 @@ services:
       - /var/ticket_manager/blob:/opt/azurite/folder
   traefik:
     image: "traefik:v2.6"
+    container_name: traefik
     command:
-      #- "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=true"
+      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - --api.insecure=true
-      - --api.dashboard=true
-      - --providers.docker.network=tf
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker.network=web"
     ports:
       - "80:80"
       - "433:433"
-      - "8080:8080"
+      - "8085:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
-      - tf
+      - web
+  dns:
+    container_name: dns
+    image: gists/dnsmasq
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ./dnsmasq:/etc/dnsmasq.d
+    restart: always
 networks:
   db:
     name: db
@@ -120,6 +129,6 @@ networks:
   blob:
     name: blob
     driver: bridge
-  tf:
-    name: tf
+  web:
+    name: web
     driver: bridge
