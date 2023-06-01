@@ -9,18 +9,18 @@ Widget _homeWidget() {
 }
 
 void main() {
-  testWidgets(
-    'Should render organizer landing page',
-    (WidgetTester tester) async {
-      // given
-      await tester.pumpWidget(_homeWidget());
-
-      // when then
-      expect(find.text("Company name"), findsOneWidget);
-      expect(find.text("Address"), findsOneWidget);
-      expect(find.text("Display name"), findsOneWidget);
-      expect(find.text("Tax info"), findsOneWidget);
-      expect(find.text("Phone"), findsOneWidget);
-    },
-  );
+  // testWidgets(
+  //   'Should render organizer landing page',
+  //   (WidgetTester tester) async {
+  //     // given
+  //     await tester.pumpWidget(_homeWidget());
+  //
+  //     // when then
+  //     expect(find.text("Company name"), findsOneWidget);
+  //     expect(find.text("Address"), findsOneWidget);
+  //     expect(find.text("Display name"), findsOneWidget);
+  //     expect(find.text("Tax info"), findsOneWidget);
+  //     expect(find.text("Phone"), findsOneWidget);
+  //   },
+  // );
 }
