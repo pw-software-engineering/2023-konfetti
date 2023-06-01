@@ -15,6 +15,16 @@ class User {
         'email': email,
         'password': password,
       };
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        json['firstName'],
+        json['lastName'],
+        json['birthDate'],
+        json['email'],
+        ""
+    );
+  }
 }
 
 class UserUpdate {
@@ -31,4 +41,6 @@ class UserUpdate {
         'birthDate': birthDate,
         'email': email,
       };
+
+
 }

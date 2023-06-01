@@ -1,11 +1,17 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
+import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/response_codes.dart';
+import 'package:ticketer/backend_communication/model/user.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/common/event_tile.dart';
+import 'package:ticketer/pages/common/user_card.dart';
 import 'package:ticketer/pages/user/user_drawer.dart';
+import 'package:tuple/tuple.dart';
 
 class UserLandingPage extends StatefulWidget {
   const UserLandingPage({Key? key}) : super(key: key);
@@ -52,12 +58,31 @@ class _UserLandingPageState extends State<UserLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
+          _userCard(),
           _getEventFilter(),
           _getEventsList(),
         ],
       ),
     );
   }
+
+  FutureBuilder _userCard(){
+    return FutureBuilder<Tuple2<Response<dynamic>, ResponseCode>>(
+      future: UserCommunication().view(),
+      builder: (BuildContext context, AsyncSnapshot<Tuple2<Response<dynamic>, ResponseCode>> snapshot){
+        if (snapshot.hasData) {
+          Tuple2<Response, ResponseCode>? data = snapshot.data;
+
+          User user = User.fromJson(data?.item1.data);
+          return UserCard(user: user);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+
 
   Text _getGreeting() {
     return Text(
