@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
@@ -370,7 +371,8 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
             _eventDescription.text,
             _eventLocation.text,
             '${_eventDate.text}T${_eventTime.text}:00.000Z',
-            sectors);
+            sectors,
+            EventStatus.Unverified);
 
         var response = await BackendCommunication().event.create(event);
 
