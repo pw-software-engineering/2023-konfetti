@@ -364,7 +364,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   Future<void> _submitEventCreation() async {
     if (_formKey.currentState!.validate() && sectors.isNotEmpty) {
       try {
-        Event event = Event(
+        Event event = Event.noSector(
             null,
             _eventName.text,
             _eventDescription.text,

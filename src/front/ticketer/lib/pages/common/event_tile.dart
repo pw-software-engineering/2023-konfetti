@@ -38,6 +38,7 @@ class _EventTileState extends State<EventTile> {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               _getEventInfo("Date & time", _event.date),
               _getEventInfo("Location", _event.location),
+              _getEventInfo("Status", _event.status!.getStatusName()),
             ],
           ),
         ),
