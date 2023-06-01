@@ -11,6 +11,8 @@ import 'package:tuple/tuple.dart';
 class UserCommunication {
   static const String _updateEndPoint = "/user/update";
   static const String _registerEndPoint = "/user/register";
+  static const String _viewEndPoint = "/user/view";
+
   Future<Tuple2<Response, ResponseCode>> update(UserUpdate body) async =>
       await BackendCommunication().postCallAuthorized(
           _updateEndPoint, Token(Auth().getCurrentAccount!.token),
@@ -18,4 +20,12 @@ class UserCommunication {
   Future<Tuple2<Response, ResponseCode>> register(User body) async =>
       await BackendCommunication()
           .postCall(_registerEndPoint, data: jsonEncode(body));
+
+  Future<Tuple2<Response, ResponseCode>> view() async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().getCallAuthorized(
+        _viewEndPoint, Token(Auth().getCurrentAccount!.token));
+  }
 }
