@@ -3,7 +3,7 @@ class User {
   String lastName;
   String birthDate;
   String email;
-  String password;
+  String? password; // User data fetched from backend does not contain password field.
 
   User(
       this.firstName, this.lastName, this.birthDate, this.email, this.password);
@@ -22,7 +22,7 @@ class User {
         json['lastName'],
         json['birthDate'],
         json['email'],
-        ""
+        null
     );
   }
 }

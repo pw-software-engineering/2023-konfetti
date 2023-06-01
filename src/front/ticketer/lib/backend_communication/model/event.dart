@@ -8,7 +8,7 @@ class Event {
   String location;
   String date;
   List<Sector> sectors;
-  EventStatus? status;
+  EventStatus? status; // This field is nullable as event creation cannot have event status.
 
   Event(
     this.id,
@@ -38,7 +38,7 @@ class Event {
       json['location'],
       json['date'],
       sectors,
-      EventStatus.getByCode(json['status'])
+      EventStatus.getByCode(json['status']),
     );
   }
 

@@ -12,9 +12,9 @@ enum EventStatus {
   const EventStatus(this.value);
   final int? value;
 
-  static EventStatus getByCode(int i) {
-  return EventStatus.values.firstWhere((x) => x.value == i);
-  }
+  static EventStatus getByCode(int i) =>
+    EventStatus.values.firstWhere((x) => x.value == i);
+
 
   String getStatusName() {
     switch (value) {
