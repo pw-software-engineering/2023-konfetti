@@ -20,7 +20,7 @@ class Event {
     this.status
   );
 
-  Event.noSector(
+  Event.noStatus(
       this.id,
       this.name,
       this.description,
