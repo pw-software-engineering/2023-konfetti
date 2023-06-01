@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/user.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
@@ -27,8 +28,8 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final List<Event> _events = [];
   String filterLocation = "";
   String filterName = "";
-  String filterEarlier = DateTime.now().add(const Duration(days: 10 * 365)).toIso8601String();
-  String filterLater = DateTime.now().toIso8601String();
+  String filterEarlier = "";
+  String filterLater = "";
 
   final TextEditingController _filterName = TextEditingController();
   final TextEditingController _filterLocation = TextEditingController();
@@ -38,11 +39,26 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final TextEditingController _laterThanEventTime = TextEditingController();
 
   Future<void> _fetchMoreData() async {
-    final res = await BackendCommunication().event.listVerified(
-        _pageNo, _pageSize, filterName, filterLocation, filterEarlier, filterLater);
+    int page = _pageNo;
+    final resOpened = await BackendCommunication().event.listFiltered(
+        page, _pageSize, filterName, filterLocation, filterEarlier,
+        filterLater, EventStatus.Opened);
+    final resPublished = await BackendCommunication().event.listFiltered(
+        page, _pageSize, filterName, filterLocation, filterEarlier,
+        filterLater, EventStatus.Published);
+    final resClosed = await BackendCommunication().event.listFiltered(
+        page, _pageSize, filterName, filterLocation, filterEarlier,
+        filterLater, EventStatus.Closed);
+
     setState(() {
       int before = _events.length;
-      for (var ev in res.item1.data["items"]) {
+      for (var ev in resPublished.item1.data["items"]) {
+        _events.add(Event.fromJson(ev));
+      }
+      for (var ev in resOpened.item1.data["items"]) {
+        _events.add(Event.fromJson(ev));
+      }
+      for (var ev in resClosed.item1.data["items"]) {
         _events.add(Event.fromJson(ev));
       }
       int after = _events.length;

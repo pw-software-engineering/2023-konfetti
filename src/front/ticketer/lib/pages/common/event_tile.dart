@@ -75,6 +75,11 @@ class _EventTileState extends State<EventTile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _getEventInfo("Event name", _event.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              _getEventInfo("Date & time", _event.date),
+              _getEventInfo("Location", _event.location),
+              _getEventInfo("Status", _event.status!.getStatusName()),
               Text(
                 _event.description,
                 textAlign: TextAlign.justify,
@@ -87,7 +92,7 @@ class _EventTileState extends State<EventTile> {
                   fontSize: 18,
                 ),
               ),
-              _accountType == AccountType.User
+              _accountType == AccountType.User && _event.status == EventStatus.Opened
                   ? _getPurchasableSectorList()
                   : _getSimpleSectorList(),
             ],
@@ -95,9 +100,22 @@ class _EventTileState extends State<EventTile> {
         ),
       ),
       actions: _accountType == AccountType.User
-          ? _getUserActions()
+          ? _event.status == EventStatus.Opened
+              ? _getUserBuyActions()
+              : _getSimpleActions()
           : _getOrganizerActions(),
     );
+  }
+
+  List<Widget> _getSimpleActions() {
+    return [
+      ElevatedButton(
+        onPressed: () => {
+          Navigator.pop(context),
+        },
+        child: const Text('OK'),
+      ),
+    ];
   }
 
   List<Widget> _getOrganizerActions() {
@@ -181,7 +199,7 @@ class _EventTileState extends State<EventTile> {
     );
   }
 
-  List<Widget> _getUserActions() {
+  List<Widget> _getUserBuyActions() {
     return [
       ElevatedButton(
         onPressed: () => {
