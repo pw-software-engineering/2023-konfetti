@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
-import 'package:ticketer/backend_communication/logic/payment/communication_payment.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
-import 'package:ticketer/backend_communication/model/event_status.dart';
-
-import '../common/app_bar.dart';
+import 'package:ticketer/pages/common/app_bar.dart';
 
 class PaymentPage extends StatefulWidget {
   final Event event;
@@ -144,9 +141,18 @@ class _PaymentPageState extends State<PaymentPage> {
                 }
                 // proceed to payment
                 for (var id in _paymentIds) {
-                  print(id);
+                  await PaymentCommunication().payment.confirm(id);
                   var response =
-                      await PaymentCommunication().payment.confirm(id);
+                      await PaymentCommunication().payment.finish(id);
+                  if (response.item2.value == 200) {
+                    // ignore: use_build_context_synchronously
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _showDialogOnSuccess(context);
+                      },
+                    );
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -157,6 +163,33 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ],
       ),
+    );
+  }
+
+  AlertDialog _showDialogOnSuccess(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        "Payment confirmed!",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      scrollable: true,
+      content: SingleChildScrollView(
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width / 4,
+            height: MediaQuery.of(context).size.height / 2,
+            child: const Text("Your payment has been confirmed successfully!")),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => {
+            Navigator.of(context).popUntil((route) => route.isFirst),
+          },
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 
