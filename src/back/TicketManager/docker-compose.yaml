@@ -9,11 +9,13 @@ services:
     ports:
       - "8080:80"
     networks:
-      - db
-      - pay
-      - rabbit
-      - blob
-      - web
+      db:
+      pay:
+      rabbit:
+      blob:
+      web:
+        aliases:
+          - server.localhost
     env_file:
       - variables.env
     depends_on:
@@ -47,8 +49,10 @@ services:
     ports:
       - "8081:80"
     networks:
-      - pay
-      - web
+      pay:
+      web:
+        aliases:
+          - payment.localhost
     env_file:
       - variables.env
     labels:
@@ -73,6 +77,7 @@ services:
     networks:
       - rabbit
       - blob
+      - web
     env_file:
       - variables.env
       - secrets.env
@@ -81,24 +86,28 @@ services:
       - blob-storage
   blob-storage:
     container_name: 'blob-storage'
-    image: mcr.microsoft.com/azure-storage/azurite
+    image: mcr.microsoft.com/azure-storage/azurite:latest
     command:
       - azurite
       - --blobHost
       - 0.0.0.0
       - --blobPort
       - "10000"
+      - --disableProductStyleUrl
     ports:
       - "10000:10000"
+    environment:
+      - executable=blob
     networks:
-      - blob
-      - web
+      web:
+        aliases:
+          - blob.localhost
     volumes:
-      - /var/ticket_manager/blob:/opt/azurite/folder
+      - storage:/opt/azurite/folder
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.blob-storage.rule=Host(`blob.localhost`)"
-      - "traefik.http.routers.blob-storage.entrypoints=web"
+      - "traefik.http.routers.blob.rule=Host(`blob.localhost`)"
+      - "traefik.http.routers.blob.entrypoints=web"
       - "traefik.port=80"
   traefik:
     image: "traefik:v2.6"
@@ -128,6 +137,8 @@ services:
     volumes:
       - ./dnsmasq:/etc/dnsmasq.d
     restart: always
+    networks:
+      - web
 networks:
   db:
     name: db
@@ -144,3 +155,5 @@ networks:
   web:
     name: web
     driver: bridge
+volumes:
+  storage:
