@@ -8,6 +8,7 @@ import 'package:ticketer/backend_communication/logic/account/communication_accou
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/logic/event/communication_event.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
+import 'package:ticketer/backend_communication/logic/payment/communication_payment.dart';
 import 'package:ticketer/backend_communication/logic/ticket/communication_ticket.dart';
 import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
@@ -152,14 +153,18 @@ class BackendCommunication {
   }
 }
 
-class PaymentCommuniacton {
-  static final PaymentCommuniacton _singleton = PaymentCommuniacton._internal();
-  factory PaymentCommuniacton() {
+class PaymentCommunication {
+  static final PaymentCommunication _singleton =
+      PaymentCommunication._internal();
+  factory PaymentCommunication() {
     return _singleton;
   }
-  PaymentCommuniacton._internal();
+  PaymentCommunication._internal();
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
+
+  final CommunicationPayment _communicationPayment = CommunicationPayment();
+  CommunicationPayment get payment => _communicationPayment;
 
   late final Dio dio;
   static Map<String, dynamic> headers = <String, String>{

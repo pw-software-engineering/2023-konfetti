@@ -21,7 +21,8 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final List<Event> _events = [];
   String filterLocation = "";
   String filterName = "";
-  String filterEarlier = DateTime.now().add(const Duration(days: 10 * 365)).toIso8601String();
+  String filterEarlier =
+      DateTime.now().add(const Duration(days: 10 * 365)).toIso8601String();
   String filterLater = DateTime.now().toIso8601String();
 
   final TextEditingController _filterName = TextEditingController();
@@ -32,8 +33,8 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final TextEditingController _laterThanEventTime = TextEditingController();
 
   Future<void> _fetchMoreData() async {
-    final res = await BackendCommunication().event.listVerified(
-        _pageNo, _pageSize, filterName, filterLocation, filterEarlier, filterLater);
+    final res = await BackendCommunication().event.listVisible(_pageNo,
+        _pageSize, filterName, filterLocation, filterEarlier, filterLater);
     setState(() {
       int before = _events.length;
       for (var ev in res.item1.data["items"]) {
@@ -118,8 +119,6 @@ class _UserLandingPageState extends State<UserLandingPage> {
     );
   }
 
-
-
   Widget _getEventFilter() {
     return InkWell(
       child: Container(
@@ -134,7 +133,8 @@ class _UserLandingPageState extends State<UserLandingPage> {
             children: [
               Text(
                 "Filters",
-                style: TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    fontSize: 20, color: Theme.of(context).primaryColor),
               ),
               _eventNameEntryField(),
               _eventLocationEntryField(),
@@ -147,7 +147,6 @@ class _UserLandingPageState extends State<UserLandingPage> {
       ),
     );
   }
-
 
   Widget _eventNameEntryField() {
     return TextFormField(
@@ -171,7 +170,6 @@ class _UserLandingPageState extends State<UserLandingPage> {
     );
   }
 
-
   Widget _eventEarlierThanDateTimeEntryField() {
     return SingleChildScrollView(
       child: Row(
@@ -189,32 +187,29 @@ class _UserLandingPageState extends State<UserLandingPage> {
     );
   }
 
-
   Widget _eventEarlierThanDateEntryField() {
     return TextFormField(
       controller: _earlierThanEventDate,
-      decoration: const InputDecoration(
-          labelText: "Earlier than date"),
+      decoration: const InputDecoration(labelText: "Earlier than date"),
       readOnly: true,
       onTap: () => _selectDate(context, DateTime.now()).then((date) => {
-        if (date != null)
-          _earlierThanEventDate.text =
-          '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
-      }),
+            if (date != null)
+              _earlierThanEventDate.text =
+                  '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
+          }),
     );
   }
 
   Widget _eventEarlierThanTimeEntryField() {
     return TextFormField(
       controller: _earlierThanEventTime,
-      decoration: const InputDecoration(
-          labelText: "Earlier than time"),
+      decoration: const InputDecoration(labelText: "Earlier than time"),
       readOnly: true,
       onTap: () => _selectTime(context).then((time) => {
-        if (time != null)
-          _earlierThanEventTime.text =
-          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
-      }),
+            if (time != null)
+              _earlierThanEventTime.text =
+                  '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
+          }),
     );
   }
 
@@ -238,28 +233,26 @@ class _UserLandingPageState extends State<UserLandingPage> {
   Widget _eventLaterThanDateEntryField() {
     return TextFormField(
       controller: _laterThanEventDate,
-      decoration: const InputDecoration(
-          labelText: "Later than date"),
+      decoration: const InputDecoration(labelText: "Later than date"),
       readOnly: true,
       onTap: () => _selectDate(context, DateTime.now()).then((date) => {
-        if (date != null)
-          _laterThanEventDate.text =
-          '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
-      }),
+            if (date != null)
+              _laterThanEventDate.text =
+                  '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}'
+          }),
     );
   }
 
   Widget _eventLaterThanTimeEntryField() {
     return TextFormField(
       controller: _laterThanEventTime,
-      decoration: const InputDecoration(
-          labelText: "Later than time"),
+      decoration: const InputDecoration(labelText: "Later than time"),
       readOnly: true,
       onTap: () => _selectTime(context).then((time) => {
-        if (time != null)
-          _laterThanEventTime.text =
-          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
-      }),
+            if (time != null)
+              _laterThanEventTime.text =
+                  '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
+          }),
     );
   }
 
@@ -283,7 +276,6 @@ class _UserLandingPageState extends State<UserLandingPage> {
     );
   }
 
-
   Widget _submitButton() {
     return Container(
       margin: const EdgeInsets.only(top: 15.0),
@@ -298,18 +290,20 @@ class _UserLandingPageState extends State<UserLandingPage> {
     setState(() {
       filterLocation = _filterLocation.text;
       filterName = _filterName.text;
-      if(_earlierThanEventDate.text.isNotEmpty) {
-        if(_earlierThanEventTime.text.isNotEmpty) {
-          filterEarlier = '${_earlierThanEventDate.text}T${_earlierThanEventTime.text}:00.000Z';
+      if (_earlierThanEventDate.text.isNotEmpty) {
+        if (_earlierThanEventTime.text.isNotEmpty) {
+          filterEarlier =
+              '${_earlierThanEventDate.text}T${_earlierThanEventTime.text}:00.000Z';
         } else {
           filterEarlier = '${_earlierThanEventDate.text}T00:00:00.000Z';
         }
       } else {
         filterEarlier = "";
       }
-      if(_laterThanEventDate.text.isNotEmpty) {
-        if(_laterThanEventTime.text.isNotEmpty) {
-          filterLater = '${_laterThanEventDate.text}T${_laterThanEventTime.text}:00.000Z';
+      if (_laterThanEventDate.text.isNotEmpty) {
+        if (_laterThanEventTime.text.isNotEmpty) {
+          filterLater =
+              '${_laterThanEventDate.text}T${_laterThanEventTime.text}:00.000Z';
         } else {
           filterLater = '${_laterThanEventDate.text}T00:00:00.000Z';
         }

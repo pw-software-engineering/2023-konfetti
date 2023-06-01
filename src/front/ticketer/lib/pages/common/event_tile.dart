@@ -192,12 +192,15 @@ class _EventTileState extends State<EventTile> {
         ),
         child: const Text('Cancel'),
       ),
-      ElevatedButton(
-        onPressed: () => _navigateToPayment(),
-        style: ElevatedButton.styleFrom(
-          fixedSize: const Size(100, 35),
+      Visibility(
+        visible: _event.status == EventStatus.Opened,
+        child: ElevatedButton(
+          onPressed: () => _navigateToPayment(),
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size(100, 35),
+          ),
+          child: const Text('Purchase'),
         ),
-        child: const Text('Purchase'),
       ),
     ];
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
+import 'package:ticketer/backend_communication/logic/payment/communication_payment.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
+import 'package:ticketer/backend_communication/model/event_status.dart';
 
 import '../common/app_bar.dart';
 
@@ -19,7 +21,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   late Event _event;
   late List<int> _seatsInSectors;
-  late List<String> ticketsIds = List.empty(growable: true);
+  late List<String> _paymentIds = List.empty(growable: true);
 
   Widget _getContent() {
     return SingleChildScrollView(
@@ -125,19 +127,27 @@ class _PaymentPageState extends State<PaymentPage> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: ElevatedButton(
-              onPressed: () => {
+              onPressed: () async {
                 // Navigator.pop(context),
                 // todo: handle returned ids into ticketsIds list
                 // and continue with logic:
-                for (int i = 0; i <= _seatsInSectors.length; ++i)
-                  {
-                    if (_seatsInSectors[i] > 0)
-                      {
-                        BackendCommunication()
-                            .ticket
-                            .buy(_event, _event.sectors[i], _seatsInSectors[i])
-                      }
-                  },
+                for (int i = 0; i < _seatsInSectors.length; ++i) {
+                  if (_seatsInSectors[i] > 0) {
+                    var response = await BackendCommunication()
+                        .ticket
+                        .buy(_event, _event.sectors[i], _seatsInSectors[i]);
+                    if (response.item2.value == 200) {
+                      String id = response.item1.data["paymentId"];
+                      _paymentIds.add(id);
+                    }
+                  }
+                }
+                // proceed to payment
+                for (var id in _paymentIds) {
+                  print(id);
+                  var response =
+                      await PaymentCommunication().payment.confirm(id);
+                }
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(100, 35),

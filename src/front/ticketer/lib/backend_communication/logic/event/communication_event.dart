@@ -69,7 +69,7 @@ class EventCommunication {
         params: params);
   }
 
-  Future<Tuple2<Response, ResponseCode>> listVerified(
+  Future<Tuple2<Response, ResponseCode>> listVisible(
       int pageNumber,
       int pageSize,
       String name,
@@ -83,7 +83,10 @@ class EventCommunication {
       "SortBy": 0,
       "EventNameFilter": name,
       "Location": location,
-      "EventStatusesFilter": EventStatus.Verified.index
+      "EventStatusesFilter": [
+        EventStatus.Published.index,
+        EventStatus.Opened.index,
+      ]
     };
     if (earlier.isNotEmpty) {
       params.addAll({"EarlierThanInclusiveFilter": earlier});
