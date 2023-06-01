@@ -30,7 +30,7 @@ public class TicketDownloadEndpoint : Endpoint<TicketDownloadRequest, TicketDown
             .Tickets
             .FirstOrDefaultAsync(t => t.Id == req.Id, ct);
 
-        if (ticket is null)
+        if (ticket is null || !ticket.IsPdfGenerated)
         {
             await SendErrorsAsync(cancellation: ct);
             return;
