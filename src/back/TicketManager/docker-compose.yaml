@@ -12,7 +12,6 @@ services:
       db:
       pay:
       rabbit:
-      blob:
       web:
         aliases:
           - server.localhost
@@ -76,7 +75,6 @@ services:
       dockerfile: Dockerfile.pdf_generator
     networks:
       - rabbit
-      - blob
       - web
     env_file:
       - variables.env
@@ -148,9 +146,6 @@ networks:
     driver: bridge
   rabbit:
     name: rabbit
-    driver: bridge
-  blob:
-    name: blob
     driver: bridge
   web:
     name: web
