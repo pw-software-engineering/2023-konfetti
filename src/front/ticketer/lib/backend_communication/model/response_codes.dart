@@ -8,9 +8,9 @@ enum ResponseCode {
   const ResponseCode(this.value);
   final int? value;
 
-  static ResponseCode getByCode(int i) {
-    return ResponseCode.values.firstWhere((x) => x.value == i);
-  }
+  static ResponseCode getByCode(int i) =>
+    ResponseCode.values.firstWhere((x) => x.value == i);
+
 
   String getResponseString() {
     switch (value) {

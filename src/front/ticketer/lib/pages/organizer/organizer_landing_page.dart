@@ -1,14 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketer/backend_communication/logic/communication.dart';
+import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
-import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
-import 'package:ticketer/backend_communication/model/tax_type.dart';
 import 'package:ticketer/pages/common/app_bar.dart';
 import 'package:ticketer/pages/common/organizer_card.dart';
 import 'package:ticketer/pages/organizer/organizer_drawer.dart';
+import 'package:tuple/tuple.dart';
 
 class OrganizerLandingPage extends StatefulWidget {
   const OrganizerLandingPage({Key? key}) : super(key: key);
@@ -40,16 +41,7 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
         children: [
           _getUserIcon(),
           _getGreeting(),
-          OrganizerCard(
-              organizer: Organizer(
-                  "123",
-                  "Januszex.pl",
-                  "Warszawa",
-                  TaxType.KRS,
-                  "12345",
-                  "Januszex",
-                  "jan.nowak@pw.edu.pl",
-                  "+48600900600")),
+          _organizerCard(),
           _getEventCreationBanner(),
           Container(
               padding: const EdgeInsets.all(12.0),
@@ -66,6 +58,22 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
               )),
         ],
       ),
+    );
+  }
+
+  FutureBuilder _organizerCard(){
+    return FutureBuilder<Tuple2<Response<dynamic>, ResponseCode>>(
+      future: OrganizerCommunication().view(),
+      builder: (BuildContext context, AsyncSnapshot<Tuple2<Response<dynamic>, ResponseCode>> snapshot){
+        if (snapshot.hasData) {
+          Tuple2<Response, ResponseCode>? data = snapshot.data;
+          Organizer organizer = Organizer.fromJson(data?.item1.data);
+          return OrganizerCard(organizer: organizer);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const CircularProgressIndicator();
+      },
     );
   }
 
@@ -356,14 +364,13 @@ class _OrganizerLandingPageState extends State<OrganizerLandingPage> {
   Future<void> _submitEventCreation() async {
     if (_formKey.currentState!.validate() && sectors.isNotEmpty) {
       try {
-        Event event = Event(
+        Event event = Event.noStatus(
             null,
             _eventName.text,
             _eventDescription.text,
             _eventLocation.text,
             '${_eventDate.text}T${_eventTime.text}:00.000Z',
-            sectors,
-            EventStatus.Unverified);
+            sectors);
 
         var response = await BackendCommunication().event.create(event);
 

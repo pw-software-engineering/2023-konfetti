@@ -69,13 +69,14 @@ class EventCommunication {
         params: params);
   }
 
-  Future<Tuple2<Response, ResponseCode>> listVisible(
+  Future<Tuple2<Response, ResponseCode>> listFiltered(
       int pageNumber,
       int pageSize,
       String name,
       String location,
       String earlier,
-      String later) async {
+      String later,
+      EventStatus status) async {
     Map<String, dynamic> params = {
       "PageNumber": pageNumber,
       "PageSize": pageSize,
@@ -83,10 +84,7 @@ class EventCommunication {
       "SortBy": 0,
       "EventNameFilter": name,
       "Location": location,
-      "EventStatusesFilter": [
-        EventStatus.Published.index,
-        EventStatus.Opened.index,
-      ]
+      "EventStatusesFilter": status.index
     };
     if (earlier.isNotEmpty) {
       params.addAll({"EarlierThanInclusiveFilter": earlier});

@@ -3,7 +3,7 @@ class User {
   String lastName;
   String birthDate;
   String email;
-  String password;
+  String? password; // User data fetched from backend does not contain password field.
 
   User(
       this.firstName, this.lastName, this.birthDate, this.email, this.password);
@@ -15,6 +15,16 @@ class User {
         'email': email,
         'password': password,
       };
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        json['firstName'],
+        json['lastName'],
+        json['birthDate'],
+        json['email'],
+        null
+    );
+  }
 }
 
 class UserUpdate {
@@ -31,4 +41,6 @@ class UserUpdate {
         'birthDate': birthDate,
         'email': email,
       };
+
+
 }

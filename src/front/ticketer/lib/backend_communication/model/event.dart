@@ -1,6 +1,5 @@
+import 'package:ticketer/backend_communication/model/event_status.dart';
 import 'package:ticketer/backend_communication/model/sector.dart';
-
-import 'event_status.dart';
 
 class Event {
   String? id;
@@ -9,7 +8,7 @@ class Event {
   String location;
   String date;
   List<Sector> sectors;
-  EventStatus status;
+  EventStatus? status; // This field is nullable as event creation cannot have event status.
 
   Event(
     this.id,
@@ -18,8 +17,17 @@ class Event {
     this.location,
     this.date,
     this.sectors,
-    this.status,
+    this.status
   );
+
+  Event.noStatus(
+      this.id,
+      this.name,
+      this.description,
+      this.location,
+      this.date,
+      this.sectors
+      );
 
   factory Event.fromJson(Map<String, dynamic> json) {
     List<Sector> sectors = _getSectorsFromJson(json);
@@ -30,7 +38,7 @@ class Event {
       json['location'],
       json['date'],
       sectors,
-      EventStatus.values[json['status']],
+      EventStatus.getByCode(json['status']),
     );
   }
 
@@ -49,6 +57,5 @@ class Event {
         'location': location,
         'date': date,
         'sectors': sectors.map((item) => item.toJson()).toList(),
-        'status': status.index,
       };
 }
