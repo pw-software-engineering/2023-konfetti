@@ -45,7 +45,9 @@ jobs:
         - name: Create dotenv
           run: |
             echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}"
+            echo "PAYMENT_URL=${{ vars.PAYMENT_ADDRESS }}"
             echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}" > build/web/assets/dotenv
+            echo "PAYMENT_URL=${{ vars.PAYMENT_ADDRESS }}" >> build/web/assets/dotenv
         - name: Setup Pages
           uses: actions/configure-pages@v3
         - name: Upload artifact
