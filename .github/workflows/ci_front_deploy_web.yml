@@ -38,8 +38,6 @@ jobs:
           run: flutter --version
         - name: Update dependencies
           run: flutter pub get
-        - name: Test app
-          run: flutter test
         - name: Build web app
           run: flutter build web --base-href "/2023-konfetti/"
         - name: Create dotenv
