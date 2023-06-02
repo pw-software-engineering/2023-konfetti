@@ -40,10 +40,11 @@ jobs:
           run: flutter pub get
         - name: Build web app
           run: flutter build web --base-href "/2023-konfetti/"
-        - name: Create dotenv
+        - name: Create dotenv file
           run: |
             echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}"
             echo "PAYMENT_URL=${{ vars.PAYMENT_ADDRESS }}"
+            echo "File in build/web/assets/assets/dotenv"
             echo "BACKEND_URL=${{ vars.BACKEND_ADDRESS }}" > build/web/assets/assets/dotenv
             echo "PAYMENT_URL=${{ vars.PAYMENT_ADDRESS }}" >> build/web/assets/assets/dotenv
         - name: Setup Pages
