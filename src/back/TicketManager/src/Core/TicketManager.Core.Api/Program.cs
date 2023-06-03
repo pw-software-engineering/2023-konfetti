@@ -20,6 +20,7 @@ using TicketManager.Core.Services.Extensions.JsonConverters;
 using TicketManager.Core.Services.Extensions.Parsers;
 using TicketManager.Core.Services.Processes.Events;
 using TicketManager.Core.Services.Processes.Tickets;
+using TicketManager.Core.Services.Services.BlobStorages;
 using TicketManager.Core.Services.Services.HttpClients;
 using TicketManager.Core.Services.Services.Mockables;
 using TicketManager.Core.Services.Services.PasswordManagers;
@@ -49,9 +50,13 @@ public class Program
         builder.Services.AddSingleton(new PaymentClientConfiguration(
             builder.Configuration["PaymentClientBaseUrl"],
             builder.Configuration["PaymentClientApiKey"]));
+        builder.Services.AddSingleton(new BlobStorageConfiguration(
+            builder.Configuration["BlobStorageConnectionString"],
+            builder.Configuration["BlobStorageContainerName"]));
 
         builder.Services.AddHttpClient<PaymentClient>().ConfigureHttpClient(PaymentClient.Configure);
-        
+
+        builder.Services.AddScoped<BlobStorage>();
         builder.Services.AddScoped<Repository<User, Guid>>();
         builder.Services.AddScoped<Repository<Organizer, Guid>>();
         builder.Services.AddScoped<Repository<Account, Guid>>();
@@ -63,6 +68,7 @@ public class Program
         {
             options.AssemblyFilter = assembly => assembly.FullName?.Contains("TicketManager.Core.Services") ?? false;
         });
+        
         
         builder.Services.AddSwaggerDoc();
 
@@ -96,6 +102,11 @@ public class Program
         
         var app = builder.Build();
 
+        app.UsePathBase("/api/");
+        app.UseRouting();
+        // app.MapFastEndpoints();
+        app.UseLoggingMiddleware();
+        
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseFastEndpoints(c =>

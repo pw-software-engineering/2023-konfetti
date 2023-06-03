@@ -16,6 +16,7 @@ class OrganizerCommunication {
   static const String _registerEndPoint = "/organizer/register";
   static const String _listEndPoint = "/organizer/list";
   static const String _decideEndPoint = "/organizer/decide";
+  static const String _viewEndPoint = "/organizer/view";
 
   Future<Tuple2<Response, ResponseCode>> update(
           OrganizerAccountUpdate body) async =>
@@ -54,5 +55,13 @@ class OrganizerCommunication {
         _decideEndPoint, Token(Auth().getCurrentAccount!.token),
         data: jsonEncode(
             {"organizerId": organizer.id, "isAccepted": isAccepted}));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> view() async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().getCallAuthorized(
+        _viewEndPoint, Token(Auth().getCurrentAccount!.token));
   }
 }

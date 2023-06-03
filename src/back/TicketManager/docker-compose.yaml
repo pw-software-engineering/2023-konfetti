@@ -9,9 +9,12 @@ services:
     ports:
       - "8080:80"
     networks:
-      - db
-      - pay
-      - rabbit
+      db:
+      pay:
+      rabbit:
+      web:
+        aliases:
+          - server.localhost
     env_file:
       - variables.env
     depends_on:
@@ -19,6 +22,12 @@ services:
       - payment-service
       - rabbitmq
       - pdf-generator
+      - blob-storage
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server.rule=Host(`server.localhost`)"
+      - "traefik.http.routers.server.entrypoints=web"
+      - "traefik.port=80"
   api-postgres:
     container_name: api-database
     image: "postgres:latest"
@@ -39,9 +48,17 @@ services:
     ports:
       - "8081:80"
     networks:
-      - pay
+      pay:
+      web:
+        aliases:
+          - payment.localhost
     env_file:
       - variables.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.payment-service.rule=Host(`payment.localhost`)"
+      - "traefik.http.routers.payment-service.entrypoints=web"
+      - "traefik.port=80"
   rabbitmq:
     container_name: 'rabbitmq'
     image: rabbitmq:3-management-alpine
@@ -58,11 +75,68 @@ services:
       dockerfile: Dockerfile.pdf_generator
     networks:
       - rabbit
+      - web
     env_file:
       - variables.env
       - secrets.env
     depends_on:
       - rabbitmq
+      - blob-storage
+  blob-storage:
+    container_name: 'blob-storage'
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    command:
+      - azurite
+      - --blobHost
+      - 0.0.0.0
+      - --blobPort
+      - "10000"
+      - --disableProductStyleUrl
+    ports:
+      - "10000:10000"
+    environment:
+      - executable=blob
+    networks:
+      web:
+        aliases:
+          - blob.localhost
+    volumes:
+      - storage:/opt/azurite/folder
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blob.rule=Host(`blob.localhost`)"
+      - "traefik.http.routers.blob.entrypoints=web"
+      - "traefik.port=80"
+  traefik:
+    image: "traefik:v2.6"
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker.network=web"
+    ports:
+      - "80:80"
+      - "433:433"
+      - "8085:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - web
+  dns:
+    container_name: dns
+    image: gists/dnsmasq
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ./dnsmasq:/etc/dnsmasq.d
+    restart: always
+    networks:
+      - web
 networks:
   db:
     name: db
@@ -73,3 +147,8 @@ networks:
   rabbit:
     name: rabbit
     driver: bridge
+  web:
+    name: web
+    driver: bridge
+volumes:
+  storage:

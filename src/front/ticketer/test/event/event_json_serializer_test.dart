@@ -11,7 +11,7 @@ void main() {
       // given
       Sector s1 = Sector("VIP", 240.48, 10, 12);
       Sector s2 = Sector("Basic", 119.90, 100, 50);
-      Event event = Event(null, "My Event", "My description", "Warsaw",
+      Event event = Event.noStatus(null, "My Event", "My description", "Warsaw",
           "2023-03-30T01:00:00.000Z", List.from([s1, s2]));
 
       String expected =
