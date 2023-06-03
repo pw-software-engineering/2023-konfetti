@@ -15,7 +15,7 @@ public class OrganizerDecideTest: SingleTest
         // Find organizer Id
         var organizerListRequest = new OrganizerListRequest
         {
-            PageNumber = 0,
+            PageNumber = 0 + Variables.PageNumberOffset,
             PageSize = 100,
             ShowAscending = true,
             SortBy = OrganizerListSortByDto.Email,

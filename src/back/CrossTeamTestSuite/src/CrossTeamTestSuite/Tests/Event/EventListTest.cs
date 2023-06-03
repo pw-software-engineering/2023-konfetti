@@ -13,7 +13,7 @@ public class EventListTest: SingleTest
     {
         var eventListRequest = new EventListRequest
         {
-            PageNumber = 0,
+            PageNumber = 0 + Variables.PageNumberOffset,
             PageSize = 10
         };
         var eventListInstance = new EventListInstance();

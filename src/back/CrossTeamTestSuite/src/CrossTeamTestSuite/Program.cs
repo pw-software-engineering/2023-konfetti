@@ -18,7 +18,7 @@ class Program
 {
     public static async Task Main(string[] args)
     {
-        if (args.Length != 4)
+        if (args.Length < 4)
         {
             throw new ArgumentException("Wrong number of arguments provided");
         }
@@ -27,6 +27,7 @@ class Program
         var adminEmail = args[1];
         var adminPassword = args[2];
         var paymentAddress = args[3];
+        SetPageNumberOffset(args);
         ApiClientSingleton.ConfigureClient(apiAddress);
         PaymentClientSingleton.ConfigureClient(paymentAddress);
 
@@ -47,6 +48,14 @@ class Program
             .AddTest(new TicketBuyTest())
             .GetExecutor()
             .ExecuteAsync();
+    }
+
+    private static void SetPageNumberOffset(string[] args)
+    {
+        if (args.Length > 4 && int.TryParse(args[4], out var value))
+        {
+            Variables.PageNumberOffset = value;
+        }
     }
 }
 
