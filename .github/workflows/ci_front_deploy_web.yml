@@ -21,48 +21,46 @@ env:
   DEPLOYMENT_DIRECTORY: '../../../deployment'
 jobs:
   build:
-      name: Build and deploy front-end Web application
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./src/front/ticketer
-      steps:
-        - uses: actions/checkout@v3
-        - uses: subosito/flutter-action@v2
-          with:
-            flutter-version: '3.7.7'
-            channel: 'stable'
+    name: Build and deploy front-end Web application
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/front/ticketer
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.7'
+          channel: 'stable'
 
-        - name: Login to ACR
-          uses: docker/login-action@v2
-          with:
-            registry: ${{ env.ACR_URL }}
-            username: ${{ secrets.ACR_USER_ID }}
-            password: ${{ secrets.ACR_USER_PASSWORD }}
+      - name: Login to ACR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.ACR_URL }}
+          username: ${{ secrets.ACR_USER_ID }}
+          password: ${{ secrets.ACR_USER_PASSWORD }}
 
-        - name: Set IMAGE_ID_FRONT as env variable
-          run: echo "IMAGE_ID_FRONT=${{ env.ACR_URL }}/${{ env.FRONT_IMAGE_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
-        - name: Build docker image for frontend
-          run: docker build --build-arg payment=${{ vars.PAYMENT_ADRESS}} --build-arg back=${{ vars.BACKEND_ADRESS}} -f ${{ env.DOCKERFILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_FRONT }}
-        - name: Push docker image for frontend
-          run: docker push ${{ env.IMAGE_ID_FRONT }}
-        
-        -  uses: azure/login@v1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
-        - uses: azure/setup-kubectl@v3
-          with:
-            version: 'v1.18.8'
-        - uses: azure/aks-set-context@v3
-          with:
-            cluster-name: ${{ secrets.AKS_NAME }}
-            resource-group: ${{ secrets.AKS_RG_NAME }}
+      - name: Set IMAGE_ID_FRONT as env variable
+        run: echo "IMAGE_ID_FRONT=${{ env.ACR_URL }}/${{ env.FRONT_IMAGE_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Build docker image for frontend
+        run: docker build --build-arg payment=${{ vars.PAYMENT_ADRESS}} --build-arg back=${{ vars.BACKEND_ADRESS}} -f ${{ env.DOCKERFILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_FRONT }}
+      - name: Push docker image for frontend
+        run: docker push ${{ env.IMAGE_ID_FRONT }}
+      
+      -  uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.18.8'
+      - uses: azure/aks-set-context@v3
+        with:
+          cluster-name: ${{ secrets.AKS_NAME }}
+          resource-group: ${{ secrets.AKS_RG_NAME }}
 
-        - name: Set DOMAIN env variable
-          run: echo "DOMAIN=$(az aks show -g ${{ secrets.AKS_RG_NAME }} -n ${{ secrets.AKS_NAME }} --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
-        - name: Substitute environment variables in app deployment file
-          run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }}"
-        - name: Deploy app to the cluster
-          run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }} --wait
-
-    
+      - name: Set DOMAIN env variable
+        run: echo "DOMAIN=$(az aks show -g ${{ secrets.AKS_RG_NAME }} -n ${{ secrets.AKS_NAME }} --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
+      - name: Substitute environment variables in app deployment file
+        run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }}"
+      - name: Deploy app to the cluster
+        run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }} --wait
