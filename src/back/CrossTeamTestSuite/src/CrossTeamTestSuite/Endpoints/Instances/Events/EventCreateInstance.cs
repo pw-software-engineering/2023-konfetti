@@ -14,10 +14,12 @@ public class EventCreateInstance: EndpointInstance<EventCreateRequest, IdRespons
         var eventRepository = DataAccessSingleton.GetInstance().EventRepository;
         var @event = new Event
         {
+            Id = response!.Id,
             Name = request.Name,
             Description = request.Description,
             Location = request.Location,
             Date = request.Date,
+            Status = EventStatus.Unverified,
             Sectors = request.Sectors.Select(x => new Sector
             {
                 Name = x.Name,
