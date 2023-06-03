@@ -50,7 +50,12 @@ public static class HttpClientExtensions
         }
         catch (Exception e)
         {
-            throw new CustomException(GetFormattedString(await response.Content.ReadAsStringAsync()), e);
+            throw new CustomException(
+                "Response:\n" +
+                GetFormattedString(await response.Content.ReadAsStringAsync()) +
+                "\n\nRequest:\n" +
+                GetFormattedString(await (response.RequestMessage?.Content?.ReadAsStringAsync() ?? Task.FromResult(""))),
+                e);
         }
     }
 
