@@ -1,5 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy fontened app to kubernetes
 
 on:
   # Runs on pushes targeting the default branch
@@ -12,14 +11,14 @@ on:
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: "front-deploy"
   cancel-in-progress: false
 
 env:
   DOCKERFILE: 'Dockerfile'
   PATH_TO_APP_SRC: '.'
   FRONT_IMAGE_NAME: konfetti-frontend
-  DEPLOYMENT_DIRECTORY: './deployment'
+  DEPLOYMENT_DIRECTORY: '../../../deployment'
 jobs:
   build:
       name: Build and deploy front-end Web application
