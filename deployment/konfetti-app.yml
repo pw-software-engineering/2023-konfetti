@@ -22,7 +22,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: konfetti-app
-        image: ${IMAGE_ID_KONFETTI_APP}
+        image: ${IMAGE_ID_FRONT}
         resources:
           requests:
             cpu: 100m

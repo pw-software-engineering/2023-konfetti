@@ -20,6 +20,8 @@ env:
   PATH_TO_APP_SRC: '.'
   FRONT_IMAGE_NAME: konfetti-frontend
   DEPLOYMENT_DIRECTORY: '../../../deployment'
+  DEPLOYMENT_FILE_NAME: 'konfetti-app.yml'
+  NAMESPACE: 'konfetti'
 jobs:
   build:
     name: Build and deploy front-end Web application
