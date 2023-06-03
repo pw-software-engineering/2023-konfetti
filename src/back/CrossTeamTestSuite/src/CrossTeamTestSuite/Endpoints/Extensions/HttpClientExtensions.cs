@@ -28,7 +28,7 @@ public static class HttpClientExtensions
     {
         var response = await client.PostOrGetAsync(request);
         
-        await ValidateStatusCode(response);
+        await ValidateStatusCodeAsync(response);
     }
 
     public async static Task<TResponse?> CallEndpointSuccessAsync<TRequest, TResponse>(this HttpClient client, TRequest request)
@@ -37,12 +37,12 @@ public static class HttpClientExtensions
     {
         var response = await client.PostOrGetAsync(request);
 
-        await ValidateStatusCode(response);
+        await ValidateStatusCodeAsync(response);
         
         return await response.Content.ReadFromJsonAsync<TResponse>(jsonSerializerOptions);
     }
 
-    private async static Task ValidateStatusCode(HttpResponseMessage response)
+    private async static Task ValidateStatusCodeAsync(HttpResponseMessage response)
     {
         try
         {
