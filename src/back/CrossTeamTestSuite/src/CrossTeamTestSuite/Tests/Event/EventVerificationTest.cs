@@ -5,7 +5,7 @@ using CrossTeamTestSuite.TestsInfrastructure;
 
 namespace CrossTeamTestSuite.Tests.Event;
 
-public class EventCanBeVerifiedTest: SingleTest
+public class EventVerificationTest: SingleTest
 {
     public override string Name => "Event can be verified";
     public override async Task ExecuteAsync()

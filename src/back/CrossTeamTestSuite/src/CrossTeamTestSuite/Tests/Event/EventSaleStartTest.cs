@@ -5,7 +5,7 @@ using CrossTeamTestSuite.TestsInfrastructure;
 
 namespace CrossTeamTestSuite.Tests.Event;
 
-public class EventSaleCanBeStartedTest: SingleTest
+public class EventSaleStartTest: SingleTest
 {
     public override string Name => "Event sale can be started";
     public override async Task ExecuteAsync()

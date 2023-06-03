@@ -41,9 +41,9 @@ class Program
             .AddTest(new UserViewTest())
             .AddTest(new EventCreateTest())
             .AddTest(new EventListTest())
-            .AddTest(new EventCanBeVerifiedTest())
-            .AddTest(new EventCanBePublishedTest())
-            .AddTest(new EventSaleCanBeStartedTest())
+            .AddTest(new EventVerificationTest())
+            .AddTest(new EventPublishTest())
+            .AddTest(new EventSaleStartTest())
             .AddTest(new TicketBuyTest())
             .GetExecutor()
             .ExecuteAsync();

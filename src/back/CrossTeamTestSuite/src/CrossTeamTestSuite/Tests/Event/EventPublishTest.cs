@@ -5,7 +5,7 @@ using CrossTeamTestSuite.TestsInfrastructure;
 
 namespace CrossTeamTestSuite.Tests.Event;
 
-public class EventCanBePublishedTest: SingleTest
+public class EventPublishTest: SingleTest
 {
     public override string Name => "Event can be published";
     public override async Task ExecuteAsync()
