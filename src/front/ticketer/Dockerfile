@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 as build
 EXPOSE 4567
 
 RUN apt-get update
@@ -27,6 +27,18 @@ COPY . /app/
 WORKDIR /app/
 RUN flutter pub get
 RUN flutter build web
+
+
+
+FROM ubuntu:20.04
+EXPOSE 4567
+
+RUN apt-get update
+RUN apt-get install -y python3
+
+WORKDIR /app/
+COPY --from=build /app/build/web/ .
+COPY ./server.sh .
 
 ARG back
 ARG payment
