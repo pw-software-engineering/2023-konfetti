@@ -1,5 +1,4 @@
 FROM ubuntu:20.04 as build
-EXPOSE 4567
 
 RUN apt-get update
 RUN apt-get install -y git 
@@ -31,7 +30,7 @@ RUN flutter build web
 
 
 FROM ubuntu:20.04
-EXPOSE 4567
+EXPOSE 80
 
 RUN apt-get update
 RUN apt-get install -y python3
