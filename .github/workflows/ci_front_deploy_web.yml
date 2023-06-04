@@ -41,7 +41,7 @@ jobs:
       - name: Set IMAGE_ID_FRONT as env variable
         run: echo "IMAGE_ID_FRONT=${{ env.ACR_URL }}/${{ env.FRONT_IMAGE_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
       - name: Build docker image for frontend
-        run: docker build --build-arg payment=${{ vars.PAYMENT_ADRESS}} --build-arg back=${{ vars.BACKEND_ADRESS}} -f ${{ env.DOCKERFILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_FRONT }}
+        run: docker build --build-arg payment=${{ vars.PAYMENT_ADDRESS}} --build-arg back=${{ vars.BACKEND_ADDRESS}} -f ${{ env.DOCKERFILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_FRONT }}
       - name: Push docker image for frontend
         run: docker push ${{ env.IMAGE_ID_FRONT }}
       
