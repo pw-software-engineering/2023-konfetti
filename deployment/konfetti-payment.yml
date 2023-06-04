@@ -62,7 +62,7 @@ spec:
   - host: ${NAMESPACE}.${DOMAIN}
     http:
       paths:
-      - path: /payment
+      - path: /pay
         pathType: Prefix
         backend:
           service: 

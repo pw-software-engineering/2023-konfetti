@@ -45,8 +45,9 @@ public class Program
         
         var app = builder.Build();
 
-        app.UsePathBase("/payment/");
+        app.UsePathBase("/pay/");
         app.UseRouting();
+        app.UseLoggingMiddleware();
 
         app.UseAuthorization();
         app.UseFastEndpoints(c =>
