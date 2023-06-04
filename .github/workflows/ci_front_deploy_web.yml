@@ -14,6 +14,7 @@ concurrency:
   group: "front-deploy"
   cancel-in-progress: false
 
+
 env:
   ACR_URL: 'powoeuwacr.azurecr.io'
   DOCKERFILE: 'Dockerfile'
