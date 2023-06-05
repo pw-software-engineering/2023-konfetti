@@ -29,22 +29,30 @@ RUN flutter build web
 
 
 
-FROM ubuntu:20.04
+# FROM ubuntu:20.04
+# EXPOSE 80
+
+# RUN apt-get update
+# RUN apt-get install -y python3
+
+# WORKDIR /app/
+# COPY --from=build /app/build/web/ .
+
+
+# # make server startup script executable and start the web server
+# RUN ["chmod", "+x", "/app/server.sh"]
+
+# ENTRYPOINT [ "/app/server.sh"]
+
+FROM nginx
 EXPOSE 80
-
-RUN apt-get update
-RUN apt-get install -y python3
-
-WORKDIR /app/
-COPY --from=build /app/build/web/ .
-COPY ./server.sh .
 
 ARG back
 ARG payment
 ENV BACKEND_ADDRESS $back
 ENV PAYMENT_ADDRESS $payment
+COPY --from=build /app/build/web/ /usr/share/nginx/html
+COPY ./server.sh .
+RUN ["chmod", "+x", "./server.sh"]
+RUN ["bash", "./server.sh"]
 
-# make server startup script executable and start the web server
-RUN ["chmod", "+x", "/app/server.sh"]
-
-ENTRYPOINT [ "/app/server.sh"]
