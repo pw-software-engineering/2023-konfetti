@@ -38,8 +38,6 @@ class BackendCommunication {
 
   late final Dio dio;
   static Map<String, dynamic> headers = <String, String>{
-    "Access-Control-Allow-Origin":
-        "http://konfetti.3e15f474d9d54301ac33.westeurope.aksapp.io/",
     'Content-Type': 'application/json',
     'Accept': '*/*'
   };
@@ -58,6 +56,7 @@ class BackendCommunication {
       dio = Dio();
       dio.options.baseUrl = url;
       dio.options.headers = headers;
+      dio.options.headers.addAll({"Access-Control-Allow-Origin": "$url/"});
       dio.options.receiveDataWhenStatusError = true;
       dio.interceptors.add(CustomInterceptors());
     } else {
@@ -169,8 +168,6 @@ class PaymentCommunication {
 
   late final Dio dio;
   static Map<String, dynamic> headers = <String, String>{
-    "Access-Control-Allow-Origin":
-        "http://konfetti.3e15f474d9d54301ac33.westeurope.aksapp.io/",
     'Content-Type': 'application/json',
     'Accept': '*/*'
   };
@@ -189,6 +186,7 @@ class PaymentCommunication {
       dio = Dio();
       dio.options.baseUrl = url;
       dio.options.headers = headers;
+      dio.options.headers.addAll({"Access-Control-Allow-Origin": "$url/"});
       dio.options.receiveDataWhenStatusError = true;
       dio.interceptors.add(CustomInterceptors());
     } else {
