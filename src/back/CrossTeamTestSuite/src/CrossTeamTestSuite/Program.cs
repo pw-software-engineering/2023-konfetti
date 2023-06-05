@@ -8,6 +8,7 @@ using CrossTeamTestSuite.Tests.Admin;
 using CrossTeamTestSuite.Tests.Event;
 using CrossTeamTestSuite.Tests.Examples;
 using CrossTeamTestSuite.Tests.Organizer;
+using CrossTeamTestSuite.Tests.Ticket;
 using CrossTeamTestSuite.Tests.User;
 using CrossTeamTestSuite.TestsInfrastructure;
 
@@ -17,16 +18,18 @@ class Program
 {
     public static async Task Main(string[] args)
     {
-        if (args.Length != 3)
+        if (args.Length < 4)
         {
             throw new ArgumentException("Wrong number of arguments provided");
         }
 
-        var address = args[0];
+        var apiAddress = args[0];
         var adminEmail = args[1];
         var adminPassword = args[2];
-        ApiClientSingleton.ConfigureClient(address);
-        
+        var paymentAddress = args[3];
+        SetPageNumberOffset(args);
+        ApiClientSingleton.ConfigureClient(apiAddress);
+        PaymentClientSingleton.ConfigureClient(paymentAddress);
 
         await new TestPipeline()
             .AddTest(new AdminLoginTest(adminEmail, adminPassword))
@@ -39,8 +42,20 @@ class Program
             .AddTest(new UserViewTest())
             .AddTest(new EventCreateTest())
             .AddTest(new EventListTest())
+            .AddTest(new EventVerificationTest())
+            .AddTest(new EventPublishTest())
+            .AddTest(new EventSaleStartTest())
+            .AddTest(new TicketBuyTest())
             .GetExecutor()
             .ExecuteAsync();
+    }
+
+    private static void SetPageNumberOffset(string[] args)
+    {
+        if (args.Length > 4 && int.TryParse(args[4], out var value))
+        {
+            Variables.PageNumberOffset = value;
+        }
     }
 }
 
