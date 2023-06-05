@@ -169,7 +169,8 @@ class PaymentCommunication {
 
   late final Dio dio;
   static Map<String, dynamic> headers = <String, String>{
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin":
+        "http://konfetti.3e15f474d9d54301ac33.westeurope.aksapp.io/",
     'Content-Type': 'application/json',
     'Accept': '*/*'
   };
