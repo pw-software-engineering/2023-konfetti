@@ -36,7 +36,7 @@ spec:
         - name: DatabaseConnectionString
           value: ${DATABASE_CONNECTION_STRING}
         - name: PaymentClientApiKey
-          value: ${API_KEY}
+          value: ${KONFETTI_API_KEY}
         - name: PaymentClientBaseUrl
           value: ${PAYMENT_CLIENT_URL}
         - name: RabbitMqHost

@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: ${NAMESPACE}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konfetti-payment
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: konfetti-payment
+  template:
+    metadata:
+      labels:
+        app: konfetti-payment
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: konfetti-payment
+        image: ${IMAGE_ID_KONFETTI_PAYMENT}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: PaymentClientApiKey
+          value: ${KONFETTI_API_KEY}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konfetti-payment
+  namespace: ${NAMESPACE}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: konfetti-payment
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: konfetti-payment
+  namespace: ${NAMESPACE}
+  labels:
+    name: konfetti-payment
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: ${NAMESPACE}.${DOMAIN}
+    http:
+      paths:
+      - path: /pay
+        pathType: Prefix
+        backend:
+          service: 
+            name: konfetii-payment
+            port: 
+              number: 80
