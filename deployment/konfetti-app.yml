@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: ${NAMESPACE}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konfetti-app
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: konfetti-app
+  template:
+    metadata:
+      labels:
+        app: konfetti-app
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: konfetti-app
+        image: ${IMAGE_ID_FRONT}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konfetti-app
+  namespace: ${NAMESPACE}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: konfetti-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: konfetti-app
+  namespace: ${NAMESPACE}
+  labels:
+    name: konfetti-app
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: ${NAMESPACE}.${DOMAIN}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: konfetti-app
+            port: 
+              number: 80

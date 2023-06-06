@@ -13,8 +13,7 @@ class OrganizerListing extends StatefulWidget {
   State<OrganizerListing> createState() => _OrganizerListingPageState();
 }
 
-class _OrganizerListingPageState  extends State<OrganizerListing>  {
-
+class _OrganizerListingPageState extends State<OrganizerListing> {
   int _pageNo = 0;
   final int _pageSize = 3;
   bool _hasNextPage = true;
@@ -27,7 +26,7 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _getHeader(),
-          _getOrganizersList()
+          _getOrganizersList(),
         ],
       ),
     );
@@ -44,8 +43,10 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
             } else if (_hasNextPage) {
               try {
                 _fetchMoreData();
-                setState(() {
-                  _pageNo++;
+                Future.delayed(Duration.zero, () {
+                  setState(() {
+                    _pageNo++;
+                  });
                 });
               } catch (e) {
                 log(e.toString());
@@ -57,19 +58,19 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }
-            else {
+            } else {
               return Container(
                   margin: const EdgeInsets.only(top: 15.0),
                   child: const Center(
                       child: Text(
-                        "No new applications to show!",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ))
-              );
+                    "No new applications to show!",
+                    style: TextStyle(fontSize: 15, color: Colors.blue),
+                  )));
             }
           },
-          itemCount: _hasNextPage ? _organizers.length + 1 : (_organizers.isEmpty ? 1: _organizers.length),
+          itemCount: _hasNextPage
+              ? _organizers.length + 1
+              : (_organizers.isEmpty ? 1 : _organizers.length),
         ),
       ],
     );
@@ -77,13 +78,15 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
 
   Future<void> _fetchMoreData() async {
     final res = await OrganizerCommunication().listToVerify(_pageNo, _pageSize);
-    setState(() {
-      int before = _organizers.length;
-      for (var org in res.item1.data["items"]) {
-        _organizers.add(Organizer.fromJson(org));
-      }
-      int after = _organizers.length;
-      _hasNextPage = after != 0 && before != after;
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        int before = _organizers.length;
+        for (var org in res.item1.data["items"]) {
+          _organizers.add(Organizer.fromJson(org));
+        }
+        int after = _organizers.length;
+        _hasNextPage = after != 0 && before != after;
+      });
     });
   }
 
@@ -102,7 +105,10 @@ class _OrganizerListingPageState  extends State<OrganizerListing>  {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        OrganizerCard(organizer: organizer), _rejectButton(organizer), _verifyButton(organizer)],
+        OrganizerCard(organizer: organizer),
+        _rejectButton(organizer),
+        _verifyButton(organizer)
+      ],
     );
   }
 

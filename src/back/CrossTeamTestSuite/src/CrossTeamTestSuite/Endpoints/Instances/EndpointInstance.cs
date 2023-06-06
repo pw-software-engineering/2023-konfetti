@@ -7,7 +7,7 @@ public abstract class EndpointInstance<TRequest, TResponse>
     where TRequest: IRequest<TResponse> 
     where TResponse: class
 {
-    protected HttpClient HttpClient { get; }
+    protected HttpClient HttpClient { get; private set; }
     protected string Token { get; set; }
 
     protected EndpointInstance()
@@ -35,6 +35,11 @@ public abstract class EndpointInstance<TRequest, TResponse>
     {
         Token = CommonTokenSingleton.GetToken(tokenType);
         Configure();
+    }
+    
+    public void SetPaymentClient()
+    {
+        HttpClient = PaymentClientSingleton.GetInstance();
     }
 
     public abstract Task<TResponse?> HandleEndpointAsync(TRequest request);
@@ -42,7 +47,7 @@ public abstract class EndpointInstance<TRequest, TResponse>
 
 public abstract class EndpointInstance<TRequest> where TRequest: IRequest
 {
-    protected HttpClient HttpClient { get; }
+    protected HttpClient HttpClient { get; private set; }
     protected string Token { get; set; }
 
     protected EndpointInstance()
@@ -70,6 +75,11 @@ public abstract class EndpointInstance<TRequest> where TRequest: IRequest
     {
         Token = CommonTokenSingleton.GetToken(tokenType);
         Configure();
+    }
+
+    public void SetPaymentClient()
+    {
+        HttpClient = PaymentClientSingleton.GetInstance();
     }
     
     public abstract Task HandleEndpointAsync(TRequest request);

@@ -30,13 +30,18 @@ env:
   PATH_TO_PDF_GENERATOR_DOCKER_FILE: 'Dockerfile.pdf_generator'
   PATH_TO_APP_SRC: '.'
   DEPLOYMENT_DIRECTORY: './deployment'
-  DEPLOYMENT_FILE_NAME: 'konfetti-api.yml'
+  DEPLOYMENT_FILE_NAME_API: 'konfetti-api.yml'
+  DEPLOYMENT_FILE_NAME_PAYMENT: 'konfetti-payment.yml'
+  DEPLOYMENT_FILE_NAME_PDF: 'konfetti-pdf.yml'
+  DEPLOYMENT_FILE_NAME_RABBIT: 'konfetti-rabbit.yml'
   NAMESPACE: 'konfetti'
-  PAYMENT_CLIENT_URL: 'http://payment-service'
-  RABBIT_MQ_HOST: 'rabbitmq'
+  PAYMENT_CLIENT_URL: 'http://konfetti-payment.konfetti'
+  RABBIT_MQ_HOST: 'konfetti-rabbit.konfetti'
   RABBIT_MQ_PASSWORD: 'guest'
   RABBIT_MQ_USERNAME: 'guest'
   RABBIT_MQ_VIRTUALHOST: '/'
+  BLOB_STORAGE_CONTAINER_NAME: 'konfetti'
+  IMAGE_ID_KONFETTI_RABBIT: 'rabbitmq:3-management-alpine'
   
 jobs:
   build:
@@ -122,23 +127,47 @@ jobs:
       with:
         cluster-name: ${{ secrets.AKS_NAME }}
         resource-group: ${{ secrets.AKS_RG_NAME }}
+
     - name: Set IMAGE_ID_KONFETTI_API as env variable
-      run: echo "IMAGE_ID_KONFETTI_API=${{ env.ACR_URL }}/${{ env.APP_PAYMENT_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+      run: echo "IMAGE_ID_KONFETTI_API=${{ env.ACR_URL }}/${{ env.APP_API_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Set IMAGE_ID_KONFETTI_PAYMENT as env variable
+      run: echo "IMAGE_ID_KONFETTI_PAYMENT=${{ env.ACR_URL }}/${{ env.APP_PAYMENT_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Set IMAGE_ID_KONFETTI_PDF as env variable
+      run: echo "IMAGE_ID_KONFETTI_PDF=${{ env.ACR_URL }}/${{ env.APP_PDF_GENERATOR_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
     - name: Set DOMAIN env variable
       run: echo "DOMAIN=$(az aks show -g ${{ secrets.AKS_RG_NAME }} -n ${{ secrets.AKS_NAME }} --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
-    - name: Print DOMAIN and IMAGE_ID
+    - name: Print DOMAIN and IMAGE_IDs
       run: |
         echo "${{ env.DOMAIN }}"
         echo "${{ env.IMAGE_ID_KONFETTI_API }}"
+        echo "${{ env.IMAGE_ID_KONFETTI_PAYMENT }}"
+        echo "${{ env.IMAGE_ID_KONFETTI_PDF }}"
+        
     - name: Substitute environment variables in app deployment file
       env:
         API_KEY: ${{ secrets.API_KEY }}
         DATABASE_CONNECTION_STRING: ${{ secrets.DATABASE_CONNECTION_STRING }}
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-      run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }}"
-    - name: Deploy app to the cluster
-      run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }} --wait
-
+      run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_API }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_API }}"
+    - name: Substitute environment variables in payment deployment file
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_PAYMENT }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_PAYMENT }}"
+    - name: Substitute environment variables in pdf deployment file
+      env:
+        BLOB_CONNECTION: ${{ secrets.BLOB_CONNECTION }}
+      run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_PDF }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_PDF }}"
+    - name: Substitute environment variables in rabbit deployment file
+      run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_RABBIT }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_RABBIT }}"
+    
+    - name: Deploy api to the cluster
+      run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_API }} --wait
+    - name: Deploy payment to the cluster
+      run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_PAYMENT }} --wait
+    - name: Deploy pdf to the cluster
+      run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_PDF }} --wait
+    - name: Deploy rabbit to the cluster
+      run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_RABBIT }} --wait
     
     
     

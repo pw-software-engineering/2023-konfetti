@@ -8,6 +8,7 @@ import 'auth/auth.dart';
 void main() async {
   await dotenv.load(fileName: "assets/dotenv");
   BackendCommunication().init();
+  PaymentCommunication().init();
   Auth().init();
 
   runApp(const MyApp());

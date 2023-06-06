@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
-
-import '../common/app_bar.dart';
+import 'package:ticketer/pages/common/app_bar.dart';
 
 class PaymentPage extends StatefulWidget {
   final Event event;
@@ -18,6 +18,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   late Event _event;
   late List<int> _seatsInSectors;
+  late List<String> _paymentIds = List.empty(growable: true);
 
   Widget _getContent() {
     return SingleChildScrollView(
@@ -123,8 +124,36 @@ class _PaymentPageState extends State<PaymentPage> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: ElevatedButton(
-              onPressed: () => {
-                Navigator.pop(context),
+              onPressed: () async {
+                // Navigator.pop(context),
+                // todo: handle returned ids into ticketsIds list
+                // and continue with logic:
+                for (int i = 0; i < _seatsInSectors.length; ++i) {
+                  if (_seatsInSectors[i] > 0) {
+                    var response = await BackendCommunication()
+                        .ticket
+                        .buy(_event, _event.sectors[i], _seatsInSectors[i]);
+                    if (response.item2.value == 200) {
+                      String id = response.item1.data["paymentId"];
+                      _paymentIds.add(id);
+                    }
+                  }
+                }
+                // proceed to payment
+                for (var id in _paymentIds) {
+                  await PaymentCommunication().payment.confirm(id);
+                  var response =
+                      await PaymentCommunication().payment.finish(id);
+                  if (response.item2.value == 200) {
+                    // ignore: use_build_context_synchronously
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _showDialogOnSuccess(context);
+                      },
+                    );
+                  }
+                }
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(100, 35),
@@ -134,6 +163,33 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ],
       ),
+    );
+  }
+
+  AlertDialog _showDialogOnSuccess(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        "Payment confirmed!",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      scrollable: true,
+      content: SingleChildScrollView(
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width / 4,
+            height: MediaQuery.of(context).size.height / 2,
+            child: const Text("Your payment has been confirmed successfully!")),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => {
+            Navigator.of(context).popUntil((route) => route.isFirst),
+          },
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 

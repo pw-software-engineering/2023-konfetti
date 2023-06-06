@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -23,7 +24,7 @@ public class GenerateTicketPdfConsumer : IConsumer<GenerateTicketPdf>
         this.blobConfiguration = blobConfiguration;
     }
 
-    public Task Consume(ConsumeContext<GenerateTicketPdf> context)
+    public async Task Consume(ConsumeContext<GenerateTicketPdf> context)
     {
         var ticket = context.Message.Ticket;
         var user = context.Message.User;
@@ -38,16 +39,17 @@ public class GenerateTicketPdfConsumer : IConsumer<GenerateTicketPdf>
             
             var blobServiceClient = new BlobServiceClient(blobConfiguration.ConnectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(blobConfiguration.ContainerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: context.CancellationToken);
             var blobClient = containerClient.GetBlobClient($"ticket-{ticket.Id}.pdf");
 
-            blobClient.Upload(stream, true);
+            await blobClient.UploadAsync(stream, true, context.CancellationToken);
         }
         
-        bus.Publish(new SetPdfGenerationFlag
+        await bus.Publish(new SetPdfGenerationFlag
         {
             TicketId = ticket.Id,
-        });
+        }, context.CancellationToken);
         
-        return Task.CompletedTask;
+        logger.LogInformation("Ticket {TicketId} pdf generated", ticket.Id);
     }
 }

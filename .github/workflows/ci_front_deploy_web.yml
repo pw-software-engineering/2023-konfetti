@@ -1,0 +1,65 @@
+name: Deploy fontened app to kubernetes
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["master"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "front-deploy"
+  cancel-in-progress: false
+
+
+env:
+  ACR_URL: 'powoeuwacr.azurecr.io'
+  DOCKERFILE: 'Dockerfile'
+  PATH_TO_APP_SRC: '.'
+  FRONT_IMAGE_NAME: konfetti-frontend
+  DEPLOYMENT_DIRECTORY: '../../../deployment'
+  DEPLOYMENT_FILE_NAME: 'konfetti-app.yml'
+  NAMESPACE: 'konfetti'
+jobs:
+  build:
+    name: Build and deploy front-end Web application
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/front/ticketer
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to ACR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.ACR_URL }}
+          username: ${{ secrets.ACR_USER_ID }}
+          password: ${{ secrets.ACR_USER_PASSWORD }}
+
+      - name: Set IMAGE_ID_FRONT as env variable
+        run: echo "IMAGE_ID_FRONT=${{ env.ACR_URL }}/${{ env.FRONT_IMAGE_NAME }}:v${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Build docker image for frontend
+        run: docker build --build-arg payment=${{ vars.PAYMENT_ADDRESS}} --build-arg back=${{ vars.BACKEND_ADDRESS}} -f ${{ env.DOCKERFILE }} ${{ env.PATH_TO_APP_SRC }} -t ${{ env.IMAGE_ID_FRONT }}
+      - name: Push docker image for frontend
+        run: docker push ${{ env.IMAGE_ID_FRONT }}
+      
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.18.8'
+      - uses: azure/aks-set-context@v3
+        with:
+          cluster-name: ${{ secrets.AKS_NAME }}
+          resource-group: ${{ secrets.AKS_RG_NAME }}
+
+      - name: Set DOMAIN env variable
+        run: echo "DOMAIN=$(az aks show -g ${{ secrets.AKS_RG_NAME }} -n ${{ secrets.AKS_NAME }} --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o tsv)" >> $GITHUB_ENV
+      - name: Substitute environment variables in app deployment file
+        run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }}"
+      - name: Deploy app to the cluster
+        run: kubectl apply -f ${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME }} --wait

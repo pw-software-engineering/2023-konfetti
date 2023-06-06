@@ -8,6 +8,8 @@ import 'package:ticketer/backend_communication/logic/account/communication_accou
 import 'package:ticketer/backend_communication/logic/dio_interceptors.dart';
 import 'package:ticketer/backend_communication/logic/event/communication_event.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
+import 'package:ticketer/backend_communication/logic/payment/communication_payment.dart';
+import 'package:ticketer/backend_communication/logic/ticket/communication_ticket.dart';
 import 'package:ticketer/backend_communication/logic/user/communication_user.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
 import 'package:tuple/tuple.dart';
@@ -31,10 +33,11 @@ class BackendCommunication {
   AccountCommunication get account => _accountCommunication;
   final EventCommunication _eventCommunication = EventCommunication();
   EventCommunication get event => _eventCommunication;
+  final TicketCommunication _ticketCommunication = TicketCommunication();
+  TicketCommunication get ticket => _ticketCommunication;
 
   late final Dio dio;
   static Map<String, dynamic> headers = <String, String>{
-    "Access-Control-Allow-Origin": "*",
     'Content-Type': 'application/json',
     'Accept': '*/*'
   };
@@ -53,6 +56,137 @@ class BackendCommunication {
       dio = Dio();
       dio.options.baseUrl = url;
       dio.options.headers = headers;
+      dio.options.headers.addAll({"Access-Control-Allow-Origin": "$url/"});
+      dio.options.receiveDataWhenStatusError = true;
+      dio.interceptors.add(CustomInterceptors());
+    } else {
+      dio = altDio;
+    }
+    _isInitialized = true;
+  }
+
+  Future<Tuple2<Response, ResponseCode>> getCallAuthorized(
+      String path, Token token,
+      {Map<String, dynamic>? params}) async {
+    if (!isInitialized) throw Exception("Not initilized");
+    Response response;
+    var options = dio.options;
+
+    try {
+      if (!token.isValid) {
+        throw ArgumentError("Token is not valid");
+      }
+      dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
+      dio.options.contentType = Headers.formUrlEncodedContentType;
+      response = await dio.get(path, queryParameters: params);
+    } on DioError catch (e) {
+      log(e.toString());
+      if (!token.isValid) {
+        response = Response(requestOptions: RequestOptions(), statusCode: 401);
+      } else if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
+    } finally {
+      dio.options = options;
+    }
+
+    return Tuple2<Response, ResponseCode>(
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> postCall(String path,
+      {Object? data}) async {
+    if (!isInitialized) throw Exception("Not initilized");
+    Response response;
+    var options = dio.options;
+
+    try {
+      dio.options.contentType = Headers.jsonContentType;
+      response = await dio.post(path, data: data);
+    } on DioError catch (e) {
+      log(e.toString());
+      if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
+    } finally {
+      dio.options = options;
+    }
+
+    return Tuple2<Response, ResponseCode>(
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> postCallAuthorized(
+      String path, Token token,
+      {Object? data}) async {
+    if (!isInitialized) throw Exception("Not initilized");
+    Response response;
+    var options = dio.options;
+
+    try {
+      if (!token.isValid) {
+        throw ArgumentError("Token is not valid");
+      }
+      dio.options.contentType = Headers.jsonContentType;
+      dio.options.headers.addAll({"Authorization": "Bearer ${token.token}"});
+      dio.options.contentType = Headers.jsonContentType;
+      response = await dio.post(path, data: data);
+    } on DioError catch (e) {
+      log(e.toString());
+      if (!token.isValid) {
+        response = Response(requestOptions: RequestOptions(), statusCode: 401);
+      } else if (e.response != null) {
+        response = e.response!;
+      } else {
+        response = Response(requestOptions: RequestOptions());
+      }
+    } finally {
+      dio.options = options;
+    }
+
+    return Tuple2<Response, ResponseCode>(
+        response, ResponseCode.getByCode(response.statusCode ?? -1));
+  }
+}
+
+class PaymentCommunication {
+  static final PaymentCommunication _singleton =
+      PaymentCommunication._internal();
+  factory PaymentCommunication() {
+    return _singleton;
+  }
+  PaymentCommunication._internal();
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
+  final CommunicationPayment _communicationPayment = CommunicationPayment();
+  CommunicationPayment get payment => _communicationPayment;
+
+  late final Dio dio;
+  static Map<String, dynamic> headers = <String, String>{
+    'Content-Type': 'application/json',
+    'Accept': '*/*'
+  };
+
+  // Initialize communication object
+  init({Dio? altDio}) async {
+    if (_isInitialized) return;
+    String? url = dotenv.env['PAYMENT_URL'];
+
+    if (url == null) {
+      throw Exception("Missing dotenv file");
+    }
+
+    // Configure request sending
+    if (altDio == null) {
+      dio = Dio();
+      dio.options.baseUrl = url;
+      dio.options.headers = headers;
+      dio.options.headers.addAll({"Access-Control-Allow-Origin": "$url/"});
       dio.options.receiveDataWhenStatusError = true;
       dio.interceptors.add(CustomInterceptors());
     } else {
