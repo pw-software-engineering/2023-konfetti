@@ -1,2 +1,2 @@
-BACKEND_URL=http://localhost:8080
-PAYMENT_URL=http://localhost:8081
+BACKEND_URL=http://konfetti.3e15f474d9d54301ac33.westeurope.aksapp.io/api
+PAYMENT_URL=http://konfetti.3e15f474d9d54301ac33.westeurope.aksapp.io/pay
