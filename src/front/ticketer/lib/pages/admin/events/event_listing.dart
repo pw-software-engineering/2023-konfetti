@@ -41,9 +41,9 @@ class _EventListingState extends State<EventListing> {
             } else if (_hasNextPage) {
               try {
                 _fetchMoreData();
-                setState(() {
+                /*setState(() {
                   _pageNo++;
-                });
+                });*/
               } catch (e) {
                 log(e.toString());
               }
@@ -82,6 +82,7 @@ class _EventListingState extends State<EventListing> {
       }
       int after = _events.length;
       _hasNextPage = after != 0 && before != after;
+      _pageNo++;
     });
   }
 
