@@ -49,6 +49,6 @@ public class MyFavoriteEventsEndpoint : Endpoint<MyFavoriteEventsRequest, List<E
             })
             .ToListAsync(ct);
         
-        await SendOkAsync(ct);
+        await SendOkAsync(result, ct);
     }
 }
