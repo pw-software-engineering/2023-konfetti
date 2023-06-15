@@ -103,7 +103,10 @@ public class Program
         builder.Services.AddCors(options =>
             options.AddDefaultPolicy(policy =>
             {
-                policy.AllowAnyOrigin();
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyMethod();
             }));
 
         var app = builder.Build();
