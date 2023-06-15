@@ -100,6 +100,15 @@ public class Program
             x.AddConsumer<DeleteSectorReservationConsumer>();
         });
         
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.SetIsOriginAllowed(host => host.StartsWith("http://localhost"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            }));
+
         var app = builder.Build();
 
         app.UsePathBase("/api/");
