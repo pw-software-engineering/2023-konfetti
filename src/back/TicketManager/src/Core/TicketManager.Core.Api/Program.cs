@@ -98,6 +98,7 @@ public class Program
             x.AddConsumer<RemoveEventTicketsConsumer>();
             x.AddConsumer<DeleteTicketConsumer>();
             x.AddConsumer<DeleteSectorReservationConsumer>();
+            x.AddConsumer<SetPdfGenerationFlagConsumer>();
         });
         
         var app = builder.Build();
