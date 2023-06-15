@@ -36,4 +36,9 @@ public class Account : IAggregateRoot<Guid>, IOptimisticConcurrent
     {
         IsBanned = true;
     }
+
+    public void UnBan()
+    {
+        IsBanned = false;
+    }
 }
