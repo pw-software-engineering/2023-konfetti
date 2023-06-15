@@ -30,6 +30,7 @@ class _OrganizerEventListPageState extends State<OrganizerEventListPage> {
       }
       int after = _events.length;
       _hasNextPage = before != after;
+      _pageNo++;
     });
   }
 
@@ -81,9 +82,9 @@ class _OrganizerEventListPageState extends State<OrganizerEventListPage> {
             } else {
               try {
                 _fetchMoreData();
-                setState(() {
+                /*setState(() {
                   _pageNo++;
-                });
+                });*/
               } catch (e) {
                 log(e.toString());
               }

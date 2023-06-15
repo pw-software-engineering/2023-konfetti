@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/event/communication_event.dart';
 import 'package:ticketer/backend_communication/model/event.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
@@ -13,8 +14,7 @@ class EventListing extends StatefulWidget {
   State<EventListing> createState() => _EventListingState();
 }
 
-class _EventListingState  extends State<EventListing>  {
-
+class _EventListingState extends State<EventListing> {
   int _pageNo = 0;
   final int _pageSize = 3;
   bool _hasNextPage = true;
@@ -25,10 +25,7 @@ class _EventListingState  extends State<EventListing>  {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _getHeader(),
-          _getEventsList()
-        ],
+        children: [_getHeader(), _getEventsList()],
       ),
     );
   }
@@ -44,9 +41,9 @@ class _EventListingState  extends State<EventListing>  {
             } else if (_hasNextPage) {
               try {
                 _fetchMoreData();
-                setState(() {
+                /*setState(() {
                   _pageNo++;
-                });
+                });*/
               } catch (e) {
                 log(e.toString());
               }
@@ -57,26 +54,27 @@ class _EventListingState  extends State<EventListing>  {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }
-            else {
+            } else {
               return Container(
                   margin: const EdgeInsets.only(top: 15.0),
                   child: const Center(
                       child: Text(
-                        "No new events to show!",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ))
-              );
+                    "No new events to show!",
+                    style: TextStyle(fontSize: 15, color: Colors.blue),
+                  )));
             }
           },
-          itemCount: _hasNextPage ? _events.length + 1 : (_events.isEmpty ? 1: _events.length),
+          itemCount: _hasNextPage
+              ? _events.length + 1
+              : (_events.isEmpty ? 1 : _events.length),
         ),
       ],
     );
   }
 
   Future<void> _fetchMoreData() async {
-    final res = await EventCommunication().listToVerify(_pageNo, _pageSize);
+    final res =
+        await BackendCommunication().event.listToVerify(_pageNo, _pageSize);
     setState(() {
       int before = _events.length;
       for (var org in res.item1.data["items"]) {
@@ -84,6 +82,7 @@ class _EventListingState  extends State<EventListing>  {
       }
       int after = _events.length;
       _hasNextPage = after != 0 && before != after;
+      _pageNo++;
     });
   }
 
@@ -102,7 +101,10 @@ class _EventListingState  extends State<EventListing>  {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        EventTile(event: event), _rejectButton(event), _verifyButton(event)],
+        EventTile(event: event),
+        _rejectButton(event),
+        _verifyButton(event)
+      ],
     );
   }
 
