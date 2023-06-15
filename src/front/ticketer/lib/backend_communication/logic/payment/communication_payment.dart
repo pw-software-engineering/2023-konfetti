@@ -19,6 +19,9 @@ class CommunicationPayment {
   }
 
   Future<Tuple2<Response, ResponseCode>> finish(String paymentId) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
     return await BackendCommunication().postCallAuthorized(
       _finishEndPoint,
       Token(Auth().getCurrentAccount!.token),
