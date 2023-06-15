@@ -45,7 +45,7 @@ public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
         BirthDate = birthDate;
     }
 
-    public void AddFavoriteEvents(UserFavoriteEvent favoriteEvent)
+    public void AddFavoriteEvent(UserFavoriteEvent favoriteEvent)
     {
         if (favoriteEvents.Contains(favoriteEvent))
         {
