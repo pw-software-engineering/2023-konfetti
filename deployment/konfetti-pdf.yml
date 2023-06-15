@@ -76,6 +76,6 @@ spec:
         pathType: Prefix
         backend:
           service: 
-            name: konfetii-pdf
+            name: konfetti-pdf
             port: 
               number: 80
