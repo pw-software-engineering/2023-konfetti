@@ -5,11 +5,15 @@ namespace TicketManager.Core.Domain.Users;
 
 public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
 {
+    private readonly List<UserFavouriteEvent> favouriteEvents = new();
+
     public Guid Id { get; private init; }
     public string Email { get; private set; } = null!;
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
     public DateOnly BirthDate { get; private set; }
+
+    public IReadOnlyList<UserFavouriteEvent> FavouriteEvents => favouriteEvents.AsReadOnly();
 
     public DateTime DateModified { get; set; }
     
@@ -40,4 +44,21 @@ public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
         LastName = lastName;
         BirthDate = birthDate;
     }
+
+    public void AddFavouriteEvents(UserFavouriteEvent favouriteEvent)
+    {
+        if (favouriteEvents.Contains(favouriteEvent))
+        {
+            throw new InvalidOperationException("Event can be add to favourites only once");
+        }
+        
+        favouriteEvents.Add(favouriteEvent);
+    }
+
+    public void RemoveEventFromFavourites(Guid eventId)
+    {
+        favouriteEvents.RemoveAll(e => e.EventId == eventId);
+    }
 }
+
+public record UserFavouriteEvent(Guid EventId);
