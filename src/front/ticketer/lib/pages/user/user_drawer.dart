@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ticketer/auth/auth.dart';
 import 'package:ticketer/pages/common/password_change_dialog.dart';
 import 'package:ticketer/pages/user/user_edit_data.dart';
+import 'package:ticketer/pages/user/user_ticket_page.dart';
 
 class UserNavigationDrawer extends StatefulWidget {
   const UserNavigationDrawer({
@@ -70,6 +71,16 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
     );
   }
 
+  Future<void> navigateToMyTickets(BuildContext context) async {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const UserTicketPage()),
+      ),
+    );
+  }
+
   Future<void> signOut(BuildContext context) async {
     Navigator.of(context).popUntil((route) => route.isFirst);
     await Auth().logOut();
@@ -81,6 +92,11 @@ class _UserNavigationDrawerState extends State<UserNavigationDrawer> {
       child: Wrap(
         runSpacing: 16,
         children: [
+          ListTile(
+            leading: const Icon(Icons.local_activity),
+            title: const Text("My Tickets"),
+            onTap: () => {navigateToMyTickets(context)},
+          ),
           ListTile(
             leading: const Icon(Icons.edit),
             title: const Text("Edit Data"),

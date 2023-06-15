@@ -12,6 +12,7 @@ import '../communication.dart';
 
 class TicketCommunication {
   static const String _buyEndPoint = "/ticket/buy";
+  static const String _listEndPoint = "/ticket/list";
 
   Future<Tuple2<Response, ResponseCode>> buy(
       Event event, Sector sector, int count) async {
@@ -25,5 +26,15 @@ class TicketCommunication {
           "sectorName": sector.name,
           "numberOfSeats": count
         }));
+  }
+
+  Future<Tuple2<Response, ResponseCode>> list(
+      int pageNumber, int pageSize) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().getCallAuthorized(
+        _listEndPoint, Token(Auth().getCurrentAccount!.token),
+        params: {"PageNumber": pageNumber, "PageSize": pageSize});
   }
 }
