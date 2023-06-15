@@ -5,7 +5,7 @@ namespace TicketManager.Core.Domain.Users;
 
 public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
 {
-    private readonly List<UserFavouriteEvent> favouriteEvents = new();
+    private readonly List<UserFavoriteEvent> favoriteEvents = new();
 
     public Guid Id { get; private init; }
     public string Email { get; private set; } = null!;
@@ -13,7 +13,7 @@ public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
     public string LastName { get; private set; } = null!;
     public DateOnly BirthDate { get; private set; }
 
-    public IReadOnlyList<UserFavouriteEvent> FavouriteEvents => favouriteEvents.AsReadOnly();
+    public IReadOnlyList<UserFavoriteEvent> FavoriteEvents => favoriteEvents.AsReadOnly();
 
     public DateTime DateModified { get; set; }
     
@@ -45,20 +45,20 @@ public class User : IAggregateRoot<Guid>, IAccount, IOptimisticConcurrent
         BirthDate = birthDate;
     }
 
-    public void AddFavouriteEvents(UserFavouriteEvent favouriteEvent)
+    public void AddFavoriteEvents(UserFavoriteEvent favoriteEvent)
     {
-        if (favouriteEvents.Contains(favouriteEvent))
+        if (favoriteEvents.Contains(favoriteEvent))
         {
             throw new InvalidOperationException("Event can be add to favourites only once");
         }
         
-        favouriteEvents.Add(favouriteEvent);
+        favoriteEvents.Add(favoriteEvent);
     }
 
-    public void RemoveEventFromFavourites(Guid eventId)
+    public void RemoveEventFromFavorites(Guid eventId)
     {
-        favouriteEvents.RemoveAll(e => e.EventId == eventId);
+        favoriteEvents.RemoveAll(e => e.EventId == eventId);
     }
 }
 
-public record UserFavouriteEvent(Guid EventId);
+public record UserFavoriteEvent(Guid EventId);
