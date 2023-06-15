@@ -29,6 +29,9 @@ class EventCommunication {
   }
 
   Future<Tuple2<Response, ResponseCode>> list(int pageNo, int pageSize) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
     Map<String, dynamic> params = {"PageNumber": pageNo, "PageSize": pageSize};
     return await BackendCommunication().getCallAuthorized(
         _listEndPoint, Token(Auth().getCurrentAccount!.token),
@@ -37,6 +40,9 @@ class EventCommunication {
 
   Future<Tuple2<Response, ResponseCode>> organizerMyList(
       int pageNo, int pageSize) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
     Map<String, dynamic> params = {"PageNumber": pageNo, "PageSize": pageSize};
     return await BackendCommunication().getCallAuthorized(
         _organizerListEndPoint, Token(Auth().getCurrentAccount!.token),
@@ -77,6 +83,9 @@ class EventCommunication {
       String earlier,
       String later,
       EventStatus status) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
     Map<String, dynamic> params = {
       "PageNumber": pageNumber,
       "PageSize": pageSize,

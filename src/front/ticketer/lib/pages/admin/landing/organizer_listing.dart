@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:ticketer/backend_communication/logic/communication.dart';
 import 'package:ticketer/backend_communication/logic/organizer/communication_organizer.dart';
 import 'package:ticketer/backend_communication/model/organizer.dart';
 import 'package:ticketer/backend_communication/model/response_codes.dart';
@@ -77,7 +78,7 @@ class _OrganizerListingPageState extends State<OrganizerListing> {
   }
 
   Future<void> _fetchMoreData() async {
-    final res = await OrganizerCommunication().listToVerify(_pageNo, _pageSize);
+    final res = await BackendCommunication().organizer.list(_pageNo, _pageSize);
     Future.delayed(Duration.zero, () {
       setState(() {
         int before = _organizers.length;

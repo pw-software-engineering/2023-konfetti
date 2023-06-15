@@ -19,17 +19,21 @@ class OrganizerCommunication {
   static const String _viewEndPoint = "/organizer/view";
 
   Future<Tuple2<Response, ResponseCode>> update(
-          OrganizerAccountUpdate body) async =>
-      await BackendCommunication().postCallAuthorized(
-          _updateEndPoint, Token(Auth().getCurrentAccount!.token),
-          data: jsonEncode(body));
+      OrganizerAccountUpdate body) async {
+    if (Auth().getCurrentAccount == null) {
+      throw Exception("Non authorized API call");
+    }
+    return await BackendCommunication().postCallAuthorized(
+        _updateEndPoint, Token(Auth().getCurrentAccount!.token),
+        data: jsonEncode(body));
+  }
 
   Future<Tuple2<Response, ResponseCode>> register(
           OrganizerAccount body) async =>
       await BackendCommunication()
           .postCall(_registerEndPoint, data: jsonEncode(body));
 
-  Future<Tuple2<Response, ResponseCode>> listToVerify(
+  Future<Tuple2<Response, ResponseCode>> list(
       int pageNumber, int pageSize) async {
     if (Auth().getCurrentAccount == null) {
       throw Exception("Non authorized API call");
