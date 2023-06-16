@@ -63,6 +63,6 @@ spec:
         pathType: Prefix
         backend:
           service: 
-            name: konfetii-rabbit
+            name: konfetti-rabbit
             port: 
               number: 80

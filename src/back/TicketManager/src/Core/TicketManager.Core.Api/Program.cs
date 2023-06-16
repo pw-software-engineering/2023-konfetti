@@ -101,6 +101,15 @@ public class Program
             x.AddConsumer<SetPdfGenerationFlagConsumer>();
         });
         
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyMethod();
+            }));
+
         var app = builder.Build();
 
         app.UsePathBase("/api/");
