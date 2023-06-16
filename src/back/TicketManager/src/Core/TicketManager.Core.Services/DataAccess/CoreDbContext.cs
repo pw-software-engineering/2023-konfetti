@@ -49,6 +49,8 @@ public class CoreDbContext : DbContext
             cfg.Property(e => e.FirstName).HasMaxLength(StringLengths.ShortString);
             cfg.Property(e => e.LastName).HasMaxLength(StringLengths.ShortString);
 
+            cfg.OwnsMany(e => e.FavoriteEvents);
+
             cfg.IsOptimisticConcurrent();
         });
     }

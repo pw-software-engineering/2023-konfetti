@@ -145,13 +145,13 @@ jobs:
         
     - name: Substitute environment variables in app deployment file
       env:
-        API_KEY: ${{ secrets.API_KEY }}
+        KONFETTI_API_KEY: ${{ secrets.KONFETTI_API_KEY }}
         DATABASE_CONNECTION_STRING: ${{ secrets.DATABASE_CONNECTION_STRING }}
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_API }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_API }}"
     - name: Substitute environment variables in payment deployment file
       env:
-        API_KEY: ${{ secrets.API_KEY }}
+        KONFETTI_API_KEY: ${{ secrets.KONFETTI_API_KEY }}
       run: envsubst < "${{ env.DEPLOYMENT_DIRECTORY }}/${{ env.DEPLOYMENT_FILE_NAME_PAYMENT }}" > "${{ env.DEPLOYMENT_DIRECTORY }}/out-${{ env.DEPLOYMENT_FILE_NAME_PAYMENT }}"
     - name: Substitute environment variables in pdf deployment file
       env:

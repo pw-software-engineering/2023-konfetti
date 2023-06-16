@@ -8,6 +8,7 @@ public class Account : IAggregateRoot<Guid>, IOptimisticConcurrent
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public string Role { get; private init; } = null!;
+    public bool IsBanned { get; private set; }
     
     public DateTime DateModified { get; set; }
     
@@ -29,5 +30,15 @@ public class Account : IAggregateRoot<Guid>, IOptimisticConcurrent
     public void UpdateEmail(string email)
     {
         Email = email;
+    }
+
+    public void Ban()
+    {
+        IsBanned = true;
+    }
+
+    public void UnBan()
+    {
+        IsBanned = false;
     }
 }

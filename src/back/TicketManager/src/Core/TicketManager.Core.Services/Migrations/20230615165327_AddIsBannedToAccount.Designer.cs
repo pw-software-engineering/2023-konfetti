@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TicketManager.Core.Services.DataAccess;
@@ -11,9 +12,11 @@ using TicketManager.Core.Services.DataAccess;
 namespace TicketManager.Core.Services.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230615165327_AddIsBannedToAccount")]
+    partial class AddIsBannedToAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,33 +379,6 @@ namespace TicketManager.Core.Services.Migrations
                         });
 
                     b.Navigation("Seats");
-                });
-
-            modelBuilder.Entity("TicketManager.Core.Domain.Users.User", b =>
-                {
-                    b.OwnsMany("TicketManager.Core.Domain.Users.UserFavoriteEvent", "FavoriteEvents", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("EventId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("UserId", "Id");
-
-                            b1.ToTable("UserFavoriteEvent");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.Navigation("FavoriteEvents");
                 });
 #pragma warning restore 612, 618
         }

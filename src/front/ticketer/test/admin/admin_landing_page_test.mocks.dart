@@ -98,7 +98,7 @@ class MockOrganizerCommunication extends _i1.Mock
         )),
       ) as _i4.Future<_i2.Tuple2<_i5.Response<dynamic>, _i6.ResponseCode>>);
   @override
-  _i4.Future<_i2.Tuple2<_i5.Response<dynamic>, _i6.ResponseCode>> listToVerify(
+  _i4.Future<_i2.Tuple2<_i5.Response<dynamic>, _i6.ResponseCode>> list(
     int? pageNumber,
     int? pageSize,
   ) =>

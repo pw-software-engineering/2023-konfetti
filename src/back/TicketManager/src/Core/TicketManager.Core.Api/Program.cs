@@ -98,8 +98,18 @@ public class Program
             x.AddConsumer<RemoveEventTicketsConsumer>();
             x.AddConsumer<DeleteTicketConsumer>();
             x.AddConsumer<DeleteSectorReservationConsumer>();
+            x.AddConsumer<SetPdfGenerationFlagConsumer>();
         });
         
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyMethod();
+            }));
+
         var app = builder.Build();
 
         app.UsePathBase("/api/");

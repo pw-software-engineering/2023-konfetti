@@ -39,17 +39,31 @@ class _UserLandingPageState extends State<UserLandingPage> {
   final TextEditingController _laterThanEventTime = TextEditingController();
 
   Future<void> _fetchMoreData() async {
-
     int page = _pageNo;
     final resOpened = await BackendCommunication().event.listFiltered(
-        page, _pageSize, filterName, filterLocation, filterEarlier,
-        filterLater, EventStatus.Opened);
+        page,
+        _pageSize,
+        filterName,
+        filterLocation,
+        filterEarlier,
+        filterLater,
+        EventStatus.Opened);
     final resPublished = await BackendCommunication().event.listFiltered(
-        page, _pageSize, filterName, filterLocation, filterEarlier,
-        filterLater, EventStatus.Published);
+        page,
+        _pageSize,
+        filterName,
+        filterLocation,
+        filterEarlier,
+        filterLater,
+        EventStatus.Published);
     final resClosed = await BackendCommunication().event.listFiltered(
-        page, _pageSize, filterName, filterLocation, filterEarlier,
-        filterLater, EventStatus.Closed);
+        page,
+        _pageSize,
+        filterName,
+        filterLocation,
+        filterEarlier,
+        filterLater,
+        EventStatus.Closed);
 
     setState(() {
       int before = _events.length;
@@ -64,6 +78,7 @@ class _UserLandingPageState extends State<UserLandingPage> {
       }
       int after = _events.length;
       _hasNextPage = before != after;
+      _pageNo++;
     });
   }
 
@@ -83,10 +98,11 @@ class _UserLandingPageState extends State<UserLandingPage> {
     );
   }
 
-  FutureBuilder _userCard(){
+  FutureBuilder _userCard() {
     return FutureBuilder<Tuple2<Response<dynamic>, ResponseCode>>(
       future: UserCommunication().view(),
-      builder: (BuildContext context, AsyncSnapshot<Tuple2<Response<dynamic>, ResponseCode>> snapshot){
+      builder: (BuildContext context,
+          AsyncSnapshot<Tuple2<Response<dynamic>, ResponseCode>> snapshot) {
         if (snapshot.hasData) {
           Tuple2<Response, ResponseCode>? data = snapshot.data;
 
@@ -99,7 +115,6 @@ class _UserLandingPageState extends State<UserLandingPage> {
       },
     );
   }
-
 
   Text _getGreeting() {
     return Text(
@@ -139,9 +154,9 @@ class _UserLandingPageState extends State<UserLandingPage> {
             } else {
               try {
                 _fetchMoreData();
-                setState(() {
+                /*setState(() {
                   _pageNo++;
-                });
+                });*/
               } catch (e) {
                 log(e.toString());
               }

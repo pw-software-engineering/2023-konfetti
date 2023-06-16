@@ -32,7 +32,7 @@ public class AccountLoginEndpoint: Endpoint<AccountLoginRequest, AccountLoginRes
     {
         var account = await coreDbContext
             .Accounts
-            .Where(a => a.Email == req.Email)
+            .Where(a => a.Email == req.Email && !a.IsBanned)
             .FirstOrDefaultAsync(ct);
         if (account is not null && passwordManager.DoPasswordsMatch(account.PasswordHash, req.Password))
         {
